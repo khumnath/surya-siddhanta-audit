@@ -184,26 +184,51 @@ const App: React.FC = () => {
 
   return (
     <div className="dashboard-container fade-in">
-      {/* Parity Accuracy Bar */}
-      {viewMode !== 'ss' && parityScore !== null && (
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between px-4 py-3 sm:px-6 sm:py-2 bg-white/5 border-b border-border-subtle gap-3 sm:gap-0" style={{
-          fontSize: '0.65rem',
-          fontWeight: 700,
-          letterSpacing: '0.1em',
-          textTransform: 'uppercase'
-        }}>
-          <div className="flex items-center gap-2.5">
-            <LineChart size={14} color="var(--accent-secondary)" className="shrink-0" />
-            <span style={{ color: 'var(--text-dim)' }}>Siddhanta-Modern Parity:</span>
-            <span style={{ color: parityScore > 90 ? 'var(--accent-success)' : 'var(--accent-secondary)' }}>
-              {parityScore.toFixed(1)}% Match
-            </span>
-          </div>
-          <div className="w-full sm:w-[200px] h-1 bg-white/5 rounded-full overflow-hidden shrink-0">
-            <div style={{ width: `${parityScore}%`, height: '100%', background: 'var(--accent-secondary)', transition: 'width 1s ease-out' }}></div>
-          </div>
+      {/* Global Top Bar (Parity Audit + Theme Toggle) */}
+      <div className="flex items-center justify-between px-4 py-2 bg-white/5 border-b border-border-subtle" style={{
+        fontSize: '0.65rem',
+        fontWeight: 700,
+        letterSpacing: '0.1em',
+        textTransform: 'uppercase',
+        minHeight: '40px'
+      }}>
+        {/* Parity Content (Left/Center) */}
+        <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6 flex-1">
+          {viewMode !== 'ss' && parityScore !== null && (
+            <>
+              <div className="flex items-center gap-2.5">
+                <LineChart size={14} color="var(--accent-secondary)" className="shrink-0" />
+                <span style={{ color: 'var(--text-dim)' }}>Siddhanta-Modern Parity:</span>
+                <span style={{ color: parityScore > 90 ? 'var(--accent-success)' : 'var(--accent-secondary)' }}>
+                  {parityScore.toFixed(1)}% Match
+                </span>
+              </div>
+              <div className="w-full sm:w-[200px] h-1 bg-white/5 rounded-full overflow-hidden shrink-0 hidden sm:block">
+                <div style={{ width: `${parityScore}%`, height: '100%', background: 'var(--accent-secondary)', transition: 'width 1s ease-out' }}></div>
+              </div>
+            </>
+          )}
         </div>
-      )}
+
+        {/* Global Controls (Right) */}
+        <div className="flex items-center gap-2 ml-4">
+          <button
+            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+            style={{ 
+              background: 'rgba(255,255,255,0.03)', 
+              color: 'var(--text-primary)', 
+              border: '1px solid var(--border-subtle)', 
+              width: '32px', 
+              height: '32px', 
+              borderRadius: '8px' 
+            }}
+            title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`}
+            className="flex items-center justify-center hover:bg-white/10 transition-colors"
+          >
+            {theme === 'dark' ? <SunIcon size={16} /> : <Moon size={16} />}
+          </button>
+        </div>
+      </div>
 
       <header className="flex flex-col lg:flex-row justify-between items-start lg:items-center py-6 mb-10 gap-8">
         <div className="flex flex-col items-start w-full">
@@ -266,14 +291,6 @@ const App: React.FC = () => {
           </div>
 
           <div className="flex items-center gap-4">
-            <button
-              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-              style={{ background: 'rgba(255,255,255,0.05)', color: 'var(--text-primary)', border: '1px solid var(--border-card)', padding: '0.8rem', borderRadius: '12px' }}
-              title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`}
-              className="aspect-square flex items-center justify-center hover:bg-white/10 shrink-0"
-            >
-              {theme === 'dark' ? <SunIcon size={20} /> : <Moon size={20} />}
-            </button>
             <a
               href="/docs/index.html"
               target="_blank"
@@ -316,7 +333,7 @@ const App: React.FC = () => {
             <button
               key={mode}
               onClick={() => setViewMode(mode)}
-              className={`nav-pill text-[0.65rem] !px-3 font-black uppercase ${viewMode === mode ? 'active' : ''}`}
+              className={`nav-pill text-[0.65rem] px-3! font-black uppercase ${viewMode === mode ? 'active' : ''}`}
             >
               {mode === 'ss' ? 'TRAD (SS)' : mode === 'modern' ? 'MOD (JPL)' : 'COMPARE'}
             </button>
@@ -581,7 +598,7 @@ const App: React.FC = () => {
                   return (
                     <div key={body} className="bg-white/5 rounded-xl border border-border-subtle hover:border-border-card transition-all group shadow-sm flex flex-col" style={{ padding: '2rem', gap: viewMode === 'both' ? '2.5rem' : '1.5rem', overflow: 'visible' }}>
                       {/* HEADER */}
-                      <div className="flex justify-between items-center mb-[-0.5rem]">
+                      <div className="flex justify-between items-center -mb-2">
                         <div className="text-[0.8rem] font-bold uppercase tracking-[0.2em] text-text-primary/70 group-hover:text-accent-primary transition-colors">{body}</div>
                         <span className="text-[0.55rem] font-black text-text-secondary uppercase tracking-[0.15em]">ELEMENT</span>
                       </div>
@@ -744,7 +761,7 @@ const App: React.FC = () => {
                         const isInauspiciousMod = modY.type === 'inauspicious';
 
                         return (
-                          <div key={i} className={`grid grid-cols-[1fr_1.5fr_1.5fr] gap-4 items-center px-6 py-5 border-b border-border-subtle transition-all duration-200 ${hasDrift ? 'bg-accent-error/5' : (i === 0 ? 'bg-accent-secondary/5' : 'hover:bg-white/[0.02]')}`}>
+                          <div key={i} className={`grid grid-cols-[1fr_1.5fr_1.5fr] gap-4 items-center px-6 py-5 border-b border-border-subtle transition-all duration-200 ${hasDrift ? 'bg-accent-error/5' : (i === 0 ? 'bg-accent-secondary/5' : 'hover:bg-white/2')}`}>
                             {/* 1. MODERN TIMING (Baseline) */}
                             <div className="flex flex-col gap-1">
                               <div className="text-[0.9rem] font-black font-mono text-accent-primary">

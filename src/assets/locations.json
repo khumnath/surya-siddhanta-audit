@@ -1,0 +1,149 @@
+[
+  {
+    "name": "Ujjain (Avanti)",
+    "latitude": 23.18,
+    "longitude": 75.76,
+    "timezone_offset": 5.5,
+    "timezone_name": "Asia/Kolkata"
+  },
+  {
+    "name": "Varanasi (Kashi)",
+    "latitude": 25.32,
+    "longitude": 82.97,
+    "timezone_offset": 5.5,
+    "timezone_name": "Asia/Kolkata"
+  },
+  {
+    "name": "Mathura",
+    "latitude": 27.49,
+    "longitude": 77.67,
+    "timezone_offset": 5.5,
+    "timezone_name": "Asia/Kolkata"
+  },
+  {
+    "name": "Kurukshetra",
+    "latitude": 29.97,
+    "longitude": 76.88,
+    "timezone_offset": 5.5,
+    "timezone_name": "Asia/Kolkata"
+  },
+  {
+    "name": "Delhi",
+    "latitude": 28.61,
+    "longitude": 77.21,
+    "timezone_offset": 5.5,
+    "timezone_name": "Asia/Kolkata"
+  },
+  {
+    "name": "Mumbai",
+    "latitude": 19.08,
+    "longitude": 72.88,
+    "timezone_offset": 5.5,
+    "timezone_name": "Asia/Kolkata"
+  },
+  {
+    "name": "Kolkata",
+    "latitude": 22.57,
+    "longitude": 88.36,
+    "timezone_offset": 5.5,
+    "timezone_name": "Asia/Kolkata"
+  },
+  {
+    "name": "Chennai",
+    "latitude": 13.08,
+    "longitude": 80.27,
+    "timezone_offset": 5.5,
+    "timezone_name": "Asia/Kolkata"
+  },
+  {
+    "name": "Bangalore",
+    "latitude": 12.97,
+    "longitude": 77.59,
+    "timezone_offset": 5.5,
+    "timezone_name": "Asia/Kolkata"
+  },
+  {
+    "name": "Hyderabad",
+    "latitude": 17.39,
+    "longitude": 78.49,
+    "timezone_offset": 5.5,
+    "timezone_name": "Asia/Kolkata"
+  },
+  {
+    "name": "Ahmedabad",
+    "latitude": 23.02,
+    "longitude": 72.57,
+    "timezone_offset": 5.5,
+    "timezone_name": "Asia/Kolkata"
+  },
+  {
+    "name": "Pune",
+    "latitude": 18.52,
+    "longitude": 73.86,
+    "timezone_offset": 5.5,
+    "timezone_name": "Asia/Kolkata"
+  },
+  {
+    "name": "Jaipur",
+    "latitude": 26.91,
+    "longitude": 75.79,
+    "timezone_offset": 5.5,
+    "timezone_name": "Asia/Kolkata"
+  },
+  {
+    "name": "Surat",
+    "latitude": 21.17,
+    "longitude": 72.83,
+    "timezone_offset": 5.5,
+    "timezone_name": "Asia/Kolkata"
+  },
+  {
+    "name": "Kanchipuram",
+    "latitude": 12.83,
+    "longitude": 79.7,
+    "timezone_offset": 5.5,
+    "timezone_name": "Asia/Kolkata"
+  },
+  {
+    "name": "Madurai",
+    "latitude": 9.93,
+    "longitude": 78.12,
+    "timezone_offset": 5.5,
+    "timezone_name": "Asia/Kolkata"
+  },
+  {
+    "name": "Tirupati",
+    "latitude": 13.63,
+    "longitude": 79.42,
+    "timezone_offset": 5.5,
+    "timezone_name": "Asia/Kolkata"
+  },
+  {
+    "name": "Kathmandu",
+    "latitude": 27.7,
+    "longitude": 85.32,
+    "timezone_offset": 5.75,
+    "timezone_name": "Asia/Kathmandu"
+  },
+  {
+    "name": "Colombo",
+    "latitude": 6.93,
+    "longitude": 79.85,
+    "timezone_offset": 5.5,
+    "timezone_name": "Asia/Colombo"
+  },
+  {
+    "name": "Perth",
+    "latitude": -31.95,
+    "longitude": 115.86,
+    "timezone_offset": 8,
+    "timezone_name": "Australia/Perth"
+  },
+  {
+    "name": "Sydney",
+    "latitude": -33.87,
+    "longitude": 151.21,
+    "timezone_offset": 10,
+    "timezone_name": "Australia/Sydney"
+  }
+]

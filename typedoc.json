@@ -1,0 +1,18 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "entryPoints": [
+    "src"
+  ],
+  "entryPointStrategy": "expand",
+  "out": "public/docs",
+  "exclude": [
+    "**/node_modules/**",
+    "**/*.test.ts"
+  ],
+  "name": "Siddhanta Parity API Documentation",
+  "includeVersion": true,
+  "plugin": [],
+  "readme": "none",
+  "hideGenerator": true,
+  "cleanOutputDir": true
+}

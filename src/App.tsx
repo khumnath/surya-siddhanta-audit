@@ -13,7 +13,7 @@ import {
   Sun, MapPin, Calendar as CalendarIcon,
   Globe, Layers, Clock, LineChart,
   Sunrise, Sunset, Info, BookOpen,
-  Moon, Sun as SunIcon
+  Moon
 } from 'lucide-react';
 
 
@@ -225,7 +225,7 @@ const App: React.FC = () => {
             title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`}
             className="flex items-center justify-center hover:bg-white/10 transition-colors"
           >
-            {theme === 'dark' ? <SunIcon size={16} /> : <Moon size={16} />}
+            {theme === 'dark' ? <Sun size={16} color="var(--accent-secondary)" /> : <Moon size={16} color="var(--accent-primary)" />}
           </button>
         </div>
       </div>

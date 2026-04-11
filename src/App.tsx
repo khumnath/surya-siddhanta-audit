@@ -234,12 +234,12 @@ const App: React.FC = () => {
         </div>
       </div>
 
-      <header className="flex flex-col lg:flex-row justify-between items-start lg:items-center py-6 mb-10 gap-8">
-        <div className="flex flex-col items-start w-full">
-          <div className="flex items-start sm:items-center gap-4 w-full">
+      <header className="flex flex-col items-center py-6 mb-10 gap-8">
+        <div className="flex flex-col items-center w-full text-center">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full">
             <Globe size={32} color="var(--accent-primary)" className="shrink-0" />
-            <div className="flex flex-col sm:flex-row sm:items-baseline gap-2 sm:gap-4 w-full overflow-hidden">
-              <span className="text-xl sm:text-2xl md:text-3xl font-black tracking-tighter bg-linear-to-br from-text-primary to-accent-primary bg-clip-text text-transparent leading-tight truncate">
+            <div className="flex flex-col sm:flex-row sm:items-baseline justify-center gap-2 sm:gap-4 w-full overflow-hidden">
+              <span className="text-xl sm:text-2xl md:text-3xl font-black tracking-tighter bg-linear-to-br from-text-primary to-accent-primary bg-clip-text text-transparent leading-tight">
                 Siddhanta Parity by Nepdate
               </span>
               <span style={{
@@ -251,50 +251,52 @@ const App: React.FC = () => {
                 padding: '0.15rem 0.5rem',
                 borderRadius: '6px',
                 letterSpacing: '0.05em'
-              }} className="w-fit whitespace-nowrap">
+              }} className="w-fit whitespace-nowrap mx-auto sm:mx-0">
                 v1.2.0
               </span>
             </div>
           </div>
-          <div className="text-[0.55rem] sm:text-[0.6rem] text-text-dim tracking-[0.2em] sm:tracking-[0.25em] font-black uppercase mt-2 sm:mt-1 ml-0 sm:ml-12 opacity-70">
+          <div className="text-[0.55rem] sm:text-[0.6rem] text-text-dim tracking-[0.2em] sm:tracking-[0.25em] font-black uppercase mt-2 sm:mt-1 opacity-70">
             Vedic Astronomical Audit
           </div>
         </div>
 
-        <div className="flex flex-col sm:grid sm:grid-cols-2 lg:flex lg:flex-row items-stretch lg:items-center gap-4 w-full lg:w-auto">
-          <div className="flex items-center gap-3 bg-white/5 px-4 py-2.5 rounded-xl border border-border-card shrink-0">
-            <MapPin size={18} color="var(--accent-primary)" className="shrink-0" />
-            <select
-              value={location.name}
-              onChange={handleLocationChange}
-              style={{ background: 'transparent', border: 'none', color: 'var(--text-primary)', outline: 'none', cursor: 'pointer', width: '100%', fontSize: '0.9rem' }}
-            >
-              {locations.map(loc => (
-                <option key={loc.name} value={loc.name} style={{ background: 'var(--bg-surface)' }}>{loc.name}</option>
-              ))}
-            </select>
-          </div>
-
-          <div className="flex items-center gap-3 bg-white/5 px-4 py-2.5 rounded-xl border border-border-card min-w-0">
-            <CalendarIcon size={18} color="var(--accent-secondary)" className="shrink-0" />
-            <input
-              type="datetime-local"
-              value={selectedDate.toFormat("yyyy-MM-dd'T'HH:mm")}
-              onChange={handleDateChange}
-              style={{ background: 'transparent', border: 'none', color: 'var(--text-primary)', outline: 'none', cursor: 'pointer', width: '100%', fontSize: '0.9rem' }}
-            />
-            {!useCurrentTime && (
-              <button
-                onClick={() => setUseCurrentTime(true)}
-                style={{ background: 'var(--accent-primary)', color: 'white', fontSize: '0.6rem', padding: '0.25rem 0.5rem', borderRadius: '4px' }}
-                className="hover:brightness-110 whitespace-nowrap"
+        <div className="flex flex-col items-center gap-6 w-full">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full lg:w-auto">
+            <div className="flex items-center gap-3 bg-white/5 px-4 py-2.5 rounded-xl border border-border-card shrink-0">
+              <MapPin size={18} color="var(--accent-primary)" className="shrink-0" />
+              <select
+                value={location.name}
+                onChange={handleLocationChange}
+                style={{ background: 'transparent', border: 'none', color: 'var(--text-primary)', outline: 'none', cursor: 'pointer', width: '200px', fontSize: '0.9rem' }}
               >
-                Reset
-              </button>
-            )}
+                {locations.map(loc => (
+                  <option key={loc.name} value={loc.name} style={{ background: 'var(--bg-surface)' }}>{loc.name}</option>
+                ))}
+              </select>
+            </div>
+
+            <div className="flex items-center gap-3 bg-white/5 px-4 py-2.5 rounded-xl border border-border-card min-w-0">
+              <CalendarIcon size={18} color="var(--accent-secondary)" className="shrink-0" />
+              <input
+                type="datetime-local"
+                value={selectedDate.toFormat("yyyy-MM-dd'T'HH:mm")}
+                onChange={handleDateChange}
+                style={{ background: 'transparent', border: 'none', color: 'var(--text-primary)', outline: 'none', cursor: 'pointer', width: '220px', fontSize: '0.9rem' }}
+              />
+              {!useCurrentTime && (
+                <button
+                  onClick={() => setUseCurrentTime(true)}
+                  style={{ background: 'var(--accent-primary)', color: 'white', fontSize: '0.6rem', padding: '0.25rem 0.5rem', borderRadius: '4px' }}
+                  className="hover:brightness-110 whitespace-nowrap"
+                >
+                  Reset
+                </button>
+              )}
+            </div>
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full">
             <a
               href="/docs/index.html"
               target="_blank"
@@ -303,13 +305,13 @@ const App: React.FC = () => {
                 background: 'rgba(99, 102, 241, 0.1)',
                 border: '1px solid var(--accent-primary)',
                 color: 'var(--accent-primary)',
-                padding: '0.8rem 1.2rem',
+                padding: '0.8rem 2.5rem',
                 borderRadius: '12px',
                 fontSize: '0.8rem',
                 fontWeight: 600,
                 textDecoration: 'none'
               }}
-              className="flex-1 lg:flex-none flex items-center justify-center gap-2 hover:bg-white/5 transition-all shadow-sm whitespace-nowrap min-w-fit"
+              className="flex items-center justify-center gap-2 hover:bg-white/5 transition-all shadow-sm whitespace-nowrap min-w-[200px]"
             >
               <BookOpen size={18} /> API Docs
             </a>
@@ -317,7 +319,8 @@ const App: React.FC = () => {
         </div>
       </header>
 
-      <nav className="nav-pill-group flex-wrap gap-2 sm:gap-4 mb-10 w-full sm:w-auto">
+      <div className="flex flex-col items-center gap-6 mb-12">
+        <nav className="nav-pill-group flex-wrap justify-center gap-2 sm:gap-4 mb-0 w-full sm:w-auto">
         <button
           onClick={() => setActiveTab('panchanga')}
           className={`nav-pill ${activeTab === 'panchanga' ? 'active' : ''}`}
@@ -331,7 +334,7 @@ const App: React.FC = () => {
           <LineChart size={18} /> Engine Accuracy
         </button>
       </nav>
-      <div className="ml-auto w-full sm:w-auto flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+      <div className="w-full sm:w-auto flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-4">
         <div className="nav-pill-group">
           {(['ss', 'modern', 'both'] as const).map(mode => (
             <button
@@ -358,13 +361,14 @@ const App: React.FC = () => {
           </div>
         )}
       </div>
+    </div>
 
-      {activeTab === "panchanga" ? (
+    {activeTab === "panchanga" ? (
         <div className="grid-12 fade-in">
 
           {/* Chronology Master Card */}
           <div className="span-12">
-            <div className="glass-card fade-in" style={{ borderTop: '4px solid var(--accent-primary)' }}>
+            <div className="glass-card fade-in">
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem', flexWrap: 'wrap', gap: '1rem' }}>
                 <h2 className="flex-center" style={{ fontSize: '1.2rem' }}>
                   <Globe size={24} color="var(--accent-primary)" /> Chronology & Era Systems
@@ -424,7 +428,7 @@ const App: React.FC = () => {
 
           {/* Primary Panchanga Hub Card */}
           <div className="span-12">
-            <div className="glass-card" style={{ borderTop: '4px solid var(--accent-secondary)' }}>
+            <div className="glass-card">
               <h2 className="flex-center" style={{ marginBottom: '1.5rem', fontSize: '1.1rem' }}>
                 <Sun color="var(--accent-secondary)" /> Primary Panchanga Hub
               </h2>
@@ -444,7 +448,6 @@ const App: React.FC = () => {
                       background: 'rgba(255,255,255,0.02)',
                       borderRadius: '20px',
                       border: `1px solid var(--border-subtle)`,
-                      borderTop: `4px solid ${item.color}`,
                       boxShadow: '0 4px 20px rgba(0,0,0,0.1)',
                       position: 'relative'
                     }}>
@@ -544,7 +547,7 @@ const App: React.FC = () => {
 
           {/* Celestial Longitudes Card (Full Width) */}
           <div className="span-12">
-            <div className="glass-card" style={{ borderTop: '4px solid var(--accent-primary)' }}>
+            <div className="glass-card">
               <h2 className="flex items-center gap-3 text-lg font-black tracking-tight mb-8">
                 <Layers size={24} className="text-accent-primary" />
                 <span className="uppercase tracking-widest text-sm opacity-80">Celestial Longitudes & Planet Positions</span>
@@ -640,7 +643,7 @@ const App: React.FC = () => {
 
           {/* Daily Rhythm Master Card */}
           <div className="span-12">
-            <div className="glass-card fade-in" style={{ borderTop: '4px solid var(--accent-secondary)', padding: '2.5rem' }}>
+            <div className="glass-card fade-in" style={{ padding: '2.5rem' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2.5rem', flexWrap: 'wrap', gap: '1.5rem' }}>
                 <h2 className="flex items-center gap-3 text-lg font-black tracking-tight">
                   <Clock size={24} className="text-accent-secondary" />

@@ -216,16 +216,20 @@ const App: React.FC = () => {
             onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
             style={{ 
               background: 'rgba(255,255,255,0.03)', 
-              color: 'var(--text-primary)', 
               border: '1px solid var(--border-subtle)', 
               width: '32px', 
               height: '32px', 
-              borderRadius: '8px' 
+              borderRadius: '8px',
+              padding: 0
             }}
             title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`}
             className="flex items-center justify-center hover:bg-white/10 transition-colors"
           >
-            {theme === 'dark' ? <Sun size={16} color="var(--accent-secondary)" /> : <Moon size={16} color="var(--accent-primary)" />}
+            {theme === 'dark' ? (
+              <Sun size={16} className="text-accent-secondary" />
+            ) : (
+              <Moon size={16} className="text-accent-primary" />
+            )}
           </button>
         </div>
       </div>

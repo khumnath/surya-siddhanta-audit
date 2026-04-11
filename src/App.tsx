@@ -214,11 +214,11 @@ const App: React.FC = () => {
         <div className="flex items-center gap-2 ml-4">
           <button
             onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-            style={{ 
-              background: 'rgba(255,255,255,0.03)', 
-              border: '1px solid var(--border-subtle)', 
-              width: '42px', 
-              height: '42px', 
+            style={{
+              background: 'rgba(255,255,255,0.03)',
+              border: '1px solid var(--border-subtle)',
+              width: '42px',
+              height: '42px',
               borderRadius: '10px',
               padding: 0
             }}
@@ -240,7 +240,7 @@ const App: React.FC = () => {
             <Globe size={32} color="var(--accent-primary)" className="shrink-0" />
             <div className="flex flex-col sm:flex-row sm:items-baseline justify-center gap-2 sm:gap-4 w-full overflow-hidden">
               <span className="text-xl sm:text-2xl md:text-3xl font-black tracking-tighter bg-linear-to-br from-text-primary to-accent-primary bg-clip-text text-transparent leading-tight">
-                Siddhanta Parity by Nepdate
+                Surya Siddhanta audit
               </span>
               <span style={{
                 fontSize: '0.65rem',
@@ -276,13 +276,13 @@ const App: React.FC = () => {
               </select>
             </div>
 
-            <div className="flex items-center gap-3 bg-white/5 px-4 py-2.5 rounded-xl border border-border-card min-w-0">
+            <div className="flex items-center gap-3 bg-white/5 px-4 py-2.5 rounded-xl border border-border-card min-w-0 w-full sm:w-auto">
               <CalendarIcon size={18} color="var(--accent-secondary)" className="shrink-0" />
               <input
                 type="datetime-local"
                 value={selectedDate.toFormat("yyyy-MM-dd'T'HH:mm")}
                 onChange={handleDateChange}
-                style={{ background: 'transparent', border: 'none', color: 'var(--text-primary)', outline: 'none', cursor: 'pointer', width: '220px', fontSize: '0.9rem' }}
+                style={{ background: 'transparent', border: 'none', color: 'var(--text-primary)', outline: 'none', cursor: 'pointer', width: '100%', maxWidth: '220px', fontSize: '0.9rem' }}
               />
               {!useCurrentTime && (
                 <button
@@ -321,49 +321,49 @@ const App: React.FC = () => {
 
       <div className="flex flex-col items-center gap-6 mb-12">
         <nav className="nav-pill-group flex-wrap justify-center gap-2 sm:gap-4 mb-0 w-full sm:w-auto">
-        <button
-          onClick={() => setActiveTab('panchanga')}
-          className={`nav-pill ${activeTab === 'panchanga' ? 'active' : ''}`}
-        >
-          <CalendarIcon size={18} /> Daily Panchanga
-        </button>
-        <button
-          onClick={() => setActiveTab('validation')}
-          className={`nav-pill ${activeTab === 'validation' ? 'active' : ''}`}
-        >
-          <LineChart size={18} /> Engine Accuracy
-        </button>
-      </nav>
-      <div className="w-full sm:w-auto flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-4">
-        <div className="nav-pill-group">
-          {(['ss', 'modern', 'both'] as const).map(mode => (
-            <button
-              key={mode}
-              onClick={() => setViewMode(mode)}
-              className={`nav-pill text-[0.65rem] px-3! font-black uppercase ${viewMode === mode ? 'active' : ''}`}
-            >
-              {mode === 'ss' ? 'TRAD (SS)' : mode === 'modern' ? 'MOD (JPL)' : 'COMPARE'}
-            </button>
-          ))}
-        </div>
-
-        {viewMode !== 'ss' && (
-          <div className="flex items-center gap-2 bg-white/5 px-3 py-1.5 rounded-xl border border-white/10 shrink-0">
-            <select
-              value={modernAyanamsha}
-              onChange={(e) => setModernAyanamsha(e.target.value as AyanamshaMode)}
-              className="bg-transparent border-none text-accent-primary text-xs font-bold outline-none cursor-pointer"
-            >
-              <option value="lahiri" style={{ background: 'var(--bg-surface)' }}>Lahiri</option>
-              <option value="ss_lib" style={{ background: 'var(--bg-surface)' }}>Revati</option>
-              <option value="tropical" style={{ background: 'var(--bg-surface)' }}>Tropical</option>
-            </select>
+          <button
+            onClick={() => setActiveTab('panchanga')}
+            className={`nav-pill ${activeTab === 'panchanga' ? 'active' : ''}`}
+          >
+            <CalendarIcon size={18} /> Daily Panchanga
+          </button>
+          <button
+            onClick={() => setActiveTab('validation')}
+            className={`nav-pill ${activeTab === 'validation' ? 'active' : ''}`}
+          >
+            <LineChart size={18} /> Engine Accuracy
+          </button>
+        </nav>
+        <div className="w-full sm:w-auto flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-4">
+          <div className="nav-pill-group">
+            {(['ss', 'modern', 'both'] as const).map(mode => (
+              <button
+                key={mode}
+                onClick={() => setViewMode(mode)}
+                className={`nav-pill text-[0.65rem] px-3! font-black uppercase ${viewMode === mode ? 'active' : ''}`}
+              >
+                {mode === 'ss' ? 'TRAD (SS)' : mode === 'modern' ? 'MOD (JPL)' : 'COMPARE'}
+              </button>
+            ))}
           </div>
-        )}
-      </div>
-    </div>
 
-    {activeTab === "panchanga" ? (
+          {viewMode !== 'ss' && (
+            <div className="flex items-center gap-2 bg-white/5 px-3 py-1.5 rounded-xl border border-white/10 shrink-0">
+              <select
+                value={modernAyanamsha}
+                onChange={(e) => setModernAyanamsha(e.target.value as AyanamshaMode)}
+                className="bg-transparent border-none text-accent-primary text-xs font-bold outline-none cursor-pointer"
+              >
+                <option value="lahiri" style={{ background: 'var(--bg-surface)' }}>Lahiri</option>
+                <option value="ss_lib" style={{ background: 'var(--bg-surface)' }}>Revati</option>
+                <option value="tropical" style={{ background: 'var(--bg-surface)' }}>Tropical</option>
+              </select>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {activeTab === "panchanga" ? (
         <div className="grid-12 fade-in">
 
           {/* Chronology Master Card */}
@@ -864,7 +864,7 @@ const App: React.FC = () => {
       )}
 
       <footer style={{ marginTop: '4rem', padding: '2rem 1rem', borderTop: '1px solid var(--border-card)', textAlign: 'center', opacity: 0.6 }}>
-        <div style={{ fontSize: '0.8rem', marginBottom: '0.5rem', fontWeight: 700, color: 'var(--text-primary)' }}>SIDDHANTA PARITY v1.2.0 by <a href="https://nepdate.khumnath.com.np">nepdate</a></div>
+        <div style={{ fontSize: '0.8rem', marginBottom: '0.5rem', fontWeight: 700, color: 'var(--text-primary)' }}>Surya Siddhanta audit by <a href="https://nepdate.khumnath.com.np">nepdate</a></div>
         <div style={{ fontSize: '0.7rem', color: 'var(--text-dim)' }}>Traditional Surya Siddhanta calibrated against JPL JPL-grade Ephemeris (Drik Logic)</div>
       </footer>
     </div>

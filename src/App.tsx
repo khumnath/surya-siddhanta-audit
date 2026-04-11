@@ -217,18 +217,18 @@ const App: React.FC = () => {
             style={{ 
               background: 'rgba(255,255,255,0.03)', 
               border: '1px solid var(--border-subtle)', 
-              width: '32px', 
-              height: '32px', 
-              borderRadius: '8px',
+              width: '42px', 
+              height: '42px', 
+              borderRadius: '10px',
               padding: 0
             }}
             title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`}
             className="flex items-center justify-center hover:bg-white/10 transition-colors"
           >
             {theme === 'dark' ? (
-              <Sun size={16} className="text-accent-secondary" />
+              <Sun size={22} className="text-accent-secondary" />
             ) : (
-              <Moon size={16} className="text-accent-primary" />
+              <Moon size={22} className="text-accent-primary" />
             )}
           </button>
         </div>

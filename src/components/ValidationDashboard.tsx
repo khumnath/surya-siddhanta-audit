@@ -80,7 +80,7 @@ const ValidationDashboard: React.FC<ValidationProps> = ({ date, ssPositions, ssT
   return (
     <div className="fade-in" style={{display: 'flex', flexDirection: 'column', gap: '1.5rem'}}>
       {/* ─── Summary Accuracy Cards ─── */}
-      <div className="grid" style={{gridTemplateColumns: '1fr 1fr'}}>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="glass-card" style={{borderLeft: '4px solid var(--accent-success)'}}>
           <div className="flex-center" style={{marginBottom: '0.5rem'}}>
             <CheckCircle2 color="var(--accent-success)" size={20} />

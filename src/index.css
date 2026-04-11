@@ -1,4 +1,28 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-bg-base: var(--bg-base);
+  --color-bg-surface: var(--bg-surface);
+  --color-bg-card: var(--bg-card);
+
+  --color-accent-primary: var(--accent-primary);
+  --color-accent-secondary: var(--accent-secondary);
+  --color-accent-success: var(--accent-success);
+  --color-accent-error: var(--accent-error);
+
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-dim: var(--text-dim);
+
+  --color-border-subtle: var(--border-subtle);
+  --color-border-card: var(--border-card);
+
+  --font-main: "Inter", "system-ui", "sans-serif";
+  --font-display: "Outfit", "sans-serif";
+
+  --blur-glass: 16px;
+}
 
 :root {
   /* Default Theme (Dark) */
@@ -39,6 +63,50 @@
   --glass-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
 }
 
+/* Modern Tab & Pill System */
+.nav-pill-group {
+  display: flex;
+  background: rgba(255, 255, 255, 0.04);
+  padding: 0.35rem;
+  border-radius: 14px;
+  border: 1px solid var(--border-card);
+  width: fit-content;
+  gap: 0.25rem;
+  margin-bottom: 1rem;
+}
+
+:root[data-theme='light'] .nav-pill-group {
+  background: rgba(0, 0, 0, 0.03);
+}
+
+.nav-pill {
+  padding: 0.6rem 1.25rem;
+  border-radius: 10px;
+  border: none;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  background: transparent;
+  color: var(--text-secondary);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  white-space: nowrap;
+}
+
+.nav-pill:hover {
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.nav-pill.active {
+  background: var(--accent-primary);
+  color: white;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -72,10 +140,10 @@ h1, h2, h3, h4 {
   backdrop-filter: var(--glass-blur);
   -webkit-backdrop-filter: var(--glass-blur);
   border: 1px solid var(--border-card);
-  border-radius: 24px;
+  border-radius: 16px;
   box-shadow: var(--glass-shadow);
   overflow: hidden;
-  padding: 1.5rem;
+  padding: 2rem;
   transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
 }
 

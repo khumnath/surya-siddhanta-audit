@@ -186,44 +186,31 @@ const App: React.FC = () => {
     <div className="dashboard-container fade-in">
       {/* Parity Accuracy Bar */}
       {viewMode !== 'ss' && parityScore !== null && (
-        <div style={{
-          padding: '0.4rem 1.5rem',
-          background: 'rgba(255,255,255,0.03)',
-          borderBottom: '1px solid var(--border-subtle)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between px-4 py-3 sm:px-6 sm:py-2 bg-white/5 border-b border-border-subtle gap-3 sm:gap-0" style={{
           fontSize: '0.65rem',
           fontWeight: 700,
           letterSpacing: '0.1em',
           textTransform: 'uppercase'
         }}>
-          <div className="flex-center" style={{ gap: '0.6rem' }}>
-            <LineChart size={14} color="var(--accent-secondary)" />
+          <div className="flex items-center gap-2.5">
+            <LineChart size={14} color="var(--accent-secondary)" className="shrink-0" />
             <span style={{ color: 'var(--text-dim)' }}>Siddhanta-Modern Parity:</span>
             <span style={{ color: parityScore > 90 ? 'var(--accent-success)' : 'var(--accent-secondary)' }}>
               {parityScore.toFixed(1)}% Match
             </span>
           </div>
-          <div style={{ width: '200px', height: '4px', background: 'rgba(255,255,255,0.05)', borderRadius: '2px', overflow: 'hidden' }}>
+          <div className="w-full sm:w-[200px] h-1 bg-white/5 rounded-full overflow-hidden shrink-0">
             <div style={{ width: `${parityScore}%`, height: '100%', background: 'var(--accent-secondary)', transition: 'width 1s ease-out' }}></div>
           </div>
         </div>
       )}
 
-      <header className="header" style={{ marginBottom: '2.5rem', alignItems: 'center' }}>
-        <div className="logo" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            <Globe size={32} color="var(--accent-primary)" />
-            <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.6rem' }}>
-              <span style={{
-                fontSize: '1.8rem',
-                fontWeight: 900,
-                letterSpacing: '-0.02em',
-                background: 'linear-gradient(135deg, var(--text-primary) 0%, var(--accent-primary) 100%)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent'
-              }}>
+      <header className="flex flex-col lg:flex-row justify-between items-start lg:items-center py-6 mb-10 gap-8">
+        <div className="flex flex-col items-start w-full">
+          <div className="flex items-start sm:items-center gap-4 w-full">
+            <Globe size={32} color="var(--accent-primary)" className="shrink-0" />
+            <div className="flex flex-col sm:flex-row sm:items-baseline gap-2 sm:gap-4 w-full overflow-hidden">
+              <span className="text-xl sm:text-2xl md:text-3xl font-black tracking-tighter bg-linear-to-br from-text-primary to-accent-primary bg-clip-text text-transparent leading-tight truncate">
                 Siddhanta Parity by Nepdate
               </span>
               <span style={{
@@ -235,149 +222,121 @@ const App: React.FC = () => {
                 padding: '0.15rem 0.5rem',
                 borderRadius: '6px',
                 letterSpacing: '0.05em'
-              }}>
+              }} className="w-fit whitespace-nowrap">
                 v1.2.0
               </span>
             </div>
           </div>
-          <div style={{ fontSize: '0.6rem', color: 'var(--text-dim)', letterSpacing: '0.25em', fontWeight: 900, textTransform: 'uppercase', marginTop: '0.2rem', marginLeft: '3.2rem', opacity: 0.7 }}>Vedic Astronomical Audit</div>
+          <div className="text-[0.55rem] sm:text-[0.6rem] text-text-dim tracking-[0.2em] sm:tracking-[0.25em] font-black uppercase mt-2 sm:mt-1 ml-0 sm:ml-12 opacity-70">
+            Vedic Astronomical Audit
+          </div>
         </div>
 
-        <div className="flex-center" style={{ gap: '1rem' }}>
-          <div className="flex-center" style={{ gap: '0.8rem', background: 'rgba(255,255,255,0.05)', padding: '0.5rem 1rem', borderRadius: '12px', border: '1px solid var(--border-card)' }}>
-            <MapPin size={18} color="var(--accent-primary)" />
+        <div className="flex flex-col sm:grid sm:grid-cols-2 lg:flex lg:flex-row items-stretch lg:items-center gap-4 w-full lg:w-auto">
+          <div className="flex items-center gap-3 bg-white/5 px-4 py-2.5 rounded-xl border border-border-card shrink-0">
+            <MapPin size={18} color="var(--accent-primary)" className="shrink-0" />
             <select
               value={location.name}
               onChange={handleLocationChange}
-              style={{ background: 'transparent', border: 'none', color: 'var(--text-primary)', fontSize: '0.9rem', outline: 'none', cursor: 'pointer' }}
+              style={{ background: 'transparent', border: 'none', color: 'var(--text-primary)', outline: 'none', cursor: 'pointer', width: '100%', fontSize: '0.9rem' }}
             >
               {locations.map(loc => (
-                <option key={loc.name} value={loc.name} style={{ background: 'var(--bg-card)' }}>{loc.name}</option>
+                <option key={loc.name} value={loc.name} style={{ background: 'var(--bg-surface)' }}>{loc.name}</option>
               ))}
             </select>
           </div>
 
-          <div className="flex-center" style={{ gap: '0.8rem', background: 'rgba(255,255,255,0.05)', padding: '0.5rem 1rem', borderRadius: '12px', border: '1px solid var(--border-card)' }}>
-            <CalendarIcon size={18} color="var(--accent-secondary)" />
+          <div className="flex items-center gap-3 bg-white/5 px-4 py-2.5 rounded-xl border border-border-card min-w-0">
+            <CalendarIcon size={18} color="var(--accent-secondary)" className="shrink-0" />
             <input
               type="datetime-local"
               value={selectedDate.toFormat("yyyy-MM-dd'T'HH:mm")}
               onChange={handleDateChange}
-              style={{ background: 'transparent', border: 'none', color: 'var(--text-primary)', fontSize: '0.9rem', outline: 'none', cursor: 'pointer' }}
+              style={{ background: 'transparent', border: 'none', color: 'var(--text-primary)', outline: 'none', cursor: 'pointer', width: '100%', fontSize: '0.9rem' }}
             />
             {!useCurrentTime && (
               <button
                 onClick={() => setUseCurrentTime(true)}
-                style={{ background: 'var(--accent-primary)', border: 'none', color: 'white', fontSize: '0.7rem', padding: '0.2rem 0.5rem', borderRadius: '4px', cursor: 'pointer' }}
+                style={{ background: 'var(--accent-primary)', color: 'white', fontSize: '0.6rem', padding: '0.25rem 0.5rem', borderRadius: '4px' }}
+                className="hover:brightness-110 whitespace-nowrap"
               >
                 Reset
               </button>
             )}
           </div>
-          <button
-            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-            style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid var(--border-card)', color: 'var(--text-primary)', padding: '0.5rem', borderRadius: '12px' }}
-            title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`}
-          >
-            {theme === 'dark' ? <SunIcon size={20} /> : <Moon size={20} />}
-          </button>
-          <a
-            href="/docs/index.html"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{
-              background: 'rgba(99, 102, 241, 0.1)',
-              border: '1px solid var(--accent-primary)',
-              color: 'var(--accent-primary)',
-              padding: '0.5rem 1rem',
-              borderRadius: '12px',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.6rem',
-              fontSize: '0.8rem',
-              fontWeight: 600,
-              textDecoration: 'none'
-            }}
-            title="View Siddhanta Parity API Documentation"
-          >
-            <BookOpen size={18} /> API Docs
-          </a>
+
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+              style={{ background: 'rgba(255,255,255,0.05)', color: 'var(--text-primary)', border: '1px solid var(--border-card)', padding: '0.8rem', borderRadius: '12px' }}
+              title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`}
+              className="aspect-square flex items-center justify-center hover:bg-white/10 shrink-0"
+            >
+              {theme === 'dark' ? <SunIcon size={20} /> : <Moon size={20} />}
+            </button>
+            <a
+              href="/docs/index.html"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                background: 'rgba(99, 102, 241, 0.1)',
+                border: '1px solid var(--accent-primary)',
+                color: 'var(--accent-primary)',
+                padding: '0.8rem 1.2rem',
+                borderRadius: '12px',
+                fontSize: '0.8rem',
+                fontWeight: 600,
+                textDecoration: 'none'
+              }}
+              className="flex-1 lg:flex-none flex items-center justify-center gap-2 hover:bg-white/5 transition-all shadow-sm whitespace-nowrap min-w-fit"
+            >
+              <BookOpen size={18} /> API Docs
+            </a>
+          </div>
         </div>
       </header>
 
-      <nav style={{ display: 'flex', gap: '1rem', marginBottom: '2.5rem', flexWrap: 'wrap', alignItems: 'center' }}>
+      <nav className="nav-pill-group flex-wrap gap-2 sm:gap-4 mb-10 w-full sm:w-auto">
         <button
           onClick={() => setActiveTab('panchanga')}
-          className={activeTab === 'panchanga' ? 'active-tab' : 'inactive-tab'}
-          style={{
-            background: activeTab === 'panchanga' ? 'var(--accent-primary)' : 'transparent',
-            border: activeTab === 'panchanga' ? 'none' : '1px solid var(--border-card)',
-            padding: '0.6rem 1.2rem', borderRadius: '10px', cursor: 'pointer',
-            color: activeTab === 'panchanga' ? 'white' : 'var(--text-secondary)',
-            display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 500
-          }}
+          className={`nav-pill ${activeTab === 'panchanga' ? 'active' : ''}`}
         >
           <CalendarIcon size={18} /> Daily Panchanga
         </button>
         <button
           onClick={() => setActiveTab('validation')}
-          style={{
-            background: activeTab === 'validation' ? 'var(--accent-primary)' : 'transparent',
-            border: activeTab === 'validation' ? 'none' : '1px solid var(--border-card)',
-            padding: '0.6rem 1.2rem', borderRadius: '10px', cursor: 'pointer',
-            color: activeTab === 'validation' ? 'white' : 'var(--text-secondary)',
-            display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 500
-          }}
+          className={`nav-pill ${activeTab === 'validation' ? 'active' : ''}`}
         >
           <LineChart size={18} /> Engine Accuracy
         </button>
-        <div style={{ marginLeft: 'auto', display: 'flex', gap: '1rem', alignItems: 'center' }}>
-          <div style={{
-            display: 'flex',
-            background: 'var(--bg-dark)',
-            padding: '0.3rem',
-            borderRadius: '12px',
-            border: '1px solid var(--border-card)',
-            gap: '0.2rem'
-          }}>
-            {(['ss', 'modern', 'both'] as const).map(mode => (
-              <button
-                key={mode}
-                onClick={() => setViewMode(mode)}
-                style={{
-                  padding: '0.4rem 0.8rem',
-                  borderRadius: '8px',
-                  border: 'none',
-                  fontSize: '0.7rem',
-                  fontWeight: 600,
-                  cursor: 'pointer',
-                  background: viewMode === mode ? 'var(--accent-primary)' : 'transparent',
-                  color: viewMode === mode ? 'white' : 'var(--text-dim)',
-                  transition: 'all 0.2s ease',
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.05em'
-                }}
-              >
-                {mode === 'ss' ? 'Trad (SS)' : mode === 'modern' ? 'Mod (JPL)' : 'Compare'}
-              </button>
-            ))}
-          </div>
-
-          {viewMode !== 'ss' && (
-            <div className="flex-center" style={{ gap: '0.5rem', background: 'rgba(255,255,255,0.05)', padding: '0.4rem 0.8rem', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.1)' }}>
-              <select
-                value={modernAyanamsha}
-                onChange={(e) => setModernAyanamsha(e.target.value as AyanamshaMode)}
-                style={{ background: 'transparent', border: 'none', color: 'var(--accent-primary)', fontSize: '0.75rem', fontWeight: 600, outline: 'none', cursor: 'pointer' }}
-              >
-                <option value="lahiri" style={{ background: 'var(--bg-card)' }}>Lahiri</option>
-                <option value="ss_lib" style={{ background: 'var(--bg-card)' }}>Revati</option>
-                <option value="tropical" style={{ background: 'var(--bg-card)' }}>Tropical</option>
-              </select>
-            </div>
-          )}
-        </div>
       </nav>
+      <div className="ml-auto w-full sm:w-auto flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+        <div className="nav-pill-group">
+          {(['ss', 'modern', 'both'] as const).map(mode => (
+            <button
+              key={mode}
+              onClick={() => setViewMode(mode)}
+              className={`nav-pill text-[0.65rem] !px-3 font-black uppercase ${viewMode === mode ? 'active' : ''}`}
+            >
+              {mode === 'ss' ? 'TRAD (SS)' : mode === 'modern' ? 'MOD (JPL)' : 'COMPARE'}
+            </button>
+          ))}
+        </div>
+
+        {viewMode !== 'ss' && (
+          <div className="flex items-center gap-2 bg-white/5 px-3 py-1.5 rounded-xl border border-white/10 shrink-0">
+            <select
+              value={modernAyanamsha}
+              onChange={(e) => setModernAyanamsha(e.target.value as AyanamshaMode)}
+              className="bg-transparent border-none text-accent-primary text-xs font-bold outline-none cursor-pointer"
+            >
+              <option value="lahiri" style={{ background: 'var(--bg-surface)' }}>Lahiri</option>
+              <option value="ss_lib" style={{ background: 'var(--bg-surface)' }}>Revati</option>
+              <option value="tropical" style={{ background: 'var(--bg-surface)' }}>Tropical</option>
+            </select>
+          </div>
+        )}
+      </div>
 
       {activeTab === "panchanga" ? (
         <div className="grid-12 fade-in">
@@ -512,38 +471,49 @@ const App: React.FC = () => {
                 })}
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem', paddingTop: '1.5rem', borderTop: '1px solid var(--border-subtle)' }}>
-                <div>
-                  <div className="text-label" style={{ marginBottom: '0.8rem' }}>☀️ Solar (Sauramana)</div>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1rem' }}>
+              <div className="flex flex-col justify-self-center flex-nowrap gap-12 pt-8 border-t border-border-subtle overflow-x-auto pb-4 scrollbar-hide" style={{ overflowY: 'hidden' }}>
+                {/* 1. SOLAR GROUP */}
+                <div className="flex flex-col flex-nowrap gap-8">
+                  <div className="flex flex-col gap-1 pr-4 border-r border-white/5">
+                    <div className="text-[0.6rem] font-black tracking-[0.15em] text-accent-secondary flex items-center gap-2 uppercase">
+                      <Sun size={12} /> Solar (Sauramana)
+                    </div>
+                  </div>
+                  <div className="flex flex-col flex-nowrap gap-8">
                     <div>
-                      <div className="text-value" style={{ fontSize: '0.9rem' }}>{solarMonth}</div>
-                      <div className="text-label" style={{ fontSize: '0.5rem' }}>SUN RASHI</div>
+                      <div className="text-sm font-black text-text-primary tracking-tight whitespace-nowrap">{solarMonth}</div>
+                      <div className="text-[0.5rem] font-black text-text-dim uppercase tracking-widest mt-1">SUN RASHI</div>
                     </div>
                     <div>
-                      <div className="text-value" style={{ fontSize: '0.9rem', color: 'var(--accent-secondary)' }}>{bikramMonth}</div>
-                      <div className="text-label" style={{ fontSize: '0.5rem' }}>BS MONTH</div>
+                      <div className="text-sm font-black text-accent-secondary tracking-tight whitespace-nowrap">{bikramMonth}</div>
+                      <div className="text-[0.5rem] font-black text-text-dim uppercase tracking-widest mt-1">BS MONTH</div>
                     </div>
                     <div>
-                      <div className="text-value" style={{ fontSize: '0.8rem' }}>{season}</div>
-                      <div className="text-label" style={{ fontSize: '0.5rem' }}>SEASON</div>
+                      <div className="text-sm font-black text-text-primary tracking-tight whitespace-nowrap">{season}</div>
+                      <div className="text-[0.5rem] font-black text-text-dim uppercase tracking-widest mt-1">SEASON</div>
                     </div>
                     <div>
-                      <div className="text-value" style={{ fontSize: '0.8rem' }}>{ayana}</div>
-                      <div className="text-label" style={{ fontSize: '0.5rem' }}>AYANA</div>
+                      <div className="text-sm font-black text-text-primary tracking-tight whitespace-nowrap">{ayana}</div>
+                      <div className="text-[0.5rem] font-black text-text-dim uppercase tracking-widest mt-1">AYANA</div>
                     </div>
                   </div>
                 </div>
-                <div>
-                  <div className="text-label" style={{ marginBottom: '0.8rem' }}>🌙 Lunar (Chandramana)</div>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1rem' }}>
+
+                {/* 2. LUNAR GROUP */}
+                <div className="flex flex-col flex-nowrap gap-8 border-l border-white/10 pl-8">
+                  <div className="flex flex-col gap-1 pr-4 border-r border-white/5">
+                    <div className="text-[0.6rem] font-black tracking-[0.15em] text-accent-primary flex items-center gap-2 uppercase">
+                      <Moon size={12} /> Lunar (Chandramana)
+                    </div>
+                  </div>
+                  <div className="flex flex-col flex-nowrap gap-8">
                     <div>
-                      <div className="text-value" style={{ fontSize: '0.9rem' }}>{lunarMonth}</div>
-                      <div className="text-label" style={{ fontSize: '0.5rem' }}>LUNAR MONTH</div>
+                      <div className="text-sm font-black text-text-primary tracking-tight whitespace-nowrap">{lunarMonth}</div>
+                      <div className="text-[0.5rem] font-black text-text-dim uppercase tracking-widest mt-1">LUNAR MONTH</div>
                     </div>
                     <div>
-                      <div className="text-value" style={{ fontSize: '0.9rem' }}>{tithi.paksha}</div>
-                      <div className="text-label" style={{ fontSize: '0.5rem' }}>PAKSHA</div>
+                      <div className="text-sm font-black text-text-primary tracking-tight whitespace-nowrap">{tithi.paksha}</div>
+                      <div className="text-[0.5rem] font-black text-text-dim uppercase tracking-widest mt-1">PAKSHA</div>
                     </div>
                   </div>
                 </div>
@@ -554,31 +524,54 @@ const App: React.FC = () => {
           {/* Celestial Longitudes Card (Full Width) */}
           <div className="span-12">
             <div className="glass-card" style={{ borderTop: '4px solid var(--accent-primary)' }}>
-              <h2 className="flex-center" style={{ marginBottom: '1.5rem', fontSize: '1.1rem' }}>
-                <Layers color="var(--accent-primary)" /> Celestial Longitudes & Planet Positions
+              <h2 className="flex items-center gap-3 text-lg font-black tracking-tight mb-8">
+                <Layers size={24} className="text-accent-primary" />
+                <span className="uppercase tracking-widest text-sm opacity-80">Celestial Longitudes & Planet Positions</span>
               </h2>
-              <div className="grid-12" style={{ gap: '1.5rem' }}>
-                {/* Lagna Section */}
-                <div className="span-12" style={{ padding: '1rem', background: 'rgba(99, 102, 241, 0.05)', borderRadius: '14px', border: '1px solid var(--accent-primary)', marginBottom: '0.5rem' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <div>
-                      <div className="text-label" style={{ marginBottom: '0.4rem' }}>LAGNA (ASCENDANT)</div>
-                      <div className="text-value" style={{ fontSize: '1.2rem' }}>{ssLagna.rashiName}</div>
-                    </div>
-                    <div style={{ textAlign: 'right' }}>
-                      <div style={{ fontSize: '1rem', fontWeight: 700 }}>{Math.floor(ssLagna.degreeInRashi)}° {Math.floor((ssLagna.degreeInRashi % 1) * 60)}'</div>
-                      <div style={{ fontSize: '0.6rem', color: 'var(--text-dim)' }}>SIDDANTIC BASELINE</div>
-                    </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                {/* Lagna Section - Spans 2 Columns for Emphasis */}
+                <div className="md:col-span-2 bg-accent-primary/5 rounded-xl border border-accent-primary/20 shadow-sm relative group" style={{ padding: '2rem', overflow: 'visible' }}>
+                  <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity">
+                    <Layers size={100} />
                   </div>
-                  {viewMode === 'both' && modernLagna && (
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '0.8rem', paddingTop: '0.8rem', borderTop: '1px solid var(--border-subtle)' }}>
-                      <div className="text-value" style={{ fontSize: '0.9rem', color: 'var(--accent-primary)' }}>{modernLagna.rashiName} (JPL)</div>
-                      <div style={{ textAlign: 'right' }}>
-                        <div style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--accent-primary)' }}>{Math.floor(modernLagna.degreeInRashi)}° {Math.floor((modernLagna.degreeInRashi % 1) * 60)}'</div>
-                        <div style={{ fontSize: '0.5rem', color: 'var(--text-dim)' }}>MODERN DRIK PARITY</div>
+
+                  <div className="relative z-10 flex flex-col gap-8">
+                    {/* SS BLOCK */}
+                    {(viewMode === 'ss' || viewMode === 'both') && (
+                      <div className="flex justify-between items-end">
+                        <div className="flex flex-col gap-1">
+                          <div className="flex items-center gap-2 mb-1.5">
+                            <span className="text-[0.65rem] font-bold uppercase tracking-[0.2em] text-accent-primary">LAGNA (ASCENDANT)</span>
+                            <span className="px-2.5 py-1 rounded bg-accent-primary/10 text-[0.5rem] font-black text-accent-primary uppercase tracking-widest border border-accent-primary/20">SIDDANTIC BASELINE</span>
+                          </div>
+                          <div className="text-3xl font-black text-text-primary tracking-tight">{ssLagna.rashiName}</div>
+                        </div>
+                        <div className="text-right">
+                          <div className="text-4xl font-mono font-black text-text-primary tracking-[-0.05em] drop-shadow-sm">
+                            {Math.floor(ssLagna.degreeInRashi)}° {Math.floor((ssLagna.degreeInRashi % 1) * 60)}'
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                  )}
+                    )}
+
+                    {(viewMode === 'modern' || viewMode === 'both') && modernLagna && (
+                      <div className={`${viewMode === 'both' ? 'pt-8 border-t border-accent-primary/10' : ''} flex justify-between items-end`}>
+                        <div className="flex flex-col gap-1">
+                          <div className="flex items-center gap-2 mb-1.5">
+                            <span className="text-[0.65rem] font-bold uppercase tracking-[0.2em] text-accent-primary/80">Modern (JPL)</span>
+                            <span className="px-2.5 py-1 rounded bg-white/5 text-[0.5rem] font-black text-text-secondary uppercase tracking-widest border border-white/10">MODERN DRIK PARITY</span>
+                          </div>
+                          <div className="text-2xl font-black text-accent-primary">{modernLagna.rashiName}</div>
+                        </div>
+                        <div className="text-right">
+                          <div className="text-3xl font-mono font-black text-accent-primary tracking-tight drop-shadow-sm">
+                            {Math.floor(modernLagna.degreeInRashi)}° {Math.floor((modernLagna.degreeInRashi % 1) * 60)}'
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 </div>
 
                 {/* Planets Grid */}
@@ -586,19 +579,34 @@ const App: React.FC = () => {
                   const modLon = modernPositions ? (modernPositions as any)[body] : null;
                   const modRashi = modLon !== null ? longitudeToRashiDetailed(modLon) : null;
                   return (
-                    <div key={body} className="span-3" style={{ padding: '1rem', background: 'rgba(255,255,255,0.02)', borderRadius: '12px', border: '1px solid var(--border-subtle)' }}>
-                      <div className="text-label" style={{ fontSize: '0.6rem', marginBottom: '0.5rem' }}>{body.toUpperCase()}</div>
-                      <div className="text-value" style={{ fontSize: '0.9rem', marginBottom: '0.4rem' }}>{pos.name}</div>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <div style={{ fontSize: '0.75rem', fontWeight: 700 }}>{pos.degrees}° {pos.minutes}'</div>
-                        <div style={{ fontSize: '0.5rem', color: 'var(--text-dim)' }}>SS</div>
+                    <div key={body} className="bg-white/5 rounded-xl border border-border-subtle hover:border-border-card transition-all group shadow-sm flex flex-col" style={{ padding: '2rem', gap: viewMode === 'both' ? '2.5rem' : '1.5rem', overflow: 'visible' }}>
+                      {/* HEADER */}
+                      <div className="flex justify-between items-center mb-[-0.5rem]">
+                        <div className="text-[0.8rem] font-bold uppercase tracking-[0.2em] text-text-primary/70 group-hover:text-accent-primary transition-colors">{body}</div>
+                        <span className="text-[0.55rem] font-black text-text-secondary uppercase tracking-[0.15em]">ELEMENT</span>
                       </div>
-                      {modRashi && (
-                        <div style={{ marginTop: '0.5rem', paddingTop: '0.5rem', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
-                          <div style={{ fontSize: '0.75rem', color: 'var(--accent-primary)', fontWeight: 600 }}>{modRashi.name}</div>
-                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <div style={{ fontSize: '0.65rem', color: 'var(--accent-primary)' }}>{modRashi.degrees}° {modRashi.minutes}'</div>
-                            <div style={{ fontSize: '0.45rem', color: 'var(--accent-primary)', opacity: 0.7 }}>JPL</div>
+
+                      {/* SS BLOCK */}
+                      {(viewMode === 'ss' || viewMode === 'both') && (
+                        <div className="flex flex-col gap-3">
+                          <div className="text-[0.6rem] font-black uppercase tracking-[0.2em] text-text-dim/80">Traditional (SS)</div>
+                          <div className="flex justify-between items-end">
+                            <div className="text-2xl font-black text-text-primary tracking-tight">{pos.name}</div>
+                            <div className="text-3xl font-mono font-black text-text-primary tracking-tighter line-clamp-1 drop-shadow-sm">
+                              {pos.degrees}° {pos.minutes}'
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
+                      {(viewMode === 'modern' || viewMode === 'both') && modRashi && (
+                        <div className={`${viewMode === 'both' ? 'pt-8 border-t border-white/5' : ''} flex flex-col gap-3`}>
+                          <div className="text-[0.6rem] font-black text-accent-primary uppercase tracking-[0.2em]">Modern (JPL)</div>
+                          <div className="flex justify-between items-end">
+                            <span className="text-2xl font-black text-accent-primary">{modRashi.name}</span>
+                            <div className="text-2xl font-mono font-black text-accent-primary tracking-tighter line-clamp-1 drop-shadow-sm">
+                              {modRashi.degrees}° {modRashi.minutes}'
+                            </div>
                           </div>
                         </div>
                       )}
@@ -611,110 +619,96 @@ const App: React.FC = () => {
 
           {/* Daily Rhythm Master Card */}
           <div className="span-12">
-            <div className="glass-card fade-in" style={{ borderTop: '4px solid var(--accent-secondary)' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem', flexWrap: 'wrap', gap: '1rem' }}>
-                <h2 className="flex-center" style={{ fontSize: '1.2rem' }}>
-                  <Clock size={24} color="var(--accent-secondary)" /> Daily Solar-Lunar Rhythm
+            <div className="glass-card fade-in" style={{ borderTop: '4px solid var(--accent-secondary)', padding: '2.5rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2.5rem', flexWrap: 'wrap', gap: '1.5rem' }}>
+                <h2 className="flex items-center gap-3 text-lg font-black tracking-tight">
+                  <Clock size={24} className="text-accent-secondary" />
+                  <span className="uppercase tracking-widest text-sm opacity-80">Daily Solar-Lunar Rhythm</span>
                 </h2>
-                <div className="flex-center" style={{ gap: '1rem', flexWrap: 'wrap' }}>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.2rem', alignItems: 'center', background: 'rgba(25, 118, 210, 0.05)', padding: '0.6rem 1rem', borderRadius: '14px', border: '1px solid rgba(25, 118, 210, 0.1)' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-                      <Sunrise size={18} color="var(--accent-secondary)" />
-                      <span style={{ fontSize: '1rem', fontWeight: 900, color: 'var(--text-primary)' }}>{formatHhhMm(modernTimings?.sunriseHours || currentTimings.sunriseHours)}</span>
+                <div className="flex items-center gap-6 flex-wrap">
+                  {/* Sunrise Box */}
+                  <div className="flex flex-col gap-1 items-center bg-accent-secondary/5 px-6 py-3 rounded-xl border border-accent-secondary/20 min-w-[120px]">
+                    <div className="flex items-center gap-3">
+                      <Sunrise size={20} className="text-accent-secondary" />
+                      <span className="text-xl font-bold text-text-primary tracking-tight">{formatHhhMm(modernTimings?.sunriseHours || currentTimings.sunriseHours)}</span>
                     </div>
-                    <div style={{ fontSize: '0.55rem', fontWeight: 800, color: 'var(--text-dim)', letterSpacing: '0.05em' }}>
+                    <div className="text-[0.6rem] font-black text-accent-secondary/70 uppercase tracking-widest">
                       SS: {formatHhhMm(panchangaTimings.sunriseHours)}
                     </div>
                   </div>
 
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.2rem', alignItems: 'center', background: 'rgba(255, 87, 34, 0.05)', padding: '0.6rem 1rem', borderRadius: '14px', border: '1px solid rgba(255, 87, 34, 0.1)' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-                      <Sunset size={18} color="var(--accent-error)" />
-                      <span style={{ fontSize: '1rem', fontWeight: 900, color: 'var(--text-primary)' }}>{formatHhhMm(modernTimings?.sunsetHours || currentTimings.sunsetHours)}</span>
+                  {/* Sunset Box */}
+                  <div className="flex flex-col gap-1 items-center bg-accent-error/5 px-6 py-3 rounded-xl border border-accent-error/20 min-w-[120px]">
+                    <div className="flex items-center gap-3">
+                      <Sunset size={20} className="text-accent-error" />
+                      <span className="text-xl font-bold text-text-primary tracking-tight">{formatHhhMm(modernTimings?.sunsetHours || currentTimings.sunsetHours)}</span>
                     </div>
-                    <div style={{ fontSize: '0.55rem', fontWeight: 800, color: 'var(--text-dim)', letterSpacing: '0.05em' }}>
+                    <div className="text-[0.6rem] font-black text-accent-error/70 uppercase tracking-widest">
                       SS: {formatHhhMm(panchangaTimings.sunsetHours)}
                     </div>
                   </div>
 
-                  <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)', fontWeight: 700, padding: '0 0.5rem' }}>
-                    MODERN DAY: {(modernTimings?.dayLengthHours || currentTimings.dayLengthHours).toFixed(2)}h
+                  <div className="px-4 py-2 bg-white/5 rounded-lg border border-white/10">
+                    <span className="text-[0.7rem] font-black text-text-primary uppercase tracking-widest opacity-90">Modern Day: </span>
+                    <span className="text-sm font-bold text-accent-primary">{(modernTimings?.dayLengthHours || currentTimings.dayLengthHours).toFixed(2)}h</span>
                   </div>
                 </div>
               </div>
 
-              <div className="grid-12" style={{ gap: '1.5rem' }}>
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
                 {/* 1. UNIFIED RHYTHM CENTER (Transitions + Audit) */}
-                <div className="span-8" style={{ borderRight: '1px solid var(--border-subtle)', paddingRight: '1.5rem', overflowX: 'hidden' }}>
+                <div className="lg:col-span-8 border-r border-border-subtle pr-8 overflow-visible">
 
                   {/* TOP: PANCHANGA TRANSITIONS GRID */}
-                  <div className="text-label" style={{ marginBottom: '1.2rem', fontSize: '0.85rem', fontWeight: 800, color: 'var(--text-primary)' }}>Sunrise to Sunrise Transitions</div>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '0.8rem', marginBottom: '2.5rem' }}>
+                  <div className="text-label mb-6 text-sm font-bold uppercase tracking-widest flex items-center gap-3">
+                    <Sunrise size={18} className="text-text-dim" /> Sunrise to Sunrise Transitions
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
                     {(['tithis', 'nakshatras', 'yogas', 'karanas'] as const).map((key) => {
                       const label = key.toUpperCase().slice(0, -1);
                       const modItems = modernTimings?.[key];
                       const tradItems = panchangaTimings[key];
                       return (
-                        <div key={key} style={{ background: 'rgba(255,255,255,0.015)', padding: '1rem', borderRadius: '14px', border: '1px solid var(--border-subtle)', boxShadow: '0 4px 20px rgba(0,0,0,0.1)' }}>
-                          <div style={{ fontSize: '0.7rem', fontWeight: 900, color: 'var(--accent-secondary)', marginBottom: '1rem', letterSpacing: '0.12em', textTransform: 'uppercase' }}>{label}</div>
-                          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
+                        <div key={key} className="bg-white/5 rounded-xl border border-border-subtle flex flex-col gap-6" style={{ padding: '2.5rem', overflow: 'visible' }}>
+                          <div className="text-[0.75rem] font-black color-text-dim uppercase tracking-[0.2em] opacity-60 flex justify-between items-center">
+                            {label}
+                            <span className="text-[0.45rem] px-2 py-0.5 rounded-md bg-white/10 uppercase tracking-widest">ELEMENT</span>
+                          </div>
+
+                          <div className="flex flex-col gap-8">
                             {modItems?.slice(0, 2).map((modIt: any, i: number) => {
                               const tradIt = tradItems?.[i];
                               const hasNameDrift = tradIt && modIt.name !== tradIt.name;
                               const isCurrent = i === 0;
 
                               return (
-                                <div key={i} style={{
-                                  opacity: isCurrent ? 1 : 0.7,
-                                  padding: '1rem',
-                                  background: isCurrent ? 'rgba(255,255,255,0.03)' : 'transparent',
-                                  borderRadius: '12px',
-                                  border: isCurrent ? '1px solid rgba(255, 152, 0, 0.2)' : '1px solid transparent',
-                                  borderLeft: isCurrent ? '4px solid var(--accent-secondary)' : '1px solid transparent'
-                                }}>
-                                  {/* MODERN ELEMENT */}
-                                  <div style={{ marginBottom: '0.4rem' }}>
-                                    <div style={{
-                                      fontSize: '0.45rem',
-                                      fontWeight: 900,
-                                      color: 'var(--accent-primary)',
-                                      opacity: 0.8,
-                                      letterSpacing: '0.1em',
-                                      background: 'rgba(99, 102, 241, 0.08)',
-                                      padding: '0.1rem 0.4rem',
-                                      borderRadius: '4px',
-                                      display: 'inline-block',
-                                      textTransform: 'uppercase',
-                                      marginBottom: '0.2rem'
-                                    }}>
-                                      JPL Modern
+                                <div key={i} className={`flex flex-col gap-5 ${isCurrent ? 'opacity-100' : 'opacity-60 grayscale-[0.5]'}`}>
+                                  {/* MODERN BLOCK */}
+                                  <div className="flex flex-col gap-3">
+                                    <div className="flex justify-between items-center">
+                                      <div className="text-[0.55rem] font-black uppercase tracking-[0.2em] text-accent-primary">JPL MODERN</div>
+                                      {!!modIt.endAhargana && (
+                                        <span className="px-2 py-0.5 rounded bg-accent-secondary/10 text-[0.6rem] font-black text-accent-secondary uppercase tracking-widest border border-accent-secondary/20">
+                                          Ends {modIt.endTimeStr}
+                                        </span>
+                                      )}
                                     </div>
-                                    <div style={{ fontWeight: 900, fontSize: '1.2rem', color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>{modIt.name}</div>
-                                  </div>
-
-                                  <div style={{
-                                    fontSize: '0.85rem',
-                                    color: modIt.endAhargana ? 'var(--accent-secondary)' : 'var(--text-dim)',
-                                    fontFamily: 'monospace',
-                                    fontWeight: 800,
-                                    background: modIt.endAhargana ? 'rgba(255, 152, 0, 0.1)' : 'rgba(255,255,255,0.05)',
-                                    padding: '0.25rem 0.6rem',
-                                    borderRadius: '6px',
-                                    display: 'inline-block'
-                                  }}>
-                                    {modIt.endAhargana ? `Ends ${modIt.endTimeStr}` : 'Remaining'}
+                                    <div className="text-lg font-black text-text-primary tracking-tight">{modIt.name}</div>
                                   </div>
 
                                   {/* TRADITIONAL COMPARISON */}
                                   {tradIt && (
-                                    <div style={{ marginTop: '1rem', paddingTop: '0.8rem', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
-                                      <div style={{ fontSize: '0.6rem', fontWeight: 800, color: 'var(--text-dim)', textTransform: 'uppercase', marginBottom: '0.4rem', letterSpacing: '0.05em' }}>Traditional (SS) Baseline</div>
-                                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                        <div style={{ fontWeight: 800, fontSize: '0.8rem', color: hasNameDrift ? 'var(--accent-error)' : 'var(--text-dim)' }}>
+                                    <div className="pt-6 border-t border-white/5 flex flex-col gap-3">
+                                      <div className="flex justify-between items-center">
+                                        <span className="text-[0.55rem] font-black text-text-secondary uppercase tracking-widest opacity-80">TRADITIONAL (SS) BASELINE</span>
+                                        {hasNameDrift && <span title="Drift Detected" className="text-accent-error text-[0.8rem]">⚠️</span>}
+                                      </div>
+                                      <div className="flex justify-between items-end">
+                                        <div className={`text-base font-black ${hasNameDrift ? 'text-accent-error' : 'text-text-dim'}`}>
                                           {tradIt.name}
                                         </div>
-                                        <div style={{ fontSize: '0.75rem', fontWeight: 700, fontFamily: 'monospace', color: hasNameDrift ? 'var(--accent-error)' : 'var(--text-dim)' }}>
-                                          {tradIt.endAhargana ? `${tradIt.endTimeStr}` : '→'}
+                                        <div className={`text-sm font-mono font-black ${hasNameDrift ? 'text-accent-error' : 'text-text-dim'}`}>
+                                          {!!tradIt.endAhargana ? tradIt.endTimeStr : '→'}
                                         </div>
                                       </div>
                                     </div>
@@ -728,33 +722,21 @@ const App: React.FC = () => {
                     })}
                   </div>
 
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.2rem', paddingTop: '1.5rem', borderTop: '1px solid var(--border-subtle)' }}>
-                    <div className="text-label" style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', fontSize: '1rem', fontWeight: 800, color: 'var(--text-primary)' }}>
-                      <Layers size={18} color="var(--accent-secondary)" /> Prosperity Audit (28-System / Abhijit Aware)
+                  <div className="flex justify-between items-center mb-6 pt-10 border-t border-border-subtle">
+                    <div className="text-sm font-bold uppercase tracking-widest flex items-center gap-3 text-text-primary">
+                      <Layers size={18} className="text-accent-secondary" /> Prosperity Audit (28-System / Abhijit Aware)
                     </div>
                   </div>
 
-                  <div style={{ display: 'flex', flexDirection: 'column', overflowX: 'auto' }}>
+                  <div className="flex flex-col overflow-x-auto">
                     {/* Header Row */}
-                    <div style={{
-                      display: 'grid',
-                      gridTemplateColumns: '1fr 1.5fr 1.5fr',
-                      gap: '1rem',
-                      padding: '1rem 0.8rem',
-                      background: 'rgba(255,255,255,0.02)',
-                      borderBottom: '2px solid var(--border-subtle)',
-                      fontSize: '0.65rem',
-                      fontWeight: 800,
-                      textTransform: 'uppercase',
-                      letterSpacing: '0.1em',
-                      color: 'var(--text-dim)'
-                    }}>
+                    <div className="grid grid-cols-[1fr_1.5fr_1.5fr] gap-4 px-6 py-4 bg-white/5 border-b-2 border-border-subtle text-[0.65rem] font-black uppercase tracking-[0.15em] text-text-dim/80">
                       <div>UTC/Local Timing</div>
                       <div>Modern Engine (Sidereal)</div>
                       <div>Siddhanta (Traditional)</div>
                     </div>
 
-                    <div style={{ display: 'flex', flexDirection: 'column', maxHeight: '450px', overflowY: 'auto', border: '1px solid var(--border-subtle)', borderTop: 'none', borderRadius: '0 0 10px 10px' }}>
+                    <div className="flex flex-col max-h-[500px] overflow-y-auto border border-border-subtle border-t-0 rounded-b-xl" style={{ overflowX: 'hidden' }}>
                       {modernTimings?.anandadi28.map((modY, i) => {
                         const ssY = panchangaTimings.anandadi28[i];
                         const hasDrift = ssY && modY.name !== ssY.name;
@@ -762,49 +744,35 @@ const App: React.FC = () => {
                         const isInauspiciousMod = modY.type === 'inauspicious';
 
                         return (
-                          <div key={i} style={{
-                            display: 'grid',
-                            gridTemplateColumns: '1fr 1.5fr 1.5fr',
-                            gap: '1rem',
-                            alignItems: 'center',
-                            padding: '1rem 0.8rem',
-                            borderBottom: '1px solid var(--border-subtle)',
-                            background: hasDrift ? 'rgba(239, 68, 68, 0.04)' : (i === 0 ? 'rgba(255,152,0,0.04)' : 'transparent'),
-                            transition: 'all 0.2s ease'
-                          }}>
-
+                          <div key={i} className={`grid grid-cols-[1fr_1.5fr_1.5fr] gap-4 items-center px-6 py-5 border-b border-border-subtle transition-all duration-200 ${hasDrift ? 'bg-accent-error/5' : (i === 0 ? 'bg-accent-secondary/5' : 'hover:bg-white/[0.02]')}`}>
                             {/* 1. MODERN TIMING (Baseline) */}
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.2rem' }}>
-                              <div style={{ fontSize: '0.85rem', fontWeight: 800, fontFamily: 'monospace', color: 'var(--accent-primary)' }}>
+                            <div className="flex flex-col gap-1">
+                              <div className="text-[0.9rem] font-black font-mono text-accent-primary">
                                 {modY.endAhargana ? `${modY.endTimeStr}` : 'Remaining'}
                               </div>
-                              <div style={{ fontSize: '0.55rem', fontWeight: 700, color: 'var(--text-dim)', letterSpacing: '0.05em' }}>MODERN</div>
+                              <div className="text-[0.55rem] font-black text-text-dim uppercase tracking-widest opacity-60">MODERN</div>
                             </div>
 
                             {/* 2. MODERN OUTPUT (REFERENCE) */}
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-                              {isAuspiciousMod ? <div style={{ width: '8px', height: '8px', background: 'var(--accent-success)', borderRadius: '50%' }}></div> : <div style={{ width: '8px', height: '8px', background: 'var(--accent-error)', borderRadius: '50%' }}></div>}
-                              <span style={{ fontSize: '1rem', fontWeight: 900, color: isAuspiciousMod ? 'var(--accent-success)' : isInauspiciousMod ? 'var(--accent-error)' : 'var(--text-primary)', textTransform: 'uppercase' }}>
+                            <div className="flex items-center gap-3">
+                              <div className={`w-2.5 h-2.5 rounded-full ${isAuspiciousMod ? 'bg-accent-success shadow-[0_0_8px_rgba(16,185,129,0.4)]' : 'bg-accent-error shadow-[0_0_8px_rgba(239,68,68,0.4)]'}`}></div>
+                              <span className={`text-[1.1rem] font-black uppercase tracking-tight ${isAuspiciousMod ? 'text-accent-success' : isInauspiciousMod ? 'text-accent-error' : 'text-text-primary'}`}>
                                 {modY?.name || '---'}
                               </span>
                             </div>
 
                             {/* 3. SIDDHANTA (AUDIT TARGET) */}
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.2rem' }}>
-                              <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-                                <span style={{ fontSize: '0.9rem', fontWeight: 800, color: hasDrift ? 'var(--accent-error)' : 'var(--text-dim)', textTransform: 'uppercase', opacity: 1 }}>
+                            <div className="flex flex-col gap-1">
+                              <div className="flex items-center gap-3">
+                                <span className={`text-[0.95rem] font-black uppercase ${hasDrift ? 'text-accent-error' : 'text-text-secondary'}`}>
                                   {ssY?.name || '---'}
                                 </span>
-                                {hasDrift && (
-                                  <span title="Planetary Drift Detected" style={{ color: 'var(--accent-error)', fontSize: '1rem' }}>
-                                    ⚠️
-                                  </span>
-                                )}
+                                {hasDrift && <span title="Planetary Drift Detected" className="text-accent-error text-lg drop-shadow-sm">⚠️</span>}
                               </div>
-                              <div style={{ fontSize: '0.75rem', fontWeight: 700, fontFamily: 'monospace', color: 'var(--accent-secondary)', opacity: 0.9 }}>
+                              <div className="text-[0.8rem] font-black font-mono text-accent-secondary">
                                 {ssY?.endAhargana ? `Ends ${ssY.endTimeStr}` : 'Remaining'}
                               </div>
-                              {hasDrift && <div style={{ fontSize: '0.55rem', color: 'var(--accent-error)', fontWeight: 800, letterSpacing: '0.05em' }}>SIDDHANTA DRIFT</div>}
+                              {hasDrift && <div className="text-[0.55rem] text-accent-error font-black uppercase tracking-widest mt-1">SIDDHANTA DRIFT</div>}
                             </div>
                           </div>
                         );
@@ -814,33 +782,35 @@ const App: React.FC = () => {
                 </div>
 
                 {/* 2. Muhurtas & Anandadi Side Panel */}
-                <div className="span-4">
-                  <div style={{ marginBottom: '2rem' }}>
-                    <div className="text-label" style={{ marginBottom: '1rem' }}>Auspicious Kaal (Muhurta)</div>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', paddingRight: '0.5rem' }}>
+                <div className="lg:col-span-4 flex flex-col gap-8">
+                  <div>
+                    <div className="text-sm font-bold uppercase tracking-widest mb-6 text-text-primary flex items-center gap-3">
+                      <Clock size={18} className="text-accent-success" /> Auspicious Kaal (Muhurta)
+                    </div>
+                    <div className="flex flex-col gap-3">
                       {ssMuhurtas.map((m: any, i: number) => {
                         const isAuspicious = m.type === 'auspicious';
                         const isInauspicious = m.type === 'inauspicious';
                         const modM = modernMuhurtas?.find((mm: any) => mm.name === m.name);
 
-                        let borderStyle = '3px solid var(--text-dim)';
-                        if (isAuspicious) borderStyle = '3px solid var(--accent-success)';
-                        if (isInauspicious) borderStyle = '3px solid var(--accent-error)';
+                        let borderStyle = 'border-l-4 border-text-dim/30';
+                        if (isAuspicious) borderStyle = 'border-l-4 border-accent-success';
+                        if (isInauspicious) borderStyle = 'border-l-4 border-accent-error';
 
-                        let bgColor = 'rgba(255,255,255,0.02)';
-                        if (isAuspicious) bgColor = 'rgba(16, 185, 129, 0.05)';
-                        if (isInauspicious) bgColor = 'rgba(239, 68, 68, 0.05)';
+                        let bgColor = 'bg-white/5';
+                        if (isAuspicious) bgColor = 'bg-accent-success/5';
+                        if (isInauspicious) bgColor = 'bg-accent-error/5';
 
                         return (
-                          <div key={i} style={{ padding: '0.6rem 0.8rem', background: bgColor, borderRadius: '10px', borderLeft: borderStyle }}>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                          <div key={i} className={`p-5 ${bgColor} rounded-xl border border-border-subtle ${borderStyle} transition-all hover:border-white/10`}>
+                            <div className="flex justify-between items-center">
                               <div>
-                                <span style={{ fontSize: '0.75rem', fontWeight: 700 }}>{m.name}</span>
-                                <div style={{ fontSize: '0.45rem', opacity: 0.6, marginTop: '0.2rem', textTransform: 'uppercase' }}>{m.category}</div>
+                                <span className={`text-[0.9rem] font-black tracking-tight ${isAuspicious ? 'text-accent-success' : isInauspicious ? 'text-accent-error' : 'text-text-primary'}`}>{m.name}</span>
+                                <div className="text-[0.55rem] font-black text-text-dim uppercase tracking-widest mt-1 opacity-70">{m.category}</div>
                               </div>
-                              <div style={{ textAlign: 'right' }}>
-                                <div style={{ fontSize: '0.6rem', fontFamily: 'monospace', color: 'var(--text-dim)' }}>{formatHhhMm(m.startHours)} - {formatHhhMm(m.endHours)} <span style={{ fontSize: '0.45rem' }}>SS</span></div>
-                                {modM && <div style={{ fontSize: '0.55rem', fontFamily: 'monospace', color: 'var(--accent-primary)' }}>{formatHhhMm(modM.startHours)} - {formatHhhMm(modM.endHours)} <span style={{ fontSize: '0.45rem' }}>MOD</span></div>}
+                              <div className="text-right flex flex-col gap-1">
+                                <div className="text-[0.75rem] font-mono font-black text-text-secondary">{formatHhhMm(m.startHours)} - {formatHhhMm(m.endHours)} <span className="text-[0.5rem] opacity-60">SS</span></div>
+                                {modM && <div className="text-[0.7rem] font-mono font-black text-accent-primary">{formatHhhMm(modM.startHours)} - {formatHhhMm(modM.endHours)} <span className="text-[0.45rem] opacity-60">MOD</span></div>}
                               </div>
                             </div>
                           </div>
@@ -850,8 +820,9 @@ const App: React.FC = () => {
                   </div>
 
                   {/* Extra space reserved for future astronomical plugins */}
-                  <div style={{ marginTop: '2rem', padding: '1rem', border: '1px dashed var(--border-subtle)', borderRadius: '12px', textAlign: 'center', opacity: 0.3 }}>
-                    <div style={{ fontSize: '0.6rem', color: 'var(--text-primary)', letterSpacing: '0.1em' }}>ASTRONOMICAL PLUGIN SPACE</div>
+                  <div className="mt-4 p-8 border border-dashed border-border-subtle rounded-xl text-center opacity-30 flex flex-col items-center gap-3">
+                    <Layers size={24} className="text-text-dim" />
+                    <div className="text-[0.65rem] font-black text-text-primary uppercase tracking-[0.2em]">ASTRONOMICAL PLUGIN SPACE</div>
                   </div>
                 </div>
               </div>

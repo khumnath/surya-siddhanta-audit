@@ -44,7 +44,23 @@ The documentation is unique because it is dynamically enriched:
 - [x] **Calendar**: Fixed Nepal Sambat year transition logic.
 - [x] **Branding**: Customized static site documentation is production-ready.
 
-## 7. Knowledge Transfer for Future Agents
+## 7. The Siddhantic Test Process (Audit Pipeline)
+The project utilizes a specific two-stage pipeline to ensure zero-drift during code refactoring:
+
+### Stage 1: Baseline Generation
+Before making changes, establish a \"Ground Truth\" for the current engine state:
+1.  **Command**: `npm run dump -- --date=YYYY-MM-DD --time=HH:MM:SS`
+2.  **Location**: By default, it uses Kathmandu [27.7, 85.32]. Custom coordinates can be passed via `--lat` and `--lon`.
+3.  **Artifact**: A JSON snapshot is generated in `scratch/snapshots/`.
+
+### Stage 2: Regression Verification
+After modifying formulas or constants, verify that the output still matches the baseline:
+1.  **Command**: `npm run verify`
+2.  **Workflow**: Select the baseline index from the interactive list.
+3.  **Alternative**: Use `npm run verify -- <path_to_snapshot>` for direct verification.
+4.  **Tolerance**: The system enforces a $10^{-6}$ degree tolerance. Any \"FAILURE\" must be mathematically justified (e.g., if you are intentionally refining a constant).
+
+## 8. Knowledge Transfer for Future Agents
 - **Identifiers**: Celestial bodies MUST use `ALL_CAPS` (e.g., `Body.SUN`, `Body.JUPITER`).
 - **Tolerances**: Floating-point comparisons must use a $10^{-6}$ buffer as defined in `verify_data.ts`.
 - **References**: Always consult `reference/surya_siddhanta_english_ocr.pdf` when verifying formula constants.

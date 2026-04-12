@@ -1,12 +1,15 @@
 /**
- * Surya-Siddhanta Mean Motions
- * ============================
+ * Siddhantic Mean Motions (Madhyama-Gati)
+ * =======================================
  * 
- * Calculates mean longitudes (Madhyama-Graha) of celestial bodies 
- * based on the Ahargana (number of civil days elapsed since the epoch).
+ * Calculates the mean longitudes of celestial bodies based on the Ahargana 
+ * (civil days elapsed since the epoch).
  * 
- * [Ch. I, v.29-36] Each body completes a specific number of revolutions 
- * (Bhagana) per Mahayuga.
+ * [Ch. I, v.29-37] Defines the 'Bhagana' (sidereal revolutions) for each 
+ * celestial body within a Mahayuga. These discrete counts are the absolute 
+ * source for planetary speeds in the Siddhanta.
+ * [Ch. I, v.53-54] Establishes the 'Graha-anayana' (planetary calculation) 
+ * rule: Longitude = (Revolutions * Days Elapsed) / Total Days in Yuga.
  */
 
 import {
@@ -23,28 +26,45 @@ import {
 } from '../core/constants';
 
 /**
- * Identifiers for celestial bodies and their secondary points (Node/Apsis).
+ * Identifiers for celestial bodies and their calculation points.
  */
 export const Body = {
+  /** The Sun (Surya). Mean motion is the fundamental sidereal year. */
   SUN: 'SUN',
+  /** The Moon (Chandra). The fastest moving scriptural body. */
   MOON: 'MOON',
+  /** Mars (Mangala). [Ch. I, v.30] */
   MARS: 'MARS',
-  /** Mercury's Sighra (fast epicycle). Note: Mean Budha longitude matches Sun. */
+  /** 
+   * Mercury (Budha). 
+   * Note: In mean motion, Budha and Shukra orbit with the Sun. 
+   * The specific 'Mercury' identifier here refers to its orbital velocity. 
+   */
   MERCURY: 'MERCURY', 
+  /** Jupiter (Guru). [Ch. I, v.31] */
   JUPITER: 'JUPITER',
-  /** Venus's Sighra (fast epicycle). Note: Mean Shukra longitude matches Sun. */
+  /** Venus (Shukra). Orbital velocity identifier. */
   VENUS: 'VENUS', 
+  /** Saturn (Shani). The slowest moving graha. [Ch. I, v.32] */
   SATURN: 'SATURN',
-  /** Moon's apogee/apsis (Mandocca) */
+  /** 
+   * Moon's Apogee (Mandocca). [Ch. I, v.33] 
+   * Used for calculating the lunar Equation of Center.
+   */
   MOON_APSIS: 'MOON_APSIS',
-  /** Moon's ascending node (Rahu/Pata) */
+  /** 
+   * Moon's Node (Rahu/Pata). [Ch. I, v.33] 
+   * Moves in a retrograde (Vamam) direction.
+   */
   MOON_NODE: 'MOON_NODE'
 } as const;
 
 export type Body = typeof Body[keyof typeof Body];
 
 /**
- * Internal mapping of revolutions per Mahayuga for each body.
+ * Mapping of revolutions (Bhagana) per Mahayuga for each body.
+ * 
+ * [Ch. I, v.29-33] These values are derived from the scriptural counts.
  */
 const REVOLUTIONS: Record<Body, number> = {
   [Body.SUN]: REV_SUN,
@@ -59,19 +79,18 @@ const REVOLUTIONS: Record<Body, number> = {
 };
 
 /**
- * Calculate the mean daily motion in degrees per day.
+ * Calculate the Sidereal Mean Daily Motion in degrees.
  * 
- * [Ch. I, v.53] The daily motion is derived from the total revolutions
- * in a Mahayuga divided by the total civil days (1,577,917,828).
+ * [Ch. I, v.53] Derived as (Bhaganas * 360) / Total Days in Yuga.
  * 
- * @param body The celestial body
- * @returns Average daily motion in degrees
+ * @param body The celestial body or calculation point
+ * @returns Average daily movement in sidereal degrees
  */
 export function getMeanDailyMotion(body: Body): number {
   const revs = REVOLUTIONS[body];
   const motion = (revs * 360.0) / DAYS_PER_MAHAYUGA;
 
-  // [Ch. I, v.36] The Node (Rahu) moves in a retrograde direction.
+  // [Ch. I, v.33] Explicitly marks the Moon's Node as retrograde (Vamam).
   if (body === Body.MOON_NODE) {
     return -motion;
   }
@@ -81,13 +100,12 @@ export function getMeanDailyMotion(body: Body): number {
 /**
  * Calculate the mean longitude (Madhyama) at a given Ahargana.
  * 
- * [Ch. I, v.53-54] Core Mean Motion Algorithm:
- * 1. Multiply Ahargana by total revolutions.
- * 2. Divide by civil days per Yuga.
- * 3. The remainder (Shesha) represents the current position in the orbit.
+ * [Ch. I, v.53-54] Core Planetary Computation:
+ * Multiplies the total days elapsed by the planetary revolution count 
+ * and normalizes the result into the 360-degree zodiac.
  * 
  * @param body The celestial body
- * @param ahargana Number of civil days elapsed since the epoch
+ * @param ahargana Number of terrestrial days elapsed since the epoch
  * @returns Normalized mean longitude in degrees [0, 360)
  */
 export function calculateMeanLongitude(body: Body, ahargana: number): number {

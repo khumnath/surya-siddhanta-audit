@@ -14,5 +14,7 @@
   "plugin": [],
   "readme": "none",
   "hideGenerator": true,
-  "cleanOutputDir": true
+  "cleanOutputDir": true,
+  "disableSources": true,
+  "customCss": "scripts/docs-theme.css"
 }

@@ -1,0 +1,164 @@
+/**
+ * Siddhanta Parity Documentation Theme
+ * ------------------------------------
+ * High-fidelity styles for scriptural proofs.
+ */
+
+/* Isolate styles to specific Siddhantic Proof blocks */
+details.siddhantic-proof {
+  margin: 1.5em 0;
+  padding: 0.8em 1.2em;
+  border: 1px solid #d4af37;
+  /* Gold border */
+  border-radius: 12px;
+  background-color: rgba(212, 175, 55, 0.05);
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+/* Dark mode overrides for background */
+html[data-theme='dark'] details.siddhantic-proof {
+  background-color: rgba(212, 175, 55, 0.1);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
+}
+
+details.siddhantic-proof>summary {
+  font-weight: 700;
+  cursor: pointer;
+  color: #d4af37;
+  outline: none;
+  font-family: 'Outfit', 'Inter', sans-serif;
+  list-style: inherit;
+  /* Ensure default arrow remains */
+  padding: 0.2em 0;
+}
+
+details.siddhantic-proof>summary:hover {
+  color: #b8860b;
+}
+
+details.siddhantic-proof[open] {
+  border-width: 2px;
+}
+
+details.siddhantic-proof blockquote {
+  border-left: 4px solid #d4af37;
+  margin: 1em 0;
+  padding-left: 1em;
+  font-style: italic;
+  color: var(--color-text-aside);
+}
+
+/* Devanagari/Strong styling within proofs */
+details.siddhantic-proof strong {
+  color: #d4af37;
+}
+
+/* Fix for TypeDoc default sidebar/widget issues potentially caused by prior wide rules */
+.tsd-theme-toggle {
+  margin-top: 10px;
+}
+
+/* Header Theme Toggle Widget */
+#header-theme-toggle {
+  margin-right: 8px;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  padding: 0 8px;
+  height: 32px;
+  width: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  color: var(--color-text);
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+#header-theme-toggle:hover {
+  background: rgba(212, 175, 55, 0.15);
+  transform: scale(1.1);
+}
+
+#header-theme-toggle svg {
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Toggle icon visibility based on current theme */
+html[data-theme='dark'] .icon-sun {
+  display: block;
+  color: #f9d71c;
+}
+
+html[data-theme='dark'] .icon-moon {
+  display: none;
+}
+
+html[data-theme='light'] .icon-sun {
+  display: none;
+}
+
+html[data-theme='light'] .icon-moon {
+  display: block;
+  color: #2c3e50;
+}
+
+/* OS preference fallback */
+html[data-theme='os'] .icon-sun {
+  display: none;
+}
+
+html[data-theme='os'] .icon-moon {
+  display: block;
+}
+
+@media (prefers-color-scheme: dark) {
+  html[data-theme='os'] .icon-sun {
+    display: block;
+    color: #f9d71c;
+  }
+
+  html[data-theme='os'] .icon-moon {
+    display: none;
+  }
+}
+
+/* Footer Styling */
+footer,
+footer .container {
+  display: block;
+  text-align: center;
+}
+
+footer {
+  border-top: 1px solid rgba(212, 175, 55, 0.1);
+  margin-top: 1.5em;
+  padding: 0.8em 0;
+  font-family: 'Outfit', sans-serif;
+  color: var(--color-text-aside);
+  background: rgba(212, 175, 55, 0.02);
+}
+
+footer .container,
+footer .container-main {
+  min-height: 0 !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  margin: 0 auto !important;
+}
+
+footer p {
+  margin: 0;
+  font-size: 0.9em;
+}
+
+footer b {
+  color: #d4af37;
+}
+
+footer i {
+  color: var(--color-text);
+  font-style: normal;
+  font-weight: 500;
+}

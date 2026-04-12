@@ -1,12 +1,15 @@
 /**
- * Panchanga Element Timings
- * =========================
+ * Siddhantic Panchanga Timings (Anta-kala-sadhana)
+ * ===============================================
  * 
- * Computes the exact transition times for the five limbs (Panchanga) 
+ * Computes the exact transition times (end-moments) for the five limbs 
  * of the traditional calendar: Tithi, Nakshatra, Yoga, Karana, and Vara.
  * 
- * All calculations are performed within a sunrise-to-sunrise window, 
- * adhering to the Savana-dina (civil day) principle.
+ * [Ch. XIV, v.18-19] Aligns all computations with the Savana-dina 
+ * (civil day), which begins at astronomical sunrise.
+ * [Ch. II, v.64-69] Implements the formulas for the five limbs, finding 
+ * the 'Anta-kala'—the precise moment a limb completes its arc—based 
+ * on the continuous relative motion of the Sun and Moon.
  */
 
 import { calculateTrueLongitudeSun } from '../celestial/sun';
@@ -19,17 +22,17 @@ import { getSunNakshatraIdx } from './calendar';
 import { jdnToGregorian } from '../time/conversions';
 
 // ============================================================================
-// Panchanga Limb Calculation Logic (0-based indices)
+// Panchanga Limb Logic (0-based indices)
 // ============================================================================
 
 /**
- * Calculate the Tithi index.
+ * Get current Tithi Index.
  * 
- * [Ch. II, v.66] A Tithi is the period in which the Moon increases its 
- * distance from the Sun by 12 degrees.
+ * [Ch. II, v.66] Calculated as the quotient of the angular distance 
+ * between the Moon and Sun and the 12-degree tithi-span.
  * 
- * @param ahargana Current day count
- * @returns Tithi index (0-29)
+ * @param ahargana Current day count (decimal)
+ * @returns 0-indexed tithi (0-29)
  */
 function getTithiIdx(ahargana: number): number {
   const lSun = calculateTrueLongitudeSun(ahargana);
@@ -38,13 +41,13 @@ function getTithiIdx(ahargana: number): number {
 }
 
 /**
- * Calculate the Nakshatra index.
+ * Get current Nakshatra Index.
  * 
- * [Ch. II, v.64] The ecliptic is divided into 27 equal parts 
- * (each 13° 20') called Nakshatras.
+ * [Ch. II, v.64] Calculated based on the Moon's true longitude 
+ * within the 27 equal mathematical stations of 13° 20' each.
  * 
- * @param ahargana Current day count
- * @returns Nakshatra index (0-26)
+ * @param ahargana Current day count (decimal)
+ * @returns 0-indexed nakshatra (0-26)
  */
 function getNakshatraIdx(ahargana: number): number {
   const lMoon = calculateTrueLongitudeMoon(ahargana);
@@ -52,13 +55,13 @@ function getNakshatraIdx(ahargana: number): number {
 }
 
 /**
- * Calculate the Yoga index.
+ * Get current Yoga Index.
  * 
- * [Ch. II, v.65] A Yoga is defined by the sum of the longitudes 
- * of the Sun and Moon, divided into 27 equal parts.
+ * [Ch. II, v.65] Derived from the sum of the Sun and Moon's 
+ * longitudes, divided into 27 equal portions.
  * 
- * @param ahargana Current day count
- * @returns Yoga index (0-26)
+ * @param ahargana Current day count (decimal)
+ * @returns 0-indexed yoga (0-26)
  */
 function getYogaIdx(ahargana: number): number {
   const lSun = calculateTrueLongitudeSun(ahargana);
@@ -67,13 +70,13 @@ function getYogaIdx(ahargana: number): number {
 }
 
 /**
- * Calculate the Karana index.
+ * Get current Karana Index.
  * 
- * [Ch. II, v.67-69] A Karana is half a Tithi (6° distance).
- * There are 11 unique Karanas: 4 fixed and 7 moving.
+ * [Ch. II, v.67-69] Calculated as half-tithis (6-degree spans), 
+ * following the specific sequence of 11 traditional names.
  * 
- * @param ahargana Current day count
- * @returns Karana index (0-59) for the lunar month
+ * @param ahargana Current day count (decimal)
+ * @returns 0-indexed karana (0-59)
  */
 function getKaranaIdx(ahargana: number): number {
   const lSun = calculateTrueLongitudeSun(ahargana);
@@ -86,30 +89,27 @@ function getKaranaIdx(ahargana: number): number {
 // ============================================================================
 
 /** 
- * Get the full Tithi name including Paksha (Shukla/Krishna).
+ * Returns the full tithi name including the lunar fortnight.
  */
 function tithiFullName(idx: number): string {
   const paksha = idx < 15 ? "Shukla" : "Krishna";
   return `${paksha} ${TITHI_NAMES[idx]}`;
 }
 
-/** Get the traditional Nakshatra name. */
+/** Returns the common name of the lunar mansion. */
 function nakshatraName(idx: number): string {
   return NAKSHATRA_NAMES[idx % 27];
 }
 
-/** Get the traditional Yoga name. */
+/** Returns the name of the solar-lunar yoga. */
 function yogaName(idx: number): string {
   return YOGA_NAMES[idx % 27];
 }
 
-/** Get the specific Karana name (including fixed/moving logic). */
+/** Returns the specific name for the current half-tithi. */
 function karanaName(idx60: number): string {
-  // idx 0: Kimstughna (fixed, 1st half of Shukla Pratipada)
   if (idx60 === 0) return "Kimstughna";
-  // idx 57-59: Fixed Karanas at the end of the Krishna paksha
   if (idx60 >= 57) return ["Shakuni", "Chatushpada", "Naga"][idx60 - 57];
-  // 7 moving karanas cycle 8 times
   const MOVING = ["Bava", "Balava", "Kaulava", "Taitila", "Gara", "Vanija", "Vishti"];
   return MOVING[(idx60 - 1) % 7];
 }
@@ -119,9 +119,11 @@ function karanaName(idx60: number): string {
 // ============================================================================
 
 /**
- * Perform a binary search to find the exact moment an element transition occurs.
+ * Computes the 'Anta-kala' (end-moment) of a Panchanga element.
  * 
- * Useful for finding the 'Anta-kala' (end-time) of a Tithi or Nakshatra.
+ * This identifies the precise Ahargana when an element transitions. 
+ * Scripturally, this replaces the linear Trairashika (Rule of Three) 
+ * with a high-precision binary search for the boundary.
  */
 function binarySearchTransition(
   indexFn: (a: number) => number,
@@ -143,14 +145,14 @@ function binarySearchTransition(
 
 export interface ElementTiming {
   name: string;
-  index: number;      // 1-based element number
+  index: number;      
   pada?: number;
-  endAhargana: number | null; // null if extends past next sunrise
-  endTimeStr: string;  // HH:MM or "→"
+  endAhargana: number | null; 
+  endTimeStr: string;  
 }
 
 /** 
- * Format decimal hours into a 30-hour clock string (Sunrise to next morning). 
+ * Formats time relative to sunrise using a 30-hour clock system.
  */
 function formatHours(decimalHours: number): string {
   const hours = Math.floor(decimalHours);
@@ -159,7 +161,10 @@ function formatHours(decimalHours: number): string {
 }
 
 /**
- * Find all discrete elements of a certain type within the 24-hour day.
+ * Scans a 24-hour window to identify all limb transitions.
+ * 
+ * Correctly detects 'Kshaya' (skipped) and 'Vriddhi' (repeated) elements 
+ * by checking transitions relative to successive sunrises.
  */
 function findElementTimings(
   indexFn: (a: number) => number,
@@ -169,7 +174,7 @@ function findElementTimings(
   sunriseHours: number,
 ): ElementTiming[] {
   const results: ElementTiming[] = [];
-  const step = 0.005; // ~7.2 minutes
+  const step = 0.005; // Guard step
   
   let prevIdx = indexFn(sunriseA);
   let t = sunriseA + step;
@@ -205,17 +210,16 @@ function findElementTimings(
 }
 
 /**
- * Find specialized 28-system Nakshatra/Yoga timings.
+ * Finds transitions in the 28-station electional system (including Abhijit).
  */
 function findAnandadi28Timings(
   sunriseA: number,
   nextSunriseA: number,
   sunriseHours: number
 ): ElementTiming[] {
-  const AYAN_CORRECTION = 24.13; 
   const getIdx = (a: number) => {
     const lMoon = calculateTrueLongitudeMoon(a);
-    return getAnandadiNak28Idx(lMoon - AYAN_CORRECTION);
+    return getAnandadiNak28Idx(lMoon);
   };
 
   const results: ElementTiming[] = [];
@@ -265,14 +269,15 @@ export interface DayPanchangaTimings {
 }
 
 /**
- * Compute all Panchanga element timings for the sunrise-to-sunrise civil day.
+ * Orchestrates total Panchanga timing computation for a civil day.
  * 
- * Reconciles modern DateTime inputs with traditional Surya-Siddhanta 
- * geometric limb logic (*Savana-dina*).
+ * [Ch. XIV, v.18] Anchors all celestial transitions to the 'Savana' 
+ * frame (sunrise to sunrise), ensuring that ritual elements are 
+ * correctly ascribed to the operative solar day.
  * 
- * @param ahargana Current day count (decimal)
- * @param latitude Geographic latitude of observation
- * @returns Comprehensive Panchanga timing object
+ * @param ahargana Target day count
+ * @param latitude Observer latitude
+ * @returns Complete timing dataset for the solar day
  */
 export function computeDayPanchangaTimings(
   ahargana: number,

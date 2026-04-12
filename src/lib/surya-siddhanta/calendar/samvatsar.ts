@@ -1,12 +1,14 @@
 /**
- * Samvatsara (60-Year Jupiter Cycle)
- * =================================
+ * Siddhantic Samvatsara (60-Year Jupiter Cycle)
+ * ============================================
  * 
  * Implements the calculation of the 60-year Jovian cycle, known as the 
- * Barhaspatya Mana. 
+ * Barhaspatya Mana (Measure of Jupiter).
  * 
- * [Ch. XIV, v.17] A year of Jupiter is the time during which he 
- * traverses one Rashi (30°) of the zodiac by his mean motion.
+ * [Ch. I, v.55] Defines the mathematical procedure for calculating 
+ * the current Jovian year based on Jupiter's revolutions.
+ * [Ch. XIV, v.17] Technically defines the Jupiter year (Samvatsara) 
+ * as the time taken for a mean transit across one zodiacal sign (~361 days).
  */
 
 import { SAMVATSARA_NAMES } from './names';
@@ -15,16 +17,17 @@ import { DAYS_PER_MAHAYUGA, REV_JUPITER } from '../core/constants';
 /**
  * Get the South Indian (Solar/Shaka-based) Samvatsar.
  * 
- * This system uses a continuous cycle of 60 years tied to the 
- * Luni-solar calendar, avoiding the "lost" (Kshaya) years common 
- * in the Jupiter-motion system.
+ * A luni-solar adaptation of the 60-year cycle where years are 
+ * synchronized with the solar calendar (beginning at Chaitra Sukla). 
+ * This system prevents 'skipped' years and is dominant in the 
+ * Southern states of India.
  * 
- * @param kaliYear Current lunar Kali year
- * @returns Object with index (1-60) and name
+ * @param shakaYear Current Shaka year (e.g., 1946)
+ * @returns Object with index (1-60) and the traditional name (e.g., 'Krodhi')
  */
-export function getSouthSamvatsar(kaliYear: number): { index: number; name: string } {
-  // Traditional offset: Kali year + 13 matches the South cycle
-  const idx = (kaliYear + 13) % 60;
+export function getSouthSamvatsar(shakaYear: number): { index: number; name: string } {
+  // Traditional South offset: (Shaka + 11) % 60 provides parity.
+  const idx = (shakaYear + 11) % 60;
   return {
     index: idx + 1,
     name: SAMVATSARA_NAMES[idx]
@@ -34,28 +37,34 @@ export function getSouthSamvatsar(kaliYear: number): { index: number; name: stri
 /**
  * Get the North Indian (Jupiter-based) Samvatsar.
  * 
- * [Ch. XIV, v.1-2, 17] Calculated strictly from Jupiter's mean motion. 
- * Because a Jupiter year is shorter than a solar year, a Samvatsar is 
- * occasionally "dropped" (Kshaya) to maintain synchronization.
+ * [Ch. I, v.55] Calculates the 'canonical' Jovian year based strictly 
+ * on Jupiter's mean motion.
  * 
- * @param ahargana Current day count
- * @returns Object with index (1-60), name, and elapsed fraction of current year
+ * Algorithm:
+ * 1. Calculate total elapsed revolutions of Jupiter.
+ * 2. Multiply by 12 to find the total elapsed signs (each sign = 1 year).
+ * 3. [Ch. I, v.55] Anchor to the 'Vijaya' year at the start of the cycle.
+ * 
+ * NOTE: Because a Jovian year is ~4 days shorter than a solar year, 
+ * this system occasionally 'skips' a solar year (Kshaya Samvatsara).
+ * 
+ * @param ahargana Current Ahargana (civil days elapsed since epoch)
+ * @returns Detailed result including index, name, and fractional progress
  */
-export function getNorthSamvatsar(ahargana: number): { index: number; name: string; fraction: number } {
-  // Total mean revolutions of Jupiter since epoch
-  const totalRevs = (ahargana * REV_JUPITER) / DAYS_PER_MAHAYUGA;
-  
-  // 12 Samvatsars (years) per revolution
+export function getNorthSamvatsar(ahargana: number): { index: number; name: string; fraction: number; rawCount: number; label: string } {
+  // Epoch anchoring: Days from Kali Yuga start to the current Ahargana.
+  const daysSinceKali = ahargana; 
+  const totalRevs = (daysSinceKali * REV_JUPITER) / DAYS_PER_MAHAYUGA;
   const totalSamvatsars = totalRevs * 12;
   
-  // Traditional offset: At the start of Kali Yuga, the year was Vijaya (27th year)
-  const idx = (Math.floor(totalSamvatsars) + 26) % 60;
-  const fraction = totalSamvatsars - Math.floor(totalSamvatsars);
+  // [Ch. I, v.55] Anchor to Vijaya (the 27th name in the list of 60).
+  const samvatsarIndex = (Math.floor(totalSamvatsars) + 26) % 60;
   
   return {
-    index: idx + 1,
-    name: SAMVATSARA_NAMES[idx],
-    fraction
+    index: samvatsarIndex + 1,
+    name: SAMVATSARA_NAMES[samvatsarIndex],
+    fraction: totalSamvatsars % 1,
+    rawCount: Math.floor(totalSamvatsars),
+    label: "Pure Surya Siddhanta (Mean Motion)"
   };
 }
-

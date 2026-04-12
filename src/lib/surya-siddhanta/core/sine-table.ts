@@ -5,8 +5,7 @@
  * Implements the 24 sine values (Jya) and interpolation logic derived
  * from Chapter II (True Places of the Planets).
  * 
- * [Ch. II, v.15-22] The text provides a 24-point sine table (Jyardhapindaka) 
- * for astronomical calculations, using arc-minute (Lipta) units.
+ * [Ch. II, v.15-22] The definition of the 24-point Sine table.
  */
 
 import { RADIUS } from './constants';
@@ -18,13 +17,9 @@ import { RADIUS } from './constants';
 export const ARC_INCREMENT_MIN = 225.0;
 
 /**
- * [Ch. II, v.17-22] The base sine values (Jya) for every 3°45' (225') of arc.
- * These values represent R × sin(θ) where R = 3438.
+ * The base sine values (Jya) for every 3°45' (225') of arc.
  * 
- * Construction Method [v.15-16]: 
- * The text describes a recursive difference method (Jya-niyama) where each 
- * subsequent Sine is found by adding a difference that decreases proportionally 
- * to the sum of preceding Sines.
+ * [Ch. II, v.17-22] Numerical values for the R=3438 sine table.
  */
 export const SINE_TABLE: number[] = [
   225,  // [v.17] sin(3°45')
@@ -56,12 +51,7 @@ export const SINE_TABLE: number[] = [
 /**
  * Calculate the Indian Sine (Jya) for a given angle.
  * 
- * [Ch. II, v.15-22] The Jya value represents R × sin(θ) where R = 3438.
- * 
- * Note on Logic: While the text focuses on the 24 values, it implies 
- * linear interpolation (proportion) for intermediate arcs. This function
- * extends the logic to full 360° quadrant symmetry as required for 
- * modern digital computation of celestial longitudes.
+ * [Ch. II, v.15-22] Calculation of the intermediate Jya using interpolation.
  * 
  * @param angleDeg Angle in degrees (will be normalized to 0-360)
  * @returns The Jya value (R × sin(θ)), signed for quadrants 3 and 4

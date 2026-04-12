@@ -1,9 +1,16 @@
 /**
- * Surya-Siddhanta Planetary Calculations
- * ======================================
+ * Siddhantic Planetary Calculations (Spashta-graha)
+ * ================================================
  * 
- * Implements the calculation of True Longitudes (Spashta-graha) for the 
- * five star-planets (Mars, Mercury, Jupiter, Venus, Saturn).
+ * Implements the calculation of True Longitudes for the five star-planets 
+ * (Mars, Mercury, Jupiter, Venus, Saturn).
+ * 
+ * [Ch. II, v.1-5] Defines the fixed points (Mandocca and Sighrocca) for 
+ * each planet.
+ * [Ch. II, v.34-37] Establishes the variable epicycle circumferences 
+ * (Paridhi) for both Manda (eccentricity) and Sighra (conjunction) cycles.
+ * [Ch. II, v.43-44] Mandates the 'Four-Step' iterative correction sequence 
+ * required to arrive at a high-precision True Longitude.
  */
 
 import { Body, calculateMeanLongitude } from './mean_motions';
@@ -18,8 +25,12 @@ import {
 import { getJya, getKojya, inverseJya } from '../core/sine-table';
 
 /** 
- * [Ch. II, v.34-37] Manda Epicycle Circumferences (Paridhi).
- * Format: [Even quadrant, Odd quadrant] in degrees.
+ * Manda Epicycle Circumferences (Manda-paridhi).
+ * 
+ * [Ch. II, v.34-35] Specified for the star-planets at even and odd quadrants.
+ * These dimensions are much larger than the Sun's, reflecting the 
+ * higher eccentricity of planetary orbits.
+ * Format: [Even circumference, Odd circumference] in degrees.
  */
 export const MANDA_CIRC_MARS: [number, number] = [75.0, 72.0];
 export const MANDA_CIRC_MERCURY: [number, number] = [30.0, 28.0];
@@ -28,8 +39,12 @@ export const MANDA_CIRC_VENUS: [number, number] = [12.0, 11.0];
 export const MANDA_CIRC_SATURN: [number, number] = [49.0, 48.0];
 
 /** 
- * [Ch. II, v.34-37] Sighra Epicycle Circumferences (Paridhi).
- * Format: [Even quadrant, Odd quadrant] in degrees.
+ * Sighra Epicycle Circumferences (Sighra-paridhi).
+ * 
+ * [Ch. II, v.36-37] Specified for planetary conjunctions. Mercury and 
+ * Venus have predictably large Sighra epicycles as the 'Sighrocca' 
+ * represents their own orbital motion around the Sun.
+ * Format: [Even, Odd] in degrees.
  */
 export const SIGHRA_CIRC_MARS: [number, number] = [235.0, 232.0];
 export const SIGHRA_CIRC_MERCURY: [number, number] = [133.0, 132.0];
@@ -38,11 +53,10 @@ export const SIGHRA_CIRC_VENUS: [number, number] = [262.0, 260.0];
 export const SIGHRA_CIRC_SATURN: [number, number] = [39.0, 40.0];
 
 /**
- * Calculate the variable epicycle circumference based on anomaly.
+ * Calculate the dynamically corrected epicycle circumference based on anomaly.
  * 
- * [Ch. II, v.38-40] The dimensions of the epicycles are variable, 
- * diminishing in the odd quadrants proportional to the Jya (Sine) 
- * of the anomaly (Kendra).
+ * [Ch. II, v.38] Implements the universal Siddhantic rule for epicyclic 
+ * contraction, which applies to both Manda and Sighra cycles.
  * 
  * @param circEven Circumference at 0°/180°
  * @param circOdd Circumference at 90°/270°
@@ -63,8 +77,8 @@ export function getVariableCircumference(
 /**
  * Calculate the Manda Equation (Equation of the Center).
  * 
- * [Ch. II, v.39] Manda-phala = (Circumference * Sine(Anomaly)) / 360.
- * Applied negatively in the first six signs and positively in the last six.
+ * [Ch. II, v.39, 45] Transforms the mean eccentricity into a 
+ * longitudinal correction.
  * 
  * @param meanLong Mean longitude
  * @param apogee Apogee position (Mandocca)
@@ -84,7 +98,7 @@ export function calculateMandaEquation(
   const eqSine = (circ / 360.0) * sinKendra;
   const correction = inverseJya(eqSine);
 
-  // Correction is negative in quadrants 1 and 2 (0-180), positive in 3 and 4
+  // [v.45] Quadrant-based application rule.
   if (anomaly >= 0.0 && anomaly < 180.0) {
     return -correction;
   } else {
@@ -95,8 +109,9 @@ export function calculateMandaEquation(
 /**
  * Calculate the Sighra Equation (Equation of Conjunction).
  * 
- * [Ch. II, v.40-42] Sighra-phala calculation involves finding the 
- * Hypothenuse (Karna) of the triangle formed by the epicycle.
+ * [Ch. II, v.40-42] A more complex correction using the 'Chala-karna' 
+ * (Variable Hypotenuse) to account for the planet's change in distance 
+ * from Earth.
  * 
  * @param planetLong Current corrected position
  * @param sighraLong Longitude of the conjunction point
@@ -118,11 +133,11 @@ export function calculateSighraEquation(
   const bhujaPhala = (circ / 360.0) * bhujaJya;
   const kotiPhala = (circ / 360.0) * kotiJya;
 
-  // Karna (Hypothenuse) = sqrt((R + KotiPhala)^2 + BhujaPhala^2)
+  // [v.41] Chala-karna (Hypotenuse) = sqrt((R + KotiPhala)^2 + BhujaPhala^2)
   const karnaSq = Math.pow(RADIUS + kotiPhala, 2) + Math.pow(bhujaPhala, 2);
   const karna = Math.sqrt(karnaSq);
 
-  // Resulting Phala is the arc of the Jya proportional to the distance
+  // [v.42] Resulting Phala is the arc of the Jya proportional to the distance.
   const eqSine = (bhujaPhala * RADIUS) / karna;
   return inverseJya(eqSine);
 }
@@ -130,14 +145,16 @@ export function calculateSighraEquation(
 /**
  * Calculate the True Longitude (Spashta) for star planets.
  * 
- * [Ch. II, v.43-45] The Four-Step Correction Procedure:
- * 1. Apply half the Sighra-phala to the Mean Longitude.
- * 2. Apply half the Manda-phala to that result.
- * 3. Apply the full Manda-phala to the original Mean Longitude (Finding True-Mean).
- * 4. Apply the full Sighra-phala to the True-Mean to find the final True Longitude.
+ * [Ch. II, v.43-44] Implements the rigorous four-step correction procedure:
+ * 1. Apply half of the Sighra-phala to the Mean Longitude.
+ * 2. Apply half of the Manda-phala to the result.
+ * 3. Apply the full Manda-phala to the original Mean Longitude to 
+ *    find the 'Manda-spashta'.
+ * 4. Apply the full Sighra-phala to the 'Manda-spashta' to find the 
+ *    final 'True Longitude'.
  * 
- * @param body The celestial body (Mars, Mercury, Jupiter, Venus, Saturn)
- * @param ahargana Current day count
+ * @param body The star planet (Mars, Mercury, Jupiter, Venus, Saturn)
+ * @param ahargana Current civil day count since epoch
  * @returns Final True Longitude (Spashta) in degrees [0, 360)
  */
 export function calculateTrueLongitudePlanet(body: Body, ahargana: number): number {
@@ -190,7 +207,7 @@ export function calculateTrueLongitudePlanet(body: Body, ahargana: number): numb
   const meanPos = calculateMeanLongitude(meanBody, ahargana);
   const sighraPos = calculateMeanLongitude(sighraSource, ahargana);
 
-  // [v.44-45] 4-Step Correction Process
+  // [v.44-45] The 4-Step Iteration.
   const mandaEq1 = calculateMandaEquation(meanPos, apogee, mandaCirc);
   const m1 = meanPos + mandaEq1 / 2.0;
 
@@ -209,36 +226,36 @@ export function calculateTrueLongitudePlanet(body: Body, ahargana: number): numb
 }
 
 /**
- * Check if the planet is in Retrograde (Vakra) motion.
+ * Determine if a planet is in Retrograde (Vakra) motion.
  * 
- * [Ch. II, v.52-53] The motion becomes retrograde at certain degrees
- * of the Sighra-kendra.
+ * [Ch. II, v.52-53] Identifies when the planet reaches the 'turning points' 
+ * in its synodic cycle relative to the Sighrocca.
  * 
- * @param body The celestial body
+ * @param body The star planet
  * @param ahargana Current day count
- * @returns True if the planet is currently moving retrograde
+ * @returns True if the planet is currently moving retrograde (Vakra)
  */
 export function isRetrograde(body: Body, ahargana: number): boolean {
   const truePlanet = calculateTrueLongitudePlanet(body, ahargana);
   
   let sighraLong: number;
   if (([Body.MARS, Body.JUPITER, Body.SATURN] as Body[]).includes(body)) {
-    // For outer planets, Sighra is the Sun
+    // Outer planets: Forced by the Mean Sun.
     sighraLong = calculateMeanLongitude(Body.SUN, ahargana);
   } else {
-    // For inner planets, Sighra is their own fast motion
+    // Inner planets: Forced by their own orbital motion.
     sighraLong = calculateMeanLongitude(body, ahargana);
   }
 
   let kendra = (sighraLong - truePlanet) % 360.0;
   if (kendra < 0) kendra += 360.0;
 
-  // [v.52-53] Specific degrees of Sighra-kendra for retrograde motion
+  // [v.53] Specific degrees of stationary points for Vakra-gati.
   const retrogradeRanges: Partial<Record<Body, [number, number]>> = {
     [Body.MERCURY]: [144.0, 216.0],
     [Body.VENUS]: [168.0, 197.0],
     [Body.MARS]: [164.0, 196.0],
-    [Body.JUPITER]: [180.0, 280.0],
+    [Body.JUPITER]: [130.0, 230.0], // Adjusted to match scriptural range
     [Body.SATURN]: [115.0, 245.0],
   };
 

@@ -1,0 +1,65 @@
+{
+  "meta": {
+    "timestamp": "2026-04-12T16:46:28.962+05:45",
+    "input_datetime": "2026-04-12T12:00:00.000+05:45",
+    "location": {
+      "latitude": 27.7,
+      "longitude": 85.32,
+      "elevation": 0,
+      "timezone_offset": 5.75
+    },
+    "ahargana": 1872677.2604166665
+  },
+  "surya_siddhanta": {
+    "eras": {
+      "kali_yuga": 5127,
+      "vikram_samvat_lunar": 2083,
+      "bikram_sambat_solar": 2082,
+      "shalivahana_shaka": 1948,
+      "nepal_sambat": 1146,
+      "south_samvatsar": "Parabhava",
+      "north_samvatsar": "Raudra",
+      "north_samvatsar_fraction": 0.08769001087603101
+    },
+    "panchanga": {
+      "tithi": {
+        "index": 25,
+        "name": "Dashami",
+        "paksha": "Krishna",
+        "fraction": 0.9201026264265835
+      },
+      "month": "Chaitra"
+    },
+    "planets": {
+      "sun": 353.5267926758926,
+      "moon": 292.5680241930116,
+      "mars": 331.43036133905883,
+      "mercury": 333.03835138462466,
+      "jupiter": 76.16903533849154,
+      "venus": 22.23612898333738,
+      "saturn": 335.6679576604332
+    },
+    "transitions": {
+      "sunrise": 6.092011552369665,
+      "sunset": 17.907988447630334,
+      "dayLengthHours": 11.81597689526067
+    }
+  },
+  "modern": {
+    "panchanga": {
+      "tithiIdx": 24,
+      "tithiFraction": 0.4470396060424555,
+      "nakshatraIdx": 21,
+      "nakshatraFraction": 0.8620200571023808,
+      "yogaIdx": 21,
+      "karanaIdx": 48,
+      "siderealMoon": 291.4936007613651,
+      "siderealSun": 358.1291254888556,
+      "siderealJupiter": 82.46510042403588,
+      "modernSamvatsarIdx": 53,
+      "modernSamvatsarName": "Raudra",
+      "samvatsarRawCount": 5187,
+      "ayan": 24.225754503589496
+    }
+  }
+}

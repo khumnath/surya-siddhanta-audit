@@ -88,63 +88,42 @@ export const REV_MOON_NODE = 232238;
 // ============================================================================
 
 /** 
- * [Ch. I, Table B] Sun's apogee longitude.
- * Position in degrees at the end of the last Krita Yuga.
+ * [Ch. I, v.41] Sun's apogee longitude (Mandocca).
  */
 export const APOGEE_SUN = 77.0 + 17.0 / 60.0;
 
-/** 
- * [Ch. I, Table B] Mars's apogee longitude (Mangala Mandocca).
- */
+/** [Ch. I, v.42] Mars's apogee longitude (Mangala Mandocca). */
 export const APOGEE_MARS = 130.0 + 1.0 / 60.0;
 
-/** 
- * [Ch. I, Table B] Mercury's apogee longitude (Budha Mandocca).
- */
+/** [Ch. I, v.42] Mercury's apogee longitude (Budha Mandocca). */
 export const APOGEE_MERCURY = 220.0 + 26.0 / 60.0;
 
-/** 
- * [Ch. I, Table B] Jupiter's apogee longitude (Guru Mandocca).
- */
+/** [Ch. I, v.42] Jupiter's apogee longitude (Guru Mandocca). */
 export const APOGEE_JUPITER = 171.0 + 16.0 / 60.0;
 
-/** 
- * [Ch. I, Table B] Venus's apogee longitude (Shukra Mandocca).
- */
+/** [Ch. I, v.42] Venus's apogee longitude (Shukra Mandocca). */
 export const APOGEE_VENUS = 79.0 + 49.0 / 60.0;
 
-/** 
- * [Ch. I, Table B] Saturn's apogee longitude (Shani Mandocca).
- */
+/** [Ch. I, v.42] Saturn's apogee longitude (Shani Mandocca). */
 export const APOGEE_SATURN = 236.0 + 37.0 / 60.0;
 
 // ============================================================================
 // Node Longitudes (Ascending Node - Pata)
 // ============================================================================
 
-/** 
- * [Ch. I, Table E] Mars's ascending node (Mangala Pata).
- */
+/** [Ch. I, v.43] Mars's ascending node (Mangala Pata). */
 export const NODE_MARS = 40.0 + 6.0 / 60.0;
 
-/** 
- * [Ch. I, Table E] Mercury's ascending node (Budha Pata).
- */
+/** [Ch. I, v.43] Mercury's ascending node (Budha Pata). */
 export const NODE_MERCURY = 20.0 + 44.0 / 60.0;
 
-/** 
- * [Ch. I, Table E] Jupiter's ascending node (Guru Pata).
- */
+/** [Ch. I, v.43] Jupiter's ascending node (Guru Pata). */
 export const NODE_JUPITER = 79.0 + 41.0 / 60.0;
 
-/** 
- * [Ch. I, Table E] Venus's ascending node (Shukra Pata).
- */
+/** [Ch. I, v.43] Venus's ascending node (Shukra Pata). */
 export const NODE_VENUS = 59.0 + 46.0 / 60.0;
 
-/** 
- * [Ch. I, Table E] Saturn's ascending node (Shani Pata).
- */
+/** [Ch. I, v.43] Saturn's ascending node (Shani Pata). */
 export const NODE_SATURN = 100.0 + 26.0 / 60.0;
 
 // ============================================================================

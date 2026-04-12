@@ -1,9 +1,14 @@
 /**
- * Surya-Siddhanta Geographic Location Support
- * ===========================================
+ * Siddhantic Geodesy and Geographic Anchors (Deshantara-vicara)
+ * ============================================================
  * 
- * Manages the geographical coordinates and longitude corrections 
- * necessary for localizing astronomical events.
+ * Manages the geographical reference points and longitudinal corrections 
+ * necessary for localizing astronomical calculations. In the Surya 
+ * Siddhanta, all positions are initially calculated for the Prime Meridian.
+ * 
+ * [Ch. I, v.60-62] Establishes the 'Madhya-rekha' (Prime Meridian) passing 
+ * through Lanka and Avanti (Ujjain), providing the canonical baseline 
+ * for astronomical time.
  */
 
 import locationData from '../../../assets/locations.json';
@@ -12,7 +17,7 @@ import type { Location } from '../../../types/astronomy';
 export { type Location };
 
 /**
- * Registry of all predefined locations.
+ * Registry of known geographic locations for Panchanga localization.
  */
 export const LOCATIONS: Record<string, Location> = {};
 
@@ -29,8 +34,10 @@ locationData.forEach((loc: any) => {
 });
 
 /** 
- * [Ch. I, v.62] Ujjain (Avanti) is the traditional reference Prime Meridian (Madhya-rekha).
- * It is located on the line passing through Lanka to the North Pole.
+ * [Ch. I, v.62] Ujjain (Avanti) — The Canonical Reference.
+ * 
+ * Avanti is explicitly named as a point on the line passing from 
+ * the 'center of the earth' (Lanka) through the northern pole.
  */
 export const UJJAIN: Location = LOCATIONS['ujjain'] || {
   name: "Ujjain (Avanti)",
@@ -41,7 +48,7 @@ export const UJJAIN: Location = LOCATIONS['ujjain'] || {
 };
 
 /** 
- * Kathmandu — Primary location for Bikram Sambat calendar calibration (85.32 E).
+ * Kathmandu — Reference point for Bikram Sambat calibration.
  */
 export const KATHMANDU: Location = LOCATIONS['kathmandu'] || {
   name: "Kathmandu",
@@ -52,10 +59,10 @@ export const KATHMANDU: Location = LOCATIONS['kathmandu'] || {
 };
 
 /**
- * Get a predefined location by name.
+ * Retrieves a geographic location from the registry.
  * 
- * @param name The city name to search for
- * @returns Found location or defaults to Ujjain
+ * @param name The city name to find
+ * @returns Found location or defaults to the Ujjain meridian
  */
 export function getLocationByName(name: string): Location {
   const nameLower = name.toLowerCase().trim();
@@ -66,25 +73,26 @@ export function getLocationByName(name: string): Location {
 }
 
 /**
- * Get all available locations.
+ * Returns the entire registry of available locations.
  */
 export function getAllLocations(): Location[] {
   return Object.values(LOCATIONS);
 }
 
 /**
- * Calculate the Deshantara correction (Longitude adjustment).
+ * Calculate the Deshantara correction (Longitudinal adjustment).
  * 
- * [Ch. I, v.60-61] Adjusts the time of a celestial event based on the 
- * distance between the observer and the Ujjain Prime Meridian.
+ * [Ch. I, v.60-61] Normalizes mean astronomical positions to the observer's 
+ * local longitude. The rule of 'Deshantara' translates the distance 
+ * from the Prime Meridian into a time correction for Ahargana.
  * 
- * Rule: 4 minutes of time per 1 degree of longitude difference.
- * 
- * @param location The observer's location
- * @returns Time correction in fraction of a day
+ * @param location The observer's target location
+ * @returns Time correction in decimal fraction of a day
  */
 export function calculateLongitudeCorrection(location: Location): number {
   const longitudeDiff = location.longitude - UJJAIN.longitude;
+  
+  // Rule: 1 minute of civil time per 0.25 degrees of longitude (4 min/deg)
   const timeCorrectionMinutes = longitudeDiff * 4.0;
   return timeCorrectionMinutes / (24.0 * 60.0);
 }

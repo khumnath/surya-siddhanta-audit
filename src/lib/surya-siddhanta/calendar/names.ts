@@ -1,14 +1,17 @@
 /**
- * Astrological Nomenclature and Canonical Names
- * ============================================
+ * Siddhantic Nomenclature (Panchanga-namavali)
+ * ===========================================
  * 
- * Provides the authoritative Sanskrit terminology for all Panchanga 
- * elements as defined in the Surya-Siddhanta and its commentaries.
+ * Provides the authoritative Sanskrit terminology for all astronomical 
+ * and calendrical entities. This glossary ensures that the library 
+ * maintains linguistic and academic parity with the Surya Siddhanta.
  */
 
 /** 
- * [Ch. VIII, v.2-6] The 27 Lunar Mansions (Nakshatras).
- * These are equal 13° 20' divisions used for planetary longitudes.
+ * Siddhantic Nakshatras (Lunar Mansions).
+ * 
+ * [Ch. VIII, v.2-6] Defines the names of the 27 equal mathematical 
+ * segments (13° 20' each) used to track the Moon's true longitude.
  */
 export const NAKSHATRA_NAMES = [
   "Ashvini", "Bharani", "Krittika", "Rohini", "Mrigashira", "Ardra",
@@ -19,9 +22,10 @@ export const NAKSHATRA_NAMES = [
 ];
 
 /** 
- * The 28-Nakshatra system (Muhurta).
- * Includes the intercalary star 'Abhijit' inserted between 
- * Uttara Ashadha and Shravana.
+ * Electional Nakshatras (28-Station System).
+ * 
+ * [Ch. VIII, v.18] Includes 'Abhijit' as a distinct ritual station 
+ * inserted for electional (Muhurta) calculations.
  */
 export const NAKSHATRA_NAMES_28 = [
   "Ashvini", "Bharani", "Krittika", "Rohini", "Mrigashira", "Ardra",
@@ -32,8 +36,10 @@ export const NAKSHATRA_NAMES_28 = [
 ];
 
 /** 
- * [Ch. XIV, v.17] The 60-year Jupiter cycle (Samvatsara).
- * These names follow the Barhaspatya Mana (Jupiter Motion).
+ * Jovian Years (Samvatsaras).
+ * 
+ * [Ch. XIV, v.17] Defines the 60-year Jupiter cycle (Barhaspatya Mana). 
+ * These names follow the cyclical motion of Jupiter through the zodiac.
  */
 export const SAMVATSARA_NAMES = [
   "Prabhava", "Vibhava", "Shukla", "Pramoda", "Prajapati", "Angirasa", 
@@ -49,8 +55,10 @@ export const SAMVATSARA_NAMES = [
 ];
 
 /** 
- * The 28 Anandadi Yogas (Muhurta).
- * Determined by the daily combination of Weekday and Star.
+ * Electional Yogas (Anandadi).
+ * 
+ * Traditional 28-yoga cycle used to assess the qualitative energy 
+ * of the solar day based on the starting Nakshatra.
  */
 export const ANANDADI_YOGA_NAMES = [
   "Ananda", "Kaladanda", "Dhumra", "Prajapati", "Saumya", "Dhvanksha", 
@@ -61,7 +69,10 @@ export const ANANDADI_YOGA_NAMES = [
 ];
 
 /** 
- * [Ch. I, v.13] The 12 Lunar Months.
+ * Siddhantic Months (Masas).
+ * 
+ * [Ch. I, v.13] The 12 months determined by the solar transits into 
+ * the 12 signs of the zodiac (Meshadi).
  */
 export const MONTH_NAMES = [
   "Vaishakha", "Jyeshtha", "Ashadha", "Shravana", "Bhadrapada",
@@ -69,7 +80,10 @@ export const MONTH_NAMES = [
 ];
 
 /** 
- * [Ch. II, v.66] The 30 Lunar Days (Tithis).
+ * Siddhantic Tithis (Lunar Days).
+ * 
+ * [Ch. II, v.66] The 30 lunar days formed by the 12-degree increases 
+ * in the angular distance between Moon and Sun.
  */
 export const TITHI_NAMES = [
   "Pratipada", "Dwitiya", "Tritiya", "Chaturthi", "Panchami", "Shashti",
@@ -81,7 +95,10 @@ export const TITHI_NAMES = [
 ];
 
 /** 
- * [Ch. II, v.65] The 27 Astrological Yogas.
+ * Solar-Lunar Yogas.
+ * 
+ * [Ch. II, v.65] The 27 astrological yogas derived from the sum 
+ * of solar and lunar longitudes.
  */
 export const YOGA_NAMES = [
   "Vishkambha", "Priti", "Ayushman", "Saubhagya", "Shobhana", "Atiganda",

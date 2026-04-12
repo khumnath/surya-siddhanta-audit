@@ -1,0 +1,333 @@
+{
+  "I.11": {
+    "adhyaya": "Madhyama (Mean Motions)",
+    "sanskrit": "प्राणादिः कथितो मूर्तस्रुट्यायोऽमूर्तसंज्ञकः। षडभ्निःप्राणौर्विनाडी स्यात् तत्षष्टया नाडिका स्मृता ॥",
+    "translation": "Six respirations (Prana) make a Vinadi; sixty of these make a Nadi.",
+    "modernCommentary": "This defines the standard sexagesimal time units. 1 Nadi (Ghati) = 24 minutes; 1 Vinadi (Pala) = 24 seconds; 1 Prana = 4 seconds, corresponding to the average healthy human respiration rate."
+  },
+  "I.13": {
+    "adhyaya": "Madhyama (Mean Motions)",
+    "sanskrit": "तद्द्वद्वात्रिंशता तिथिभिश्चान्द्रो मासस्तत्र ।... मासेर्द्वादशभिर्वर्षं दिव्यं तदह उच्यते ॥",
+    "translation": "Twelve months make a year, which is called a day and night of the gods (Devaratripa).",
+    "modernCommentary": "Establishes the year as the fundamental solar cycle. It also introduces the 'Divine Day' concept where one human solar year corresponds to a single day for the gods, centered on the North/South poles (Meru)."
+  },
+  "I.15": {
+    "adhyaya": "Madhyama (Mean Motions)",
+    "sanskrit": "तद्द्वादशसहस्राणि चतुर्युगमुदाहृतम्। सूर्याब्दसङ्ख्यया द्वित्रिसागरैरयुताहतैः॥",
+    "translation": "Twelve thousand divine years make a Quadruple Age (Chaturyuga); it consists of 4,320,000 solar years.",
+    "modernCommentary": "Defines the Mahayuga (Great Age) as the common least multiple of all planetary periods. This 4.32 million year cycle ensures all planets return to 0° Longitude (Aries) simultaneously."
+  },
+  "I.17": {
+    "adhyaya": "Madhyama (Mean Motions)",
+    "sanskrit": "युगस्य दशमो भागश्चतुस्त्रिद्व्येकसंगुणः । क्रमात्कृतयुगादीनां षष्ठांशः सन्ध्ययो स्वकः ॥",
+    "translation": "The tenth part of a Mahayuga, multiplied by 4, 3, 2, 1, gives the lengths of the four ages respectively.",
+    "modernCommentary": "Calculates the specific lengths of the Yugas: Satya (1,728,000y), Treta (1,296,000y), Dvapara (864,000y), and Kali (432,000y) based on a 4:3:2:1 ratio."
+  },
+  "I.28": {
+    "adhyaya": "Madhyama (Mean Motions)",
+    "sanskrit": "विकलानां कला षष्ट्या तत्षष्ट्या भाग उच्यते । तत्तरिंशता भवेद्राशिर्भगणो द्वादशैव ते ॥",
+    "translation": "Sixty seconds (Vikala) make a minute (Kala); sixty of these a degree (Bhaga); thirty degrees a sign (Rashi); twelve signs a revolution (Bhagana).",
+    "modernCommentary": "The foundational sexagesimal system for celestial coordinates. It maps the 360-degree ecliptic into 21,600 minutes, allowing for high-precision integer math in astronomical calculations."
+  },
+  "I.29": {
+    "adhyaya": "Madhyama (Mean Motions)",
+    "sanskrit": "युगे सूर्यबुधशुक्राणां खचतुष्करदार्णवाः। कुजार्किगुरुशीघ्राणां भगणाः पूर्वयायिनाम्॥",
+    "translation": "In a Mahayuga, the Sun, Mercury, and Venus complete 4,320,000 revolutions. This number also applies to the Sighra (conjunction) points of Mars, Saturn, and Jupiter.",
+    "modernCommentary": "Establishes the mean solar year. For Mercury and Venus, these are their actual orbital revolutions around the Sun. For outer planets, this count applies to their 'Sighra' (fast) epicycle, which represents the Earth's orbital motion."
+  },
+  "I.30": {
+    "adhyaya": "Madhyama (Mean Motions)",
+    "sanskrit": "इन्दो रसाग्मित्रित्रीषु सततभूधरमार्गणाः। दस्त्रत्रयष्टरसाङ्काक्षिलोचनानि कुजस्य तु॥",
+    "translation": "The revolutions of the Moon are 57,753,336; of Mars, 2,296,832.",
+    "modernCommentary": "Defines the sidereal periods. The Moon's high revolution count reflects its rapid orbit around the Earth, while Mars' count reflects its roughly 1.88-year period."
+  },
+  "I.31": {
+    "adhyaya": "Madhyama (Mean Motions)",
+    "sanskrit": "बुधशीघ्रस्य शून्यार्तुखाद्वित्यर्कनगेन्दवः। बृहस्पतेः खदस्राक्षिवेदषड्वह्नयस्तथा॥",
+    "translation": "The revolutions of Mercury's Sighra are 17,937,060; of Jupiter, 364,220.",
+    "modernCommentary": "Mercury's 'Sighra' revolutions represent its actual orbit around the sun (~88 days). Jupiter's count reflects its slow ~11.86-year orbit."
+  },
+  "I.32": {
+    "adhyaya": "Madhyama (Mean Motions)",
+    "sanskrit": "सितशीघ्रस्य षट्सप्तत्रियमाश्विखभूधराः। शनेर्भुजागषट्पञ्चरसवेदनिशाकराः॥",
+    "translation": "The revolutions of Venus's Sighra are 7,022,376; of Saturn, 146,568.",
+    "modernCommentary": "Venus's orbital motion around the Sun (~225 days). Saturn's very low count reflects its extremely slow ~29.45-year sidereal period."
+  },
+  "I.37": {
+    "adhyaya": "Madhyama (Mean Motions)",
+    "sanskrit": "वसुद्यष्टाद्विरूपाङ्कसप्ताद्रितिथयो युगे। चान्द्राः खाष्टखखव्योमखाग्निखर्तुनिशाकराः॥",
+    "translation": "The terrestrial (civil) days in a Mahayuga are 1,577,917,828.",
+    "modernCommentary": "This is the 'Civil Day' count (Savana-dina) used as the denominator for all mean motion fractions. Dividing any planetary revolution count by this number yields the mean daily motion."
+  },
+  "I.40": {
+    "adhyaya": "Madhyama (Mean Motions)",
+    "sanskrit": "सूर्यैन्दुभगणेभ्योऽन्ये तिथीनां समुदाहृताः । संशान्तिकालविच्छेदादधिमासाः प्रकीर्तिताः ॥",
+    "translation": "The intercalary months originate from the solar/lunar revolution difference.",
+    "modernCommentary": "Explains the Adhika Masa (Leap Month) logic. Since the lunar year (~354 days) is shorter than the solar year (~365 days), an extra month is added roughly every 32.5 months to keep the calendar synchronized with the seasons."
+  },
+  "I.50": {
+    "adhyaya": "Madhyama (Mean Motions)",
+    "sanskrit": "द्विष्ठास्तिथिक्षयाभ्यस्ताश्चान्द्रवासरभाजिताः । लब्धोनरात्रिरहिता लङ्कायामार्धरात्रिकाः ॥",
+    "translation": "The sum of days is found... it is the number of civil days elapsed at the meridian of Lanka.",
+    "modernCommentary": "The core Ahargana algorithm. It converts years, months, and days into a single integer (civil days) used for all planetary positions. It anchors the calculation to midnight at the Lanka Prime Meridian."
+  },
+  "I.60": {
+    "adhyaya": "Madhyama (Mean Motions)",
+    "sanskrit": "तेन देशान्तराभ्यस्ता ग्रहभुक्तिर्विभाजिता ॥",
+    "translation": "Multiply the planet's daily motion by the distance in yojanas between the Prime Meridian and the observer's location.",
+    "modernCommentary": "Defines the Deshantara correction (Longitudinal Correction). It adjusts the planetary position calculated for the Prime Meridian to the local observer's longitude based on Earth's circumference."
+  },
+  "I.62": {
+    "adhyaya": "Madhyama (Mean Motions)",
+    "sanskrit": "रोहीतकमवन्ती च यथा सन्निहितं सरः ॥",
+    "translation": "The line of the Prime Meridian passes through Rohitaka, Avanti (Ujjain), and Kurukshetra.",
+    "modernCommentary": "Geographical definition of the Siddhantic Prime Meridian. Avanti (75° 46' E) is the primary anchor, effectively the 'Greenwich' of ancient Indian astronomy."
+  },
+  "II.15": {
+    "adhyaya": "Spashta (True Longitudes)",
+    "sanskrit": "चतुर्विंशतिधा चक्रे ज्यार्धारिण पृथक्पृथक् । तानि पञ्चविंशतियुक्तानि त्रीणि शतानि च ॥",
+    "translation": "Divide the quadrant of the circle into 24 parts... the first sine is 225 minutes.",
+    "modernCommentary": "Establishes the 24-point Sine table (Jya). The interval is 225' (3° 45'), chosen because in a circle where R = 3438', the arc of 225' is approximately equal to its sine."
+  },
+  "III.1": {
+    "adhyaya": "Tri-Prasna (Shadows & Direction)",
+    "sanskrit": "अम्बुसंशुद्धे जलवत्‌ समीकृते शिलाप्रदेशे ... तन्मध्ये द्वादशसंख्यकाङ्गुलानि स्थापयेत् ॥",
+    "translation": "On a stony surface made level as a mirror, describe a circle... at the center, place a gnomon twelve fingers high.",
+    "modernCommentary": "Defines the standard instrument for ancient observation: the **Shanku** (Gnomon). Its 12-digit height is universal in Siddhantic math, establishing a fixed unit for trigonometric shadow-to-angle conversions (cotangent relation)."
+  },
+  "III.9": {
+    "adhyaya": "Tri-Prasna (Shadows & Direction)",
+    "sanskrit": "त्रिंशत्कृत्यो युगे भानां चक्र प्राक्परिलम्बते । तद्रुणाद्भूदिनैर्भक्ताद्‌ युगणाद्यदवाप्यते ॥",
+    "translation": "In a Mahayuga, the circle of stars oscillates eastward 600 times.",
+    "modernCommentary": "Establishes the **Trepidation Theory** of Precession. Rather than a continuous 25,700-year cycle, the Siddhanta models precession as a swinging motion of 27° in either direction. 600 cycles in a Mahayuga implies an annual rate of 54 seconds of arc."
+  },
+  "III.12": {
+    "adhyaya": "Tri-Prasna (Shadows & Direction)",
+    "sanskrit": "तद्दोखिघ्ना दशासांशा विज्ञेया अयनाभिधाः ॥",
+    "translation": "The result, multiplied by three and divided by ten, gives the Ayanamsha (precession) in degrees.",
+    "modernCommentary": "Technical formula to calculate the instantaneous Ayanamsha. It is used to convert 'Tropical' longitudes (Saura) to 'Sidereal' longitudes (Nirayana) for Panchanga synchronization."
+  },
+  "III.13": {
+    "adhyaya": "Tri-Prasna (Shadows & Direction)",
+    "sanskrit": "शङ्कुच्छायाहते त्रिज्ये विषुवत्कर्णभाजिते । लम्बाक्षज्ये तयोश्चापे लम्बाक्षौ दक्षिणौ सदा ॥",
+    "translation": "The sine of the latitude (Akshajya) is found from the equinoctial shadow... the arcs are the latitude and co-latitude.",
+    "modernCommentary": "The fundamental formula for **Geodesy**: `sin(latitude) = (Equinoctial Shadow * R) / Hypotenuse`. It converts the observed physical shadow at noon on the equinox into the observer's angular latitude (Aksha)."
+  },
+  "II.66": {
+    "adhyaya": "Spashta (True Longitudes)",
+    "sanskrit": "अर्कानिःसृतसश्चन्द्रः प्रत्यूहानि दिने दिने । यदर्कान्तरितो गच्छेद् द्वादशांशैः स वै तिथिः ॥",
+    "translation": "The period in which the Moon increases its distance from the Sun by twelve degrees is called a lunar day (Tithi).",
+    "modernCommentary": "Defines the Tithi, the primary element of the Panchanga. It is a relative angular measurement (Moon Longitude - Sun Longitude) rather than a fixed temporal duration, leading to Tithis vary in length between 19 and 26 hours."
+  },
+  "IV.1": {
+    "adhyaya": "Grahas-Yuti (Eclipses)",
+    "sanskrit": "सार्धानि षट्‌ सहस्राणि योजनानि विवस्वतः । अशीत्यधिकं चतुःशतं योजनानि चन्द्रस्य ॥",
+    "translation": "The diameter of the Sun's disk is 6,500 yojanas; that of the Moon, 480 yojanas.",
+    "modernCommentary": "These physical diameters are used to calculate angular sizes. By dividing these yojana values by the planet's instantaneous distance (Karna), the Siddhanta derives the angular diameter necessary for eclipse contact calculations."
+  },
+  "IV.2": {
+    "adhyaya": "Grahas-Yuti (Eclipses)",
+    "sanskrit": "योजनैः शशिनो कक्ष्या ... भूबिम्बं दशगुणाः ॥",
+    "translation": "The diameter of the Earth is 1,600 yojanas.",
+    "modernCommentary": "Establishes a 1,600-yojana baseline for the Earth's diameter. In the Siddhanta's system, this value is critical for parallax (Lambana) and the size of the Earth's shadow (Tamoh) during lunar eclipses."
+  },
+  "XIV.1": {
+    "adhyaya": "Manadhya (Systems of Measurement)",
+    "sanskrit": "ब्राह्मं दिव्यं तथा पित्र्यं प्राजापत्यं च गौरवम्‌। सौरञ्च सावनं चान्द्रमाक्षं मानानि वै नव।।",
+    "translation": "The Brahma, the Divya, the Pitrya, the Prajapatya, the Gaurava (Jovian), the Saura (solar), the Savana, the Chandra, and the Nakshatra - these are the nine systems of measurement."
+  },
+  "XIV.2": {
+    "adhyaya": "Manadhya (Systems of Measurement)",
+    "sanskrit": "चतुर्भिर्व्यवहारोऽत्र सौरचान्द्रार्षसावनैः। बाहस्स्येन षष्ट्यब्दं जेयं नान्यैस्तु नित्यशः।।",
+    "translation": "Of these, only four are commonly used in practice... the Jovian (Gaurava) is used for determining the cycle of sixty years (Samvatsara)."
+  },
+  "XIV.17": {
+    "adhyaya": "Manadhya (Systems of Measurement)",
+    "sanskrit": "षष्ट्यब्दाः पर्यायाः पञ्चाधिकैः पञ्चभिस्तथा । बृहस्पतेर्मानस्य गौरवः संवत्सरः स च ॥",
+    "translation": "Five revolutions of Jupiter make the cycle of sixty years... this is called the Jupiter year (Samvatsara).",
+    "modernCommentary": "This defines the Jovian cycle (Samvatsara). Five revolutions of Jupiter (approximately 60 solar years) constitute a full cycle where each year has a specific traditional name (Prabhava, Vibhava, etc.)."
+  },
+  "I.41": {
+    "adhyaya": "Madhyama (Mean Motions)",
+    "sanskrit": "अर्कमन्दोच्चस्य सप्त-अष्ट-राम-मिताः ...॥",
+    "translation": "The revolutions of the Sun's apogee are 387 in a Kalpa.",
+    "modernCommentary": "Establishes the Sun's apogee (perihelion shift). Although the Sun's orbit is relatively stable, the Siddhanta accounts for its very slow motion (secular variation) over millions of years."
+  },
+  "I.42": {
+    "adhyaya": "Madhyama (Mean Motions)",
+    "sanskrit": "भौममन्दोच्चस्य चतुरधिकं शतद्रयम् । बौधस्य अष्टषात्रिमिताः ...॥",
+    "translation": "The revolutions of the apogees: Mars 204, Mercury 368, Jupiter 900, Venus 535, Saturn 39.",
+    "modernCommentary": "Lists the fixed or slowly moving apsides for the planets. These values (Mandocca) are the points of maximum distance from Earth where the planetary correction (Manda-phala) is zero."
+  },
+  "I.43": {
+    "adhyaya": "Madhyama (Mean Motions)",
+    "sanskrit": "कुजपातस्य कल्पे भगणाश्चतु्दशाधिकं शतद्रयम् ...॥",
+    "translation": "The revolutions of the nodes (Pata): Mars 214, Mercury 488, Jupiter 174, Venus 903, Saturn 662.",
+    "modernCommentary": "Defines the revolutions of the ascending nodes. These are the points where the planetary orbits intersect the ecliptic, used to calculate celestial latitude (Vikshepa)."
+  },
+  "II.48": {
+    "adhyaya": "Spashta (True Longitudes)",
+    "sanskrit": "ग्रहभुक्तेः फलं कार्य ग्रहवन्मन्दकर्मणि । दोर्ज्यान्तरगुणा भुक्तिस्तत्वनेत्रोदूता पुनः ॥",
+    "translation": "The correction (phala) is to be applied to the motion of the planet as in the Manda process.",
+    "modernCommentary": "Defines the **Equation of Motion**. This formula adjusts the velocity of the planet based on its position relative to the apse. It explains why a planet appears to move faster at perigee and slower at apogee."
+  },
+  "II.51": {
+    "adhyaya": "Spashta (True Longitudes)",
+    "sanskrit": "ऋणमूनेऽधिके प्रोज्छ््य शेषं वक्रगतिर्भवेत् ॥",
+    "translation": "When the correction is greater than the motion, the result is retrograde (Vakra) motion.",
+    "modernCommentary": "Technical definition of **Retrograde Motion**. It occurs when the negative *Sighra* correction exceeds the planet's forward mean motion, causing it to appear as if it is moving backward against the stars from the observer's perspective."
+  },
+  "II.52": {
+    "adhyaya": "Spashta (True Longitudes)",
+    "sanskrit": "दूरस्थितः स्वशीप्रोचाद्‌ ग्रहः शिथिलरश्मिभिः । सव्येतराकृष्टतनुर्भवेद्‌ वक्रगतिस्तदा ॥",
+    "translation": "When a planet is far from its Sighra-uchcha (conjunction), it is pulled backward... and becomes retrograde.",
+    "modernCommentary": "The physical model of retrograde motion. The Siddhanta describes planets as being pulled by 'reins of air' (vayu-rashmi) attached to their conjunction points. When the planet is far enough (near opposition), this pull reverses its apparent direction."
+  },
+  "II.53": {
+    "adhyaya": "Spashta (True Longitudes)",
+    "sanskrit": "कृतर्तुचन्द्रवदन्द्ैः शूल्यत्येकैर्गुणाष्टिभिः । शरर्दरैश्वतुर्थेषु केन्द्रांशैभूसुतादयः ॥",
+    "translation": "Mars, Mercury, Jupiter, Venus, and Saturn become retrograde at specific degrees of their anomaly.",
+    "modernCommentary": "Lists the **Stationary Points** in degrees of Sighra Anomaly: Mars (164°), Mercury (144°), Jupiter (130°), Venus (163°), and Saturn (115°). These are the critical 'turning points' in the planet's synodic cycle."
+  },
+  "II.64": {
+    "adhyaya": "Spashta (True Longitudes)",
+    "sanskrit": "चन्द्रार्कयोः संबन्धिनो भागाः सप्तविंशतिः । नक्षत्राणि तानि कथ्यन्ते द्वादशांशैश्च तत्समाः ॥",
+    "translation": "The ecliptic is divided into twenty-seven equal parts, each called a Nakshatra (13° 20')."
+  },
+  "III.34": {
+    "adhyaya": "Tri-prasna (Direction, Place and Time)",
+    "sanskrit": "त्रिज्योदक्चरजायुक्ता याम्यायां तद्विवर्जिता। अन्त्या नतोत्क्रमज्योना स्वाहोरात्रार्दसङ्गुणा।। त्रिज्या भक्ता भवेच्छेदो लम्बज्याघ्नोऽथ भाजितः।।",
+    "translation": "The Radius increased by the Sine of ascensional difference in the north, and diminished by it in the south, is the 'antya'. This, diminished by the Sine of the hour-angle, and multiplied by the radius of the diurnal circle and divided by the Radius, is the 'cheda' (divisor).",
+    "modernCommentary": "Calculates the **Ascensional Difference (Cara)**. This is a critical correction in Indian astronomy that accounts for the difference between the local celestial horizon and the prime meridian (Lanka), determining the length of day and night for a given latitude."
+  },
+  "III.35": {
+    "adhyaya": "Tri-prasna (Direction, Place and Time)",
+    "sanskrit": "त्रिभज्यया भवेच्छङ्कुस्तद्र्ग परिशोधयेत्‌।। त्रिज्यावर्गात्‌ पदं दृग्ज्या छायाकर्णौ तु पूर्ववत्‌।।",
+    "translation": "Multiplied by the Sine of co-latitude and divided by the Radius, it becomes the gnomon (shanku). Subtract its square from the square of the Radius; the square root is the Sine of altitude (drigjya)."
+  },
+  "III.36": {
+    "adhyaya": "Tri-prasna (Direction, Place and Time)",
+    "sanskrit": "अभीष्टच्छाययाभ्यस्ता त्रिज्या तत्कर्णभाजिता। दृग्ज्या तद्र्गसंशुदधात्‌ त्रिज्यावर्गाच्च यत्‌ पदम्‌।।",
+    "translation": "The Radius multiplied by the desired shadow and divided by its hypotenuse is the Sine of altitude; from its square subtracted from the square of the Radius, the square root is the gnomon."
+  },
+  "III.41": {
+    "adhyaya": "Tri-prasna (Direction, Place and Time)",
+    "sanskrit": "त्रिभयुकर्णा्द गुणाः स्वाहोरात्रार्दभाजिताः। क्रमादेकद्वित्रिभज्यास्तच्चापानि पृथक्‌ पृथक्‌।।",
+    "translation": "The Sines of one, two, and three signs, respectively, are to be multiplied by the Radius and by the Sine of co-declination (dyujya) and divided by the Radius. The arcs of the results are the rising times."
+  },
+  "III.42": {
+    "adhyaya": "Tri-prasna (Direction, Place and Time)",
+    "sanskrit": "खागाष्टयोडर्धगोडगैकाः शरत््यङ्कहिमांशवः। मेषाल्लाकोदयासवः क्रमादेते प्रकीर्तिताः।।",
+    "translation": "1670, 1795, and 1935 are, in order, the rising times (in respirations) of Aries, Taurus, and Gemini at the equator.",
+    "modernCommentary": "Defines the **Standard Right Ascension** for the first three signs. These values (1670, 1795, 1935 Pranas) are the basis for all local Lagna (Ascendant) calculations, representing the time it takes for each zodiac sign to rise at the Earth's equator."
+  },
+  "VIII.18": {
+    "adhyaya": "Bha-graha-yuti (Stellar Conjunctions)",
+    "sanskrit": "अभिजिद्‌ ब्रह्महृदयं स्वातिवैष्णववासवाः। अहिर्बुघन्यमुदक्स्थत्वान्न वुप्यन्तेऽर्करश्मभिः।",
+    "translation": "Abhijit, Brahma-hridaya, Svati, Shravana, Dhanishtha, and Uttara-Bhadrapada... are never hidden by the sun's rays.",
+    "modernCommentary": "Identifies **Abhijit** (Vega) as a primary scriptural asterism. While the ecliptic is mathematically divided into 27 equal segments for planetary motion, Abhijit is recognized here as a fixed stellar entity, forming the '28th Nakshatra' used in electional astrology (Muhurta)."
+  },
+  "XIV.18": {
+    "adhyaya": "Manadhya (Systems of Measurement)",
+    "sanskrit": "उदयादुदयं भानोः सावनं तत्‌ प्रकीर्तितम्‌।",
+    "translation": "The time from one sunrise to the next is designated as a Savana (civil) day.",
+    "modernCommentary": "Defines the fundamental civil day. This sunrise-to-sunrise period is the basis for determining the weekday (Vara), the planetary hours (Hora), and the divisions used in Muhurta calculations like Choghadia."
+  },
+  "I.51": {
+    "adhyaya": "Madhyama (Mean Motions)",
+    "sanskrit": "मन्दादधोऽधः क्रमेण स्युः...॥",
+    "translation": "Beginning from Saturn, and descending in the order of their speed (Saturn, Jupiter, Mars, Sun, Venus, Mercury, Moon) are the lords of the hours (Hora).",
+    "modernCommentary": "Establishes the 'Speed-Descending Order' of the planets. This sequence determines the planetary hour (Hora) and is the foundation for calculating the specific 'Kaalas' (like Rahu Kaal or Yamaganda) which occur when different planetary energies dominate the day."
+  },
+  "I.55": {
+    "adhyaya": "Madhyama (Mean Motions)",
+    "sanskrit": "द्वादशघ्ना गुरोर्याता भगणा वर्तमानकैः। राशिभिः सहिताः शुद्धाः षष्ट्या स्युर्विजयादयः॥",
+    "translation": "Jupiter's elapsed revolutions multiplied by twelve, with the addition of the current sign, and divided by sixty, give the year of the cycle (Vijaya, etc.).",
+    "modernCommentary": "Defines the Jovian year (Samvatsara) as the time Jupiter takes to traverse one zodiacal sign. The cycle start point (Vijaya) mentioned here is critical for anchoring the North Indian Samvatsara count."
+  },
+  "II.2": {
+    "adhyaya": "Spashta (True Longitudes)",
+    "sanskrit": "अंशाः सूर्यादियुग्मान्ते मन्दोच्चानां यथाक्रमम्। अशीतिः सप्ततिः षष्टिस्ततश्च त्र्याश्विनः खषट्॥",
+    "translation": "The degrees of the apogees (Mandocca) of the Sun and the others are: 80°, 70°, 60°, 223°, 160°...",
+    "modernCommentary": "Sets the fixed position of the Sun's apogee at 80 degrees (Gemini), which is the zero-point for calculating the mean anomaly (Kendra)."
+  },
+  "II.34": {
+    "adhyaya": "Spashta (True Longitudes)",
+    "sanskrit": "ततः मन्दपरिध्यंशाः कथ्यन्ते भौमकादितः। युगाष्टवसवस्त्रिंशत्त्रयस्त्रिंशत्खषट् तथा॥",
+    "translation": "Then are stated the degrees of the Manda-epicycles, for Mars and the others: 75, 30, 33, 12, and 49...",
+    "modernCommentary": "Defines the dimensions of the primary elliptical correction (Manda) for the five planets. These circumferences represent the eccentricity of the planetary orbits."
+  },
+  "II.35": {
+    "adhyaya": "Spashta (True Longitudes)",
+    "sanskrit": "युग्मान्तेऽर्थाद्वयः खाग्निसुराः सूर्या नवार्णवाः। ओजे यगा वसुयमा रदा रुद्रा गजान्धयः॥",
+    "translation": "At the end of the even quadrants, they are 75, 30, 33, 12, 49; in the odd quadrants, they are 72, 28, 32, 11, 48.",
+    "modernCommentary": "Establishes the variable nature of the Manda epicycles. Like the Sun and Moon, the star-planets also experience epicyclic contraction, getting smaller as they approach the odd quadrants (90°/270°)."
+  },
+  "II.36": {
+    "adhyaya": "Spashta (True Longitudes)",
+    "sanskrit": "कुजादीनामतः शैघ्या युग्मान्तेऽर्थाग्निदस्रकाः। गुणाग्निचन्द्राः खनगा द्विरसाक्षीणि गोऽग्नयः॥",
+    "translation": "For Mars and the rest, the Sighra-epicycles at the end of the even quadrants are 235, 133, 70, 262, and 39.",
+    "modernCommentary": "Defines the second large epicycle (Sighra) used for the star-planets. This epicycle accounts for the relative motion of the Earth and the planet (the 'conjunction' or synodic effect)."
+  },
+  "II.37": {
+    "adhyaya": "Spashta (True Longitudes)",
+    "sanskrit": "ओजान्ते द्वित्रियमला द्विविश्वे यमपर्वताः। खर्तुदस्रा वियद्वेदाः शीघ्रकर्मणि कीर्तिताः॥",
+    "translation": "In the odd quadrants, they are 232, 132, 72, 260, and 40.",
+    "modernCommentary": "Completes the definition of planetary epicycles. Note that unlike the others, Jupiter and Saturn's Sighra epicycles slightly expand in the odd quadrants, a subtle mathematical nuance captured in the text."
+  },
+  "II.38": {
+    "adhyaya": "Spashta (True Longitudes)",
+    "sanskrit": "ओजयुग्मान्तरगुणा भुजज्या त्रिज्ययोद्धृता। युग्मवृत्ते धनर्णं स्यादोजादूनेऽधिके स्फुटम्॥",
+    "translation": "The difference of the epicycles of the odd and even quadrants, multiplied by the sine of the anomaly and divided by the radius, is additive to or subtractive from the even epicycle.",
+    "modernCommentary": "Implements 'Epicyclic Contraction'. The Siddhanta recognizes that the solar and lunar epicycles are not fixed circles but vary slightly in size depending on the planet's position. This specific formula calculates the 'Corrected Circumference' used for the Equation of the Center."
+  },
+  "II.39": {
+    "adhyaya": "Spashta (True Longitudes)",
+    "sanskrit": "तद्गुणे भुजकोटिज्ये भगणांशविभाजिते। तद्भुजज्याफलधनुर्मान्दं लिप्तादिकं फलम्॥",
+    "translation": "Multiply the sine of the anomaly (Kendra-jya) by the epicycle and divide by 360; the arc of the result is the Manda-correction (Equation of the Center).",
+    "modernCommentary": "The fundamental formula for the Equation of the Center. It transforms the mean eccentricity into a longitudinal correction (Phala) using a sine-wave model. This represents the Sun's non-uniform motion as seen from Earth."
+  },
+  "II.43": {
+    "adhyaya": "Spashta (True Longitudes)",
+    "sanskrit": "मान्दं कर्मैकं अर्कॆन्दोः भौमादीनाम् अथ उच्यते। शैघ्यं मान्दं पुनर्मान्दं शैघ्यं चत्वारि अनुक्रमात्॥",
+    "translation": "A single Manda-correction is for the Sun and Moon; for Mars and the rest, it is stated that there are four: first Sighra, then Manda, again Manda, then Sighra.",
+    "modernCommentary": "The standard iterative procedure for star-planets. Because the two corrections (Manda and Sighra) are interdependent, the Siddhanta requires a sequence of half-corrections followed by full-corrections to converge on the true position."
+  },
+  "II.44": {
+    "adhyaya": "Spashta (True Longitudes)",
+    "sanskrit": "मध्ये शीघ्रफलादर्धं मान्दमर्धफलं तथा। मध्यग्रहे मन्दफलं सकलं शैघ्यमेवच॥",
+    "translation": "In the mean longitude, first apply half the Sighra correction, then half the Manda; next, apply the whole Manda correction to the mean position, and finally the whole Sighra.",
+    "modernCommentary": "Specifies the precise order of operations: (1) Sighra-half, (2) Manda-half, (3) Full Manda on original mean, (4) Full Sighra on Manda-corrected mean. This ensures high accuracy for planetary conjunctions."
+  },
+  "II.46": {
+    "adhyaya": "Spashta (True Longitudes)",
+    "sanskrit": "अर्कबाहुफलाभ्यस्ता ग्रहभुक्तिर्विभाजिता। भचक्रकलिकाभिस्तु लिप्ताः कार्या ग्रहेऽर्कवत्॥",
+    "translation": "Multiply the daily motion of the planet by the Sun's Equation of the Center and divide by 21,600; applying this result makes the motion true to the solar day.",
+    "modernCommentary": "Defines the 'Bhujantara' or Equation of Time. It corrects for the fact that terrestrial days are measured by the Sun's return to the meridian, which is slightly variable because the Sun's own motion is non-uniform."
+  },
+  "II.65": {
+    "adhyaya": "Spashta (True Longitudes)",
+    "sanskrit": "रवीन्दुयोगविप्ताश्च योगा भभोगभाजिताः।",
+    "translation": "The sum of the longitudes of the Sun and Moon, divided by the span of a Nakshatra (800'), are the Yogas (Vishkambha, etc.)."
+  },
+  "II.67": {
+    "adhyaya": "Spashta (True Longitudes)",
+    "sanskrit": "ध्रुवाणि शकुनिर्नागं तृतीयं तु चतुष्पदम्‌।",
+    "translation": "The fixed (dhruva) Karanas are Shakuni, Naga, and the third is Chatushpada."
+  },
+  "II.68": {
+    "adhyaya": "Spashta (True Longitudes)",
+    "sanskrit": "किस्तुघ्नं तु चतुर्दश्याः कृष्णायाश्चापरार्धतः। बवादीनि ततः सप्त चराख्यकरणानि च।",
+    "translation": "Kimstughna occurs in the latter half of the 14th Krishna Tithi; then follow the seven moveable (chara) Karanas beginning with Bava."
+  },
+  "XIV.9": {
+    "adhyaya": "Manadhya (Systems of Measurement)",
+    "sanskrit": "भानोर्मकरसस्ड्क्रान्तेः षण्मासा उत्तरायणम्‌। कक्कदिस्तु तथाैव स्यात्‌ षण्मासा दक्षिणायनम्‌।।",
+    "translation": "From the Sun's entrance into Capricorn (Makara) for six months is the northward progress (Uttarayana); similarly from Cancer (Karka) is the southward progress (Dakshinayana)."
+  },
+  "XIV.10": {
+    "adhyaya": "Manadhya (Systems of Measurement)",
+    "sanskrit": "द्विराशिनाथा ऋतवस्ततोऽपि शिशिरादयः। मेषादयो द्वादशैते मासास्तैरेव वत्सरः।।",
+    "translation": "The seasons (Ritus) like Shishira etc. each last for two signs; the twelve signs starting from Aries (Mesha) are the months, which together make the year."
+  }
+}

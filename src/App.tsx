@@ -38,6 +38,19 @@ import { getAllEraYears } from './lib/surya-siddhanta/time/eras';
 import { getLagna } from './lib/surya-siddhanta/astrology/lagna';
 import { calculateDailyMuhurtas } from './lib/surya-siddhanta/calendar/muhurta';
 import { getModernLagna } from './lib/modern/astronomy';
+import { getNorthSamvatsar } from './lib/surya-siddhanta/calendar/samvatsar';
+import { 
+  findSSMeanTransitAhargana, 
+  findNextSSMeanTransitAhargana,
+  getSSNextSamvatsarName,
+  getModernNextSamvatsarName,
+  findPrecedingYugadiAhargana, 
+  getNorthCivilSamvatsar,
+  getSouthCivilSamvatsar,
+  getNextSamvatsarName,
+  formatAharganaDate 
+} from './lib/surya-siddhanta/calendar/transit-finder';
+import { ModernPanchangaEngine } from './lib/modern/modern-engine';
 
 
 // Component Imports
@@ -141,6 +154,49 @@ const App: React.FC = () => {
     if (viewMode === 'ss') return null;
     return getModernLagna(selectedDate.toJSDate(), location, modernAyanamsha);
   }, [viewMode, selectedDate, location, modernAyanamsha]);
+  // Triple Samvatsara Auditor - High Precision refined for Adoption Window
+  const samvatsarAudit = useMemo(() => {
+    if (!modernCurrent) return null;
+    
+    // Find high-precision boundary dates
+    const modernInDate = ModernPanchangaEngine.findJupiterIngress(selectedDate.toJSDate(), modernAyanamsha);
+    const modernOutDate = ModernPanchangaEngine.findNextJupiterIngress(selectedDate.toJSDate(), modernAyanamsha);
+    
+    const ss = getNorthSamvatsar(ahargana);
+    const ssMeanAhargana = findSSMeanTransitAhargana(ahargana);
+    const ssEndAhargana = findNextSSMeanTransitAhargana(ahargana);
+    const yugadiAhargana = findPrecedingYugadiAhargana(ahargana);
+    
+    const civilStartStr = formatAharganaDate(yugadiAhargana);
+    const civilName = getNorthCivilSamvatsar(ahargana);
+    const southName = getSouthCivilSamvatsar(ahargana);
+
+    // Visibility logic: only show if selected date is between Modern Ingress and Yugadi
+    const selTs = selectedDate.toMillis();
+    const modTs = modernInDate.getTime();
+    const yugadiTs = DateTime.fromFormat(civilStartStr, "MMM d, yyyy").setZone('Asia/Kathmandu').toMillis();
+    
+    const isTransWindow = (selTs > Math.min(modTs, yugadiTs)) && (selTs < Math.max(modTs, yugadiTs));
+
+    return {
+      isDiscrepant: isTransWindow && (civilName !== modernCurrent.samvatsar.name),
+      ss: eras.north_samvatsar as string,
+      ssNext: getSSNextSamvatsarName(ahargana),
+      ssRawCount: (ss as any).rawCount,
+      modern: modernCurrent.samvatsar.name,
+      modernNext: getModernNextSamvatsarName(selectedDate.toJSDate(), modernAyanamsha),
+      modernRawCount: modernCurrent.samvatsarRawCount,
+      civil: civilName,
+      civilNext: getNextSamvatsarName(civilName),
+      south: southName,
+      southNext: getNextSamvatsarName(southName),
+      ssStart: formatAharganaDate(ssMeanAhargana),
+      ssEnd: formatAharganaDate(ssEndAhargana),
+      modernStart: DateTime.fromJSDate(modernInDate).setZone('Asia/Kathmandu').toFormat("MMM d, yyyy"),
+      modernEnd: DateTime.fromJSDate(modernOutDate).setZone('Asia/Kathmandu').toFormat("MMM d, yyyy"),
+      civilStart: formatAharganaDate(yugadiAhargana)
+    };
+  }, [eras, modernCurrent, selectedDate, ahargana, modernAyanamsha]);
 
 
 
@@ -365,6 +421,34 @@ const App: React.FC = () => {
 
       {activeTab === "panchanga" ? (
         <div className="grid-12 fade-in">
+          {/* Calendar Adoption Note (Educational discrepancy banner) */}
+          {samvatsarAudit?.isDiscrepant && (
+            <div className="span-12" style={{ marginBottom: '1.5rem' }}>
+              <div style={{
+                background: 'rgba(99, 102, 241, 0.05)',
+                border: '1px solid var(--accent-primary)',
+                borderRadius: '16px',
+                padding: '1.2rem 1.5rem',
+                display: 'flex',
+                alignItems: 'flex-start',
+                gap: '1rem',
+                position: 'relative',
+                overflow: 'hidden'
+              }}>
+                <div style={{ padding: '0.6rem', background: 'rgba(99, 102, 241, 0.1)', borderRadius: '12px' }}>
+                  <Info size={20} color="var(--accent-primary)" />
+                </div>
+                <div>
+                  <div style={{ fontSize: '0.65rem', fontWeight: 900, color: 'var(--accent-primary)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.3rem' }}>
+                    Calendar Adoption Comparison
+                  </div>
+                  <p style={{ fontSize: '0.75rem', color: 'var(--text-dim)', lineHeight: '1.5', margin: 0 }}>
+                    Transition period detected: Different regional calendars adopt Samvatsara names based on varying logic. Modern systems follow high-precision **True Jupiter Ingress**, while traditional systems follow **Mean Motion** or pin the name strictly to the **Lunar New Year (Yugadi)**.
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Chronology Master Card */}
           <div className="span-12">
@@ -384,40 +468,83 @@ const App: React.FC = () => {
                 <div className="span-4" style={{ borderRight: '1px solid var(--border-subtle)', paddingRight: '1.5rem' }}>
                   <div className="text-label" style={{ marginBottom: '1rem' }}>Samvatsara (60-Cycle)</div>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
-                    <div>
-                      <div className="text-value" style={{ fontSize: '1.4rem' }}>{eras.south_samvatsar}</div>
-                      <div style={{ fontSize: '0.65rem', color: 'var(--text-dim)', fontWeight: 700 }}>SOUTH SYSTEM</div>
-                    </div>
-                    <div>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '0.4rem' }}>
-                        <div className="text-value" style={{ fontSize: '1.1rem', opacity: 0.9 }}>{eras.north_samvatsar}</div>
-                        <div style={{ fontSize: '0.6rem', color: 'var(--accent-secondary)', fontWeight: 800, opacity: 0.8 }}>{((eras.north_samvatsar_fraction as number) * 100).toFixed(0)}% YEAR PROGRESS</div>
+                    {viewMode === 'both' && samvatsarAudit ? (
+                      <>
+                        <div style={{ marginBottom: '1.5rem' }}>
+                          <div className="text-value" style={{ fontSize: '1.2rem', fontWeight: 700 }}>{samvatsarAudit.ss}</div>
+                          <div style={{ fontSize: '0.55rem', color: 'var(--text-dim)', fontWeight: 700, marginBottom: '4px' }}>SS MEAN (Astronomical Status) • {samvatsarAudit.ssStart} – {samvatsarAudit.ssEnd}</div>
+                          <div style={{ backgroundColor: 'rgba(255,255,255,0.03)', padding: '4px 8px', borderRadius: '4px', fontSize: '0.5rem', color: 'var(--text-dim)' }}>
+                            SS EPOCH: FEB 18, 3102 BCE • YEAR COUNT: {samvatsarAudit.ssRawCount}
+                          </div>
+                          <div style={{ fontSize: '0.5rem', opacity: 0.6, marginTop: '4px' }}>NEXT: {samvatsarAudit.ssNext}</div>
+                        </div>
+
+                        <div style={{ marginBottom: '1.5rem' }}>
+                          <div className="text-value" style={{ fontSize: '1.2rem', color: 'var(--accent-primary)', fontWeight: 700 }}>{samvatsarAudit.modern}</div>
+                          <div style={{ fontSize: '0.55rem', color: 'var(--accent-primary)', fontWeight: 800, marginBottom: '4px' }}>MODERN TRUE (Astronomical Status) • {samvatsarAudit.modernStart} – {samvatsarAudit.modernEnd}</div>
+                          <div style={{ backgroundColor: 'rgba(0,180,255,0.05)', padding: '4px 8px', borderRadius: '4px', fontSize: '0.5rem', color: 'var(--accent-primary)' }}>
+                            TRANSIT EPOCH: JAN 5, 3102 BCE • TRANSIT COUNT: {samvatsarAudit.modernRawCount}
+                          </div>
+                          <div style={{ fontSize: '0.5rem', color: 'var(--accent-primary)', opacity: 0.6, marginTop: '4px' }}>NEXT: {samvatsarAudit.modernNext}</div>
+                        </div>
+
+                        <div style={{ marginBottom: '1.5rem' }}>
+                          <div className="text-value" style={{ fontSize: '1.2rem', opacity: 0.8, fontWeight: 700 }}>{samvatsarAudit.civil}</div>
+                          <div style={{ fontSize: '0.55rem', color: 'var(--text-dim)', fontWeight: 700 }}>NORTH CIVIL (Pinned at Yugadi {samvatsarAudit.civilStart})</div>
+                          <div style={{ fontSize: '0.45rem', textTransform: 'uppercase', color: 'var(--accent-secondary)', fontWeight: 800, marginTop: '4px', opacity: 0.9 }}>
+                            CIVIL ADOPTION: NAME REMAINS CONSTANT UNTIL NEXT LUNAR YEAR
+                          </div>
+                          <div style={{ fontSize: '0.5rem', color: 'var(--text-dim)', opacity: 0.6, marginTop: '4px' }}>NEXT: {samvatsarAudit.civilNext}</div>
+                        </div>
+
+                        <div>
+                          <div className="text-value" style={{ fontSize: '1.2rem', color: 'var(--accent-secondary)', fontWeight: 700 }}>{samvatsarAudit.south}</div>
+                          <div style={{ fontSize: '0.55rem', color: 'var(--accent-secondary)', fontWeight: 800 }}>SOUTH CIVIL (Lunar-Pinned • Salivahana Era)</div>
+                          <div style={{ fontSize: '0.5rem', color: 'var(--accent-secondary)', opacity: 0.6, marginTop: '4px' }}>NEXT: {samvatsarAudit.southNext}</div>
+                        </div>
+                      </>
+                    ) : (
+                      <div>
+                        <div className="text-value" style={{ fontSize: '1.4rem' }}>
+                          {viewMode === 'ss' ? eras.north_samvatsar : (modernCurrent?.samvatsar.name || '---')}
+                        </div>
+                        <div style={{ fontSize: '0.65rem', color: 'var(--text-dim)', fontWeight: 700 }}>
+                          {viewMode === 'ss' ? 'NORTH SYSTEM (JUPITER)' : 'MODERN JUPITER TRANSIT'}
+                        </div>
                       </div>
-                      <div style={{ width: '100%', height: '3px', background: 'rgba(255,255,255,0.05)', borderRadius: '2px', overflow: 'hidden' }}>
-                        <div style={{ width: `${(eras.north_samvatsar_fraction as number) * 100}%`, height: '100%', background: 'var(--accent-secondary)', opacity: 0.6 }}></div>
-                      </div>
-                      <div style={{ fontSize: '0.65rem', color: 'var(--text-dim)', fontWeight: 700, marginTop: '0.4rem' }}>NORTH SYSTEM (JUPITER)</div>
-                    </div>
+                    )}
                   </div>
                 </div>
 
                 {/* Major Eras Section */}
                 <div className="span-8">
-                  <div className="text-label" style={{ marginBottom: '1rem' }}>Traditional Eras</div>
+                  <div className="text-label" style={{ marginBottom: '1rem' }}>Traditional Eras & Boundaries</div>
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '1.5rem' }}>
-                    {Object.entries(eras).filter(([k]) => !k.includes('samvatsar')).map(([key, val]) => (
+                    {Object.entries(eras)
+                      .filter(([k]) => k.includes('kali') || k.includes('vikram') || k.includes('bikram') || k.includes('nepal') || k.includes('shaka'))
+                      .map(([key, val]) => (
                       <div key={key}>
-                        <div className="text-value" style={{ color: key === 'vikram_samvat' ? 'var(--accent-secondary)' : 'var(--text-primary)' }}>{val}</div>
-                        <div className="text-label" style={{ fontSize: '0.55rem', marginTop: '0.2rem' }}>{key.replace(/_/g, ' ')}</div>
+                        <div className="text-value" style={{ 
+                          color: key === 'vikram_samvat_lunar' ? 'var(--accent-primary)' : 
+                                 key === 'bikram_sambat_solar' ? 'var(--accent-secondary)' : 
+                                 'var(--text-primary)' 
+                        }}>{val}</div>
+                        <div className="text-label" style={{ fontSize: '0.55rem', marginTop: '0.2rem', textTransform: 'uppercase', opacity: 0.8 }}>
+                          {key.replace(/_/g, ' ')}
+                        </div>
                       </div>
                     ))}
                   </div>
 
                   {isBikramNewYearApproaching && (
-                    <div style={{ marginTop: '1.5rem', padding: '0.75rem 1rem', background: 'rgba(245, 158, 11, 0.05)', border: '1px solid rgba(245, 158, 11, 0.2)', borderRadius: '12px', display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
-                      <Info size={18} color="var(--accent-secondary)" />
-                      <div style={{ fontSize: '0.7rem', color: 'var(--accent-secondary)', fontWeight: 500 }}>
-                        <strong>New Year Transition:</strong> Currently in Chaitra (Meena). BS {Number(eras.vikram_samvat) + 1} starting soon.
+                    <div style={{ marginTop: '1.5rem', padding: '1rem 1.2rem', background: 'rgba(245, 158, 11, 0.08)', border: '1px solid var(--accent-secondary)', borderRadius: '16px', display: 'flex', alignItems: 'flex-start', gap: '1rem' }}>
+                      <Info size={18} color="var(--accent-secondary)" style={{ marginTop: '0.2rem' }} />
+                      <div style={{ fontSize: '0.75rem', color: 'var(--text-primary)', lineHeight: '1.4' }}>
+                        <strong style={{ color: 'var(--accent-secondary)', display: 'block', marginBottom: '0.2rem' }}>Solar Transition Warning: Mesha Sankranti</strong>
+                        Currently in the transition gap: **Vikram Samvat {eras.vikram_samvat_lunar} (Lunar)** has begun, but **Bikram Sambat {eras.bikram_sambat_solar} (Solar)** remains until Mesha Sankranti. 
+                        <span style={{ display: 'block', marginTop: '0.4rem', opacity: 0.8, fontSize: '0.7rem' }}>
+                          Actual Solar New Year: **April 15, 2026** (Phalguna Shukla Dwadashi)
+                        </span>
                       </div>
                     </div>
                   )}

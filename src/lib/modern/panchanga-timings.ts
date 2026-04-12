@@ -99,7 +99,12 @@ export function getModernPanchangaElements(date: Date, ayanMode: string = 'Chitr
       fraction: res.nakshatraFraction
     },
     yoga: { index: res.yogaIdx + 1, name: yogaName(res.yogaIdx) },
-    karana: { index: res.karanaIdx + 1, name: karanaName(res.karanaIdx) }
+    karana: { index: res.karanaIdx + 1, name: karanaName(res.karanaIdx) },
+    samvatsar: {
+      index: res.modernSamvatsarIdx,
+      name: res.modernSamvatsarName
+    },
+    samvatsarRawCount: res.samvatsarRawCount
   };
 }
 

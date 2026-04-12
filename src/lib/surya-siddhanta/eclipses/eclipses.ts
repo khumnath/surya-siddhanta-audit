@@ -11,8 +11,14 @@ import { RADIUS, SINE_MAX_DECLINATION } from '../core/constants';
 import { getJya } from '../core/sine-table';
 
 // Celestial Body Diameters in yojanas
+
+/** [Ch. IV, v.1] The diameter of the Sun's disk in yojanas. */
 export const DIAMETER_SUN_YOJANAS = 6500.0;
+
+/** [Ch. IV, v.1] The diameter of the Moon's disk in yojanas. */
 export const DIAMETER_MOON_YOJANAS = 480.0;
+
+/** [Ch. IV, v.2] The diameter of the Earth in yojanas. */
 export const DIAMETER_EARTH_YOJANAS = 1600.0;
 
 const MEAN_MOTION_SUN_DEG = getMeanDailyMotion(Body.SUN);

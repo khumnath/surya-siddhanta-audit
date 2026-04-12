@@ -1,9 +1,13 @@
 /**
- * Surya-Siddhanta Calendar Systems
- * ================================
+ * Siddhantic Calendar Systems (Kalanirnaya)
+ * =========================================
  * 
- * Provides high-level abstractions for the traditional time divisions: 
- * Months, Seasons, Ayanas, and specific Panchanga elements.
+ * Provides high-level abstractions for traditional time divisions, 
+ * seasonal cycles, and the five limbs (Lagnas) of the Panchanga.
+ * 
+ * [Ch. I, v.13] Defines the solar and lunar measures used in calendar computation.
+ * [Ch. XIV, v.1-2] Establishes the nine systems of measurement (Mana) used for 
+ * astronomical and civil time.
  */
 
 import { calculateTrueLongitudeSun } from '../celestial/sun';
@@ -14,17 +18,18 @@ import { normalizeAngle } from '../core/utils';
 import { calculateSunriseSunset as calcSS } from '../geometry/geodesy';
 
 // ============================================================================
-// Lunar Limb Utilities
+// Lunar Limb Utilities (Tithi & Masa)
 // ============================================================================
 
 /**
  * Calculate detailed Tithi (Lunar Day) information.
  * 
- * [Ch. II, v.66] A Tithi is a 12° increment of distance between the 
- * Moon and Sun.
+ * [Ch. II, v.66] A Tithi is defined as the time taken for the longitudinal 
+ * distance (Antara) between the Moon and the Sun to increase by 12 degrees. 
+ * This represents one 'Day' of the lunar month.
  * 
- * @param ahargana Current day count
- * @returns Object with tithi index, name, paksha (Shukla/Krishna), and fraction
+ * @param ahargana Current day count since epoch
+ * @returns Detailed Tithi info including Paksha (Fortnight) and fraction
  */
 export function getTithiDetails(ahargana: number): { index: number; name: string; paksha: string; fraction: number } {
   const lSun = calculateTrueLongitudeSun(ahargana);
@@ -52,14 +57,15 @@ export function getTithiDetails(ahargana: number): { index: number; name: string
 /**
  * Detect Adhimasa (Intercalary Month).
  * 
- * [Ch. I, v.40] An intercalary month (Adhika Masa) occurs when a lunar 
- * month passes without the Sun entering a new Rashi (Sankranti).
+ * [Ch. I, v.40] An intercalary month (Adhika Masa) occurs when there is 
+ * no solar transit (Sankranti) during a single lunar moon-to-moon cycle. 
+ * This ensures the lunar year does not drift away from the solar seasons.
  * 
- * @param ahargana Day count at the start of the lunar period
- * @returns True if the month is intercalary
+ * @param ahargana Day count at the start of the lunar month
+ * @returns True if the month contains no solar ingress
  */
 export function isAdhimasa(ahargana: number): boolean {
-  // If the Sun stays within the same 30° arc for a full synodic cycle
+  // Check if the Sun enters a new Rashi (30°) within 29.53 days.
   const synodicCycle = 29.530589;
   const sunLongNow = calculateTrueLongitudeSun(ahargana);
   const sunLongFuture = calculateTrueLongitudeSun(ahargana + synodicCycle);
@@ -73,11 +79,11 @@ export function isAdhimasa(ahargana: number): boolean {
 /**
  * Get the name of the Lunar Month.
  * 
- * Traditional names are linked to the solar Rashi occupied by the Sun 
- * at the moment of the new moon.
+ * [Ch. I, v.48-51] Traditional lunar months (Meshadi) are named based on 
+ * the solar Rashi occupied by the Sun at the preceding New Moon.
  * 
- * @param ahargana Current day count (usually anchored to Amavasya)
- * @returns Normalized lunar month name
+ * @param ahargana Current day count
+ * @returns The traditional month name (e.g., 'Chaitra')
  */
 export function getLunarMonthName(ahargana: number): string {
   const lSun = calculateTrueLongitudeSun(ahargana);
@@ -99,7 +105,11 @@ export function getLunarMonthName(ahargana: number): string {
 /**
  * Calculate the 27-system Nakshatra (Lunar Mansion).
  * 
- * [Ch. II, v.64] The ecliptic is divided into 27 equal parts of 13° 20'.
+ * [Ch. II, v.64] The ecliptic is divided into 27 equal stations of 
+ * 13° 20' each. The mansion is determined by the Moon's true sidereal position.
+ * 
+ * @param ahargana Current day count
+ * @returns Nakshatra info including the Pada (Quarter) of the mansion
  */
 export function calculateNakshatra(ahargana: number): { index: number; name: string; pada: number; fraction: number } {
   const lMoon = calculateTrueLongitudeMoon(ahargana);
@@ -123,6 +133,13 @@ export function calculateNakshatra(ahargana: number): { index: number; name: str
 
 /**
  * Calculate the 28-system Nakshatra (including Abhijit).
+ * 
+ * [Ch. VIII, v.18] Maps the Moon's longitude to the 28-station stations, 
+ * accommodating the scriptural asterism Abhijit between Uttara Ashadha 
+ * and Shravana.
+ * 
+ * @param ahargana Current day count
+ * @returns Nakshatra index (1-28) and name
  */
 export function calculateNakshatra28(ahargana: number): { index: number; name: string } {
   const lMoon = calculateTrueLongitudeMoon(ahargana);
@@ -136,7 +153,6 @@ export function calculateNakshatra28(ahargana: number): { index: number; name: s
     "Shatabhisha", "Purva Bhadrapada", "Uttara Bhadrapada", "Revati"
   ];
 
-  // Logic matches NAKSHATRA_28_BOUNDARIES unequal divisions
   const boundaries = [
     13.333, 26.666, 40.0, 53.333, 66.666, 80.0, 93.333, 106.666, 120.0, 
     133.333, 146.666, 160.0, 173.333, 186.666, 200.0, 213.333, 226.666, 
@@ -151,9 +167,14 @@ export function calculateNakshatra28(ahargana: number): { index: number; name: s
 }
 
 /**
- * Calculate the Yoga.
+ * Calculate the Nitya Yoga (Solar-Lunar Yoga).
  * 
- * [Ch. II, v.65] Derived from the sum of solar and lunar longitudes.
+ * [Ch. II, v.65] The Yoga is derived from the sum of the longitudes 
+ * of the Sun and Moon. Like Nakshatras, each of the 27 Yogas 
+ * spans 13° 20'.
+ * 
+ * @param ahargana Current day count
+ * @returns Current Yoga (1=Vishkumbha, ..., 27=Vaidhriti)
  */
 export function calculateYoga(ahargana: number): { index: number; name: string } {
   const lSun = calculateTrueLongitudeSun(ahargana);
@@ -175,7 +196,14 @@ export function calculateYoga(ahargana: number): { index: number; name: string }
 }
 
 /**
- * Calculate the Karana.
+ * Calculate the Karana (Half-Tithi).
+ * 
+ * [Ch. II, v.67-68] A Karana is exactly half of a Tithi (6° arc). 
+ * There are 11 distinct names that cycle through the 60 Karanas 
+ * of a lunar month in a fixed pattern.
+ * 
+ * @param ahargana Current day count
+ * @returns Current Karana index and name
  */
 export function calculateKarana(ahargana: number): { index: number; name: string } {
   const lSun = calculateTrueLongitudeSun(ahargana);
@@ -190,6 +218,7 @@ export function calculateKarana(ahargana: number): { index: number; name: string
   ];
 
   let karanaName: string;
+  // Specific sequence rules for fixed (Sthira) and moveable (Chara) Karanas
   if (karanaOf60 === 0) {
     karanaName = karanaNames[0]; 
   } else if (karanaOf60 >= 57) {
@@ -207,6 +236,11 @@ export function calculateKarana(ahargana: number): { index: number; name: string
 
 /**
  * Get the Solar Month Sign (Rashi index).
+ * 
+ * [Ch. I, v.13] Returns the sign occupied by the Sun's true longitude.
+ * 
+ * @param ahargana Current day count
+ * @returns 1-based Rashi index (1=Mesha, ..., 12=Meena)
  */
 export function getSolarMonthSign(ahargana: number): number {
   const lSun = calculateTrueLongitudeSun(ahargana);
@@ -216,8 +250,8 @@ export function getSolarMonthSign(ahargana: number): number {
 /**
  * Get the name of the Solar Month (Rashi).
  * 
- * [Ch. I, v.13] A solar month (Saura Masa) is the time 
- * spent by the Sun in one zodiac sign.
+ * @param ahargana Current day count
+ * @returns Combined Rashi name (e.g., 'Mesha (Aries)')
  */
 export function getSolarMonthName(ahargana: number): string {
   const solarMonthIdx = getSolarMonthSign(ahargana);
@@ -232,8 +266,6 @@ export function getSolarMonthName(ahargana: number): string {
 
 /**
  * Get the Bikram Sambat (Solar) month name.
- * 
- * The BS year (Saura-Varsha) begins at Mesha Sankranti.
  */
 export function getBikramMonthName(ahargana: number): string {
   const solarMonthIdx = getSolarMonthSign(ahargana);
@@ -246,10 +278,14 @@ export function getBikramMonthName(ahargana: number): string {
 }
 
 /**
- * Get the current Ayana (Progress).
+ * Get the current Ayana (Solar Progress).
  * 
- * [Ch. XIV, v.9] The sun's progress northward (Uttarayana) from 
- * the winter solstice and southward (Dakshinayana) from the summer solstice.
+ * [Ch. XIV, v.9] Determines the Sun's progress relative to solstices. 
+ * Uttarayana (Northward) begins at Makara Sankranti (Capricorn); 
+ * Dakshinayana (Southward) at Karka Sankranti (Cancer).
+ * 
+ * @param ahargana Current day count
+ * @returns Ayana name
  */
 export function getAyana(ahargana: number): string {
   const sunLong = calculateTrueLongitudeSun(ahargana);
@@ -261,10 +297,13 @@ export function getAyana(ahargana: number): string {
 }
 
 /**
- * Get the Season (Ritu).
+ * Get the current Ritu (Season).
  * 
- * [Ch. XIV, v.10] The solar year is divided into six seasons, each 
- * consisting of two solar months.
+ * [Ch. XIV, v.10] The solar year is divided into six seasons (Ritus), 
+ * following a bimestrial cycle through the zodiac.
+ * 
+ * @param ahargana Current day count
+ * @returns Name of the current Vedic season (e.g., 'Vasanta')
  */
 export function getSeason(ahargana: number): string {
   const solarMonth = getSolarMonthSign(ahargana);
@@ -276,7 +315,10 @@ export function getSeason(ahargana: number): string {
 }
 
 /**
- * Calculate local Sunrise and Sunset.
+ * Calculate topocentric Sunrise and Sunset.
+ * 
+ * [Ch. II, v.60-63] Calculates the horizon transitions based on 
+ * topocentric altitude and the Sun's position.
  */
 export function getSunriseSunset(ahargana: number, latitude: number) {
   const sunLong = calculateTrueLongitudeSun(ahargana);
@@ -292,9 +334,12 @@ export function getSunNakshatraIdx(ahargana: number): number {
 }
 
 // ============================================================================
-// Planetary Positions
+// Planetary Positions (Spashta-graha)
 // ============================================================================
 
+/**
+ * Detailed Rashi position including degrees and minutes.
+ */
 export interface RashiPosition {
   index: number;
   name: string;
@@ -304,7 +349,9 @@ export interface RashiPosition {
 }
 
 /**
- * Convert raw ecliptic longitude to a readable Rashi position.
+ * Convert raw longitude to a readable Rashi position.
+ * 
+ * [Ch. II, v.1-2] Maps the 360-degree ecliptic to the 12 signs.
  */
 export function longitudeToRashiDetailed(longitude: number): RashiPosition {
   const normalized = normalizeAngle(longitude);
@@ -328,10 +375,13 @@ export function longitudeToRashiDetailed(longitude: number): RashiPosition {
 }
 
 /**
- * Get Rashi positions for the Sun, Moon, and the five star planets 
- * (Grahas) at the current moment.
+ * Get Rashi positions for the Sun, Moon, and star planets.
  * 
- * Includes the Manda and Sighra corrections (True positions).
+ * [Ch. II, v.14-53] Incorporates Manda and Sighra corrections to find 
+ * the 'True' (Spashta) positions of all major bodies.
+ * 
+ * @param ahargana Current civil day count
+ * @returns Map of body names to their detailed Rashi data
  */
 export function getAllPlanetRashis(ahargana: number): Record<string, RashiPosition> {
   return {

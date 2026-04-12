@@ -1,23 +1,26 @@
 /**
- * Anandadi Yoga and Muhurta Logic
- * ===============================
+ * Siddhantic Anandadi Yogas (Anandadi-vicara)
+ * ===========================================
  * 
- * Implements the auxiliary 28-Nakshatra system and associated yogas 
- * used for electional astrology (Muhurta).
+ * Implements the calculation of the 28 Anandadi Yogas, which are defined 
+ * by the intersection of the Weekday (Vara) and the Moon's mansion 
+ * (Nakshatra) at the moment of sunrise. 
  * 
- * While the Surya-Siddhanta uses 27 equal segments for mathematical 
- * longitudes (Ch. II, v.64), the 28-system includes Abhijit for 
- * specific ritual and auspiciousness calculations.
+ * [Ch. II, v.64] Defines the base 27 mathematical Nakshatra segments 
+ * (13° 20' each).
+ * [Ch. VIII, v.18] Identifies Abhijit as a distinct scriptural asterism, 
+ * justifying the 28-station system used for fine-tuned electional 
+ * astrology (Muhurta).
  */
 
 import { ANANDADI_YOGA_NAMES } from './names';
 
 /**
- * 28-Nakshatra boundaries (including Abhijit).
+ * 28-Nakshatra Boundaries (including Abhijit).
  * 
- * Standard segments are 13° 20'. Abhijit is inserted between 
- * Uttara Ashadha and Shravana, spanning the final quarter of the former 
- * and the very beginning of the latter.
+ * [Ch. VIII, v.18] While most Nakshatras span 13° 20', the electional system 
+ * inserts Abhijit between Uttara Ashadha and Shravana. This specific grid 
+ * is used to determine the Anandadi Yogas.
  */
 export const NAKSHATRA_28_BOUNDARIES = (() => {
   const boundaries: number[] = [];
@@ -29,13 +32,13 @@ export const NAKSHATRA_28_BOUNDARIES = (() => {
   // Star 21: Uttara Ashadha (ends at 276° 40')
   current = 276 + 40/60;
   boundaries.push(current);
-  // Star 22: Abhijit (ends at 280° 53' 20")
+  // Star 22: Abhijit (inserted as per Ch. VIII, v.18)
   current = 280 + 53/60 + 20/3600;
   boundaries.push(current);
   // Star 23: Shravana (ends at 293° 20')
   current = 293 + 20/60;
   boundaries.push(current);
-  // Stars 24-28 (remaining segments of 13° 20')
+  // Stars 24-28
   for (let i = 0; i < 5; i++) {
     current += 13 + 20/60;
     boundaries.push(current);
@@ -46,8 +49,10 @@ export const NAKSHATRA_28_BOUNDARIES = (() => {
 /**
  * Identify the 28-system Nakshatra index for a given longitude.
  * 
+ * Maps the sidereal Moon position to one of the 28 scriptural mansions.
+ * 
  * @param moonLong Local sidereal longitude of the Moon
- * @returns 0-based index in the 28-system (Abhijit = 21)
+ * @returns 0-based index (0-27) in the 28-system
  */
 export function getAnandadiNak28Idx(moonLong: number): number {
   const norm = ((moonLong % 360) + 360) % 360;
@@ -58,22 +63,24 @@ export function getAnandadiNak28Idx(moonLong: number): number {
 }
 
 /**
- * Get the Anandadi Yoga for a given weekday and Nakshatra index.
+ * Get the Anandadi Yoga for a given weekday and Nakshatra.
  * 
- * Determined by the cyclical intersection of the Weekday (Vara) 
- * and the Moon's mansion at sunrise.
+ * These yogas (Ananda, Kaladanda, etc.) provide a qualitative classification 
+ * for the entire civil day based on the starting Nakshatra at sunrise.
  * 
- * @param weekday 0=Sun, 1=Mon, ..., 6=Sat
+ * @param weekday 0=Sun (Ravivara), ..., 6=Sat (Shanivara)
  * @param nakshatraIdx 0-based index in the 28-system
- * @returns Object containing the yoga index, name, and auspiciousness
+ * @returns Yoga data including name and auspiciousness type
  */
 export function getAnandadiYoga(
   weekday: number, 
   nakshatraIdx: number
 ): { index: number; name: string; type: 'auspicious' | 'inauspicious' | 'neutral' } {
   
+  // Offsets derived from the rule: Sun starts at Ashwini (1), 
+  // Mon starts at Mrigashirsha (5), etc., in the 28-system.
   const offsets = [1, 5, 9, 13, 17, 21, 25];
-  const startNaks = offsets[weekday] - 1; // 0-based
+  const startNaks = offsets[weekday] - 1; 
   const yogaIdx = (nakshatraIdx - startNaks + 28) % 28;
 
   const auspicious = [0, 3, 4, 6, 7, 10, 11, 12, 13, 18, 19, 20, 23, 25, 26, 27];
@@ -91,10 +98,13 @@ export function getAnandadiYoga(
 }
 
 /**
- * Get Tamil Yoga (Amrita, Siddha, Marana, or Prabalarishta).
+ * Get the Tamil Yoga classification (Amrita etc.).
  * 
- * A specialized regional system often used alongside the standard 
- * Anandadi sequence.
+ * A regional interpretive layer used in tandem with the Anandadi sequence.
+ * 
+ * @param weekday 0=Sun, ..., 6=Sat
+ * @param nakIdx 0-based index in the 28-system
+ * @returns Classification mapping (Amrita/Siddha/Marana)
  */
 export function getTamilYoga(weekday: number, nakIdx: number): { name: string; type: 'auspicious' | 'inauspicious' | 'neutral' } {
   const amrita = [
@@ -120,7 +130,7 @@ export function getTamilYoga(weekday: number, nakIdx: number): { name: string; t
   const w = weekday % 7;
   let n = nakIdx % 28;
 
-  // Abhijit (index 21) handling for Tamil Yoga (traditionally 27-based)
+  // Traditional 27-based mapping for Tamil logic.
   if (n === 21) return { name: 'Marana', type: 'inauspicious' }; 
   if (n > 21) n--;
 
@@ -133,21 +143,21 @@ export function getTamilYoga(weekday: number, nakIdx: number): { name: string; t
 /**
  * Calculate Netrama (Eyes) and Jeevanama (Life Force).
  * 
- * These metrics indicate the vitality of the day based on the angular 
- * distance between the Moon's mansion and the Sun's mansion at sunrise.
+ * Fine-grained indicators of the 'vitality' of the day based on the 
+ * angular distance (counted in nakshatras) between the Moon and Sun 
+ * at sunrise.
  * 
  * @param nakIdx Current Moon Nakshatra (28-system)
  * @param sunNakIdx Current Sun Nakshatra (28-system)
- * @returns Object with netra (0-2) and jeeva (0, 0.5, 1) values
+ * @returns Numerical scores for spiritual visibility and metabolic force.
  */
 export function getNetraJeeva(nakIdx: number, sunNakIdx: number): { netra: number; jeeva: number } {
-  // Count from Sun nakshatra to day nakshatra (inclusive result)
   const dist = (nakIdx - sunNakIdx + 28) % 28 + 1;
 
   let netra = 0;
   let jeeva = 0;
 
-  // Nethiram (Eyes): 0 (Blind), 1 (One-eyed), 2 (Two-eyed)
+  // Netra (Eyes): 0=Blind, 1=One-eyed, 2=Two-eyed
   if (dist <= 4 || dist >= 26) {
     netra = 0;
   } else if ((dist >= 5 && dist <= 8) || (dist >= 22 && dist <= 25)) {
@@ -156,7 +166,7 @@ export function getNetraJeeva(nakIdx: number, sunNakIdx: number): { netra: numbe
     netra = 2;
   }
 
-  // Jeevanama (Life Force): 0 (Dead), 0.5 (Half), 1 (Full)
+  // Jeeva (Life): 0=Dead, 0.5=Half, 1=Full
   if (dist === 1 || dist === 2 || dist === 28) {
     jeeva = 0;
   } else if ((dist >= 3 && dist <= 9) || (dist >= 21 && dist <= 27)) {

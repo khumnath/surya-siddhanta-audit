@@ -1,10 +1,14 @@
 /**
- * Surya-Siddhanta Sun Calculations
- * ================================
+ * Siddhantic Sun Calculations (Surya-spashti)
+ * ==========================================
  * 
  * Implements the calculation of the True Longitude of the Sun (Ravisphuta).
- * In the Surya-Siddhanta, the Sun's position is corrected using only 
- * the Equation of the Center (Manda-phala).
+ * 
+ * [Ch. II, v.2] Establishes the fixed apogee (Mandocca) of the Sun at 80°.
+ * [Ch. II, v.14-16] Defines 'Spashti-karana' (correction process) to find 
+ * the observable position.
+ * [Ch. II, v.38-39] Describes the Sun's Equation of the Center (Manda-phala) 
+ * and the contraction of its epicycle (Manda-vritta).
  */
 
 import { Body, calculateMeanLongitude } from './mean_motions';
@@ -12,21 +16,23 @@ import { APOGEE_SUN, RADIUS } from '../core/constants';
 import { getJya, inverseJya } from '../core/sine-table';
 
 /** 
- * [Ch. II, v.38] Manda (slow) epicycle circumference for the Sun.
- * Traditionally specified as 14° in even quadrants and diminished 
- * by 20' (totaling 13° 40') in odd quadrants.
+ * Solar epicycle circumferences (Manda-paridhi).
+ * 
+ * [Ch. II, v.38] The Surya-Siddhanta defines solar epicycles as 
+ * pulsatory: they are 14° at the quadrants (Vishuvat) and 
+ * contract to 13° 40' at the apsides.
  */
 export const MANDA_CIRCUMFERENCE_SUN_EVEN = 14.0;
 export const MANDA_CIRCUMFERENCE_SUN_ODD = 13.0 + (40.0 / 60.0);
 
 /**
- * Calculate the variable epicycle circumference for the Sun.
+ * Calculate the dynamically corrected epicycle circumference for the Sun.
  * 
- * [Ch. II, v.38] Dynamically adjusts the solar epicycle between 14° 
- * and 13° 40' based on the sine of the anomaly.
+ * [Ch. II, v.38] Implements the rule of epicyclic contraction. The 
+ * circumference varies linearly with the sine of the anomaly (Kendra-jya).
  * 
- * @param kendra The mean anomaly
- * @returns Corrected circumference for the current position
+ * @param kendra The mean anomaly in degrees
+ * @returns The precise circumference for the current anomaly
  */
 export function getVariableCircumferenceSun(kendra: number): number {
   const jya = Math.abs(getJya(kendra));
@@ -36,9 +42,10 @@ export function getVariableCircumferenceSun(kendra: number): number {
 }
 
 /**
- * Calculate the mean anomaly (Manda Kendra) of the Sun.
+ * Calculate the Sun's Mean Anomaly (Manda Kendra).
  * 
- * [Ch. II, v.29] The distance of the mean Sun from its fixed apogee.
+ * [Ch. II, v.29] Specifically defined as the distance of the mean 
+ * planet from its apogee (Mean Position - Apogee).
  * 
  * @param ahargana Current day count
  * @returns Mean anomaly in degrees [0, 360)
@@ -51,11 +58,12 @@ export function calculateMeanAnomalySun(ahargana: number): number {
 }
 
 /**
- * Calculate the true longitude (Spashta / Ravisphuta) of the Sun.
+ * Calculate the True Longitude (Spashta-Surya) of the Sun.
  * 
- * [Ch. II, v.39] The Equation of the Center (Manda-phala) is 
- * applied negatively in the first half of the anomaly and 
- * positively in the second half.
+ * [Ch. II, v.39, 45] Core Algorithm:
+ * 1. Calculate the Sine of the Anomaly (Kendra-jya).
+ * 2. Resulting Phala (Equation of Center) = (Kendra-jya * Epicycle) / 360.
+ * 3. Apply the correction to the Mean Sun based on the Kendra half-orbit.
  * 
  * @param ahargana Current day count
  * @returns True solar longitude (Ravisphuta) in degrees [0, 360)
@@ -67,11 +75,14 @@ export function calculateTrueLongitudeSun(ahargana: number): number {
 
   const sinKendra = getJya(kendra);
   const circumference = getVariableCircumferenceSun(kendra);
+  
+  // Siddhantic Rule: Result = (Paridhi * Jya) / 360 (expressed as an arc)
   const term = (circumference / 360.0) * sinKendra;
   const correctionDeg = inverseJya(term);
 
   let trueSun: number;
-  // Apply Manda-phala based on quadrant
+  // [Ch. II, v.45] Apply Manda-phala: Negative in 1st/2nd quadrants, 
+  // Positive in 3rd/4th.
   if (kendra < 180.0) {
     trueSun = meanSun - correctionDeg;
   } else {

@@ -9,7 +9,8 @@
   "license": "GPL-3.0-or-later",
   "scripts": {
     "dev": "vite",
-    "build": "typedoc && tsc -b && vite build",
+    "docs:generate": "node scripts/resolve-siddhanta-logic.js",
+    "build": "npm run docs:generate && tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview"
   },

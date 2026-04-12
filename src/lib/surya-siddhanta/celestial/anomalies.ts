@@ -1,12 +1,14 @@
 /**
- * Surya-Siddhanta Anomaly Calculations
- * ======================================
+ * Siddhantic Anomaly Calculations (Kendra-vicara)
+ * ===============================================
  * 
  * Implements Manda (Apsis) and Sighra (Conjunction) anomaly (Kendra) 
  * calculations required to find true celestial longitudes.
  * 
- * [Ch. II, v.29] "Subtracting the apsis (Mandocca) from the planet, 
- * the remainder is its anomaly (Kendra)."
+ * [Ch. II, v.29] Defines 'Kendra' as the angular distance between a 
+ * planet and its apsis/conjunction point.
+ * [Ch. II, v.46] Establishes the rules for identifying the Sighra point 
+ * for inner and outer planets.
  */
 
 import { Body, calculateMeanLongitude } from './mean_motions';
@@ -27,12 +29,11 @@ import {
 /**
  * Calculate the Manda Kendra (Anomaly of the Apsis).
  * 
- * [Ch. II, v.29] The Manda Kendra is the distance of the mean planet 
- * from its apogee (Mandocca). This is used to calculate the Equation 
- * of the Center.
+ * [Ch. II, v.29] The Manda Kendra is specifically defined as: 
+ * Distance = Mean planet - Apogee (Mandocca).
  * 
  * @param body The celestial body
- * @param ahargana Current day count
+ * @param ahargana Current civil day count since epoch
  * @returns Manda Kendra in degrees [0, 360)
  */
 export function getMandaKendra(body: Body, ahargana: number): number {
@@ -40,10 +41,11 @@ export function getMandaKendra(body: Body, ahargana: number): number {
 
   let apogee: number;
   if (body === Body.MOON) {
-    // [Ch. I, v.35] The Moon's Mandocca is a moving point.
+    // [Ch. I, v.33] The Moon's Mandocca (Apogee) is a moving point, 
+    // unlike the relatively fixed apogees of other planets.
     apogee = calculateMeanLongitude(Body.MOON_APSIS, ahargana);
   } else {
-    // For other planets, the Mandocca is treated as fixed for the Kalpa.
+    // [Ch. II, v.2] Fixed apogees for the current Kalpa.
     const apogees: Partial<Record<Body, number>> = {
       [Body.SUN]: APOGEE_SUN,
       [Body.MARS]: APOGEE_MARS,
@@ -63,24 +65,22 @@ export function getMandaKendra(body: Body, ahargana: number): number {
 /**
  * Calculate the Sighra Kendra (Anomaly of Conjunction).
  * 
- * [Ch. II, v.43-46] The Sighra Kendra is the distance between the
- * planet and its conjunction point (Sighra).
+ * [Ch. II, v.46] Defines the Sighrocca (Point of Conjunction).
+ * - For Outer Planets (Mars, Jupiter, Saturn): The Sighrocca is the Mean Sun.
+ * - For Inner Planets (Mercury, Venus): The Sighrocca is the planet's 
+ *   own mean motion.
  * 
- * Traditional Rules for Sighra Point [v.46]:
- * - For Outer Planets (Mars, Jupiter, Saturn): The Sighra is the mean Sun.
- * - For Inner Planets (Mercury, Venus): The Sighra is the planet's own fast motion.
- * 
- * @param body The celestial body
+ * @param body The celestial body (Mars, Mercury, Jupiter, Venus, Saturn)
  * @param ahargana Current day count
  * @returns Sighra Kendra in degrees [0, 360)
  */
 export async function getSighraKendra(body: Body, ahargana: number): Promise<number> {
   let sighraPos: number;
   if (([Body.MARS, Body.JUPITER, Body.SATURN] as Body[]).includes(body)) {
-    // [Ch. II, v.46] For Mars etc., the Sighra is the Sun.
+    // [Ch. II, v.46] For outer planets, the Sighra is the Sun.
     sighraPos = calculateMeanLongitude(Body.SUN, ahargana);
   } else if (([Body.MERCURY, Body.VENUS] as Body[]).includes(body)) {
-    // For Mercury/Venus, the Sighra is their own calculated fast position.
+    // For inner planets, the Sighra is their own mean orbital motion.
     sighraPos = calculateMeanLongitude(body, ahargana);
   } else {
     return 0.0;
@@ -98,8 +98,9 @@ export async function getSighraKendra(body: Body, ahargana: number): Promise<num
 /**
  * Calculate the Node Kendra (Anomaly from the Node).
  * 
- * [Ch. II] The angular distance of the planet from its Ascending 
- * Node (Pata). Primarily used for calculating celestial latitude.
+ * Corresponds to the angular distance of the planet from its Ascending 
+ * Node (Pata). This Kendra is used in the Surya Siddhanta for 
+ * calculating celestial latitude (Vikshepa).
  * 
  * @param body The celestial body
  * @param ahargana Current day count

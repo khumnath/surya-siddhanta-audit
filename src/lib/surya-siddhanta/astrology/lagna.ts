@@ -1,6 +1,17 @@
 /**
- * Surya-Siddhanta Lagna (Ascendant) Calculations
- * ===============================================
+ * Siddhantic Lagna (Ascendant) Calculations
+ * ==========================================
+ * 
+ * Implements the calculation of the Ascendant (Lagna) for a given location 
+ * and time. 
+ * 
+ * [Ch. III, v.41-42] Defines the 'Udaya-prana' (Rising Times) of the 
+ * twelve signs at the equator (Lanka).
+ * [Ch. III, v.34] Establishes the 'Cara' (Ascensional Difference) logic 
+ * required to correct rising times for the observer's specific latitude.
+ * 
+ * The Lagna is the point of the ecliptic that is rising on the eastern 
+ * horizon at a specific moment.
  */
 
 import { SINE_MAX_DECLINATION, RADIUS } from '../core/constants';
@@ -17,6 +28,14 @@ export interface LagnaInfo {
 
 /**
  * Calculate Local Sidereal Time (LST) for a given location.
+ * 
+ * [Ch. III] Corresponds to the 'Ishta-kala' (Desired Time) of the 
+ * celestial sphere. It represents the rotation of the heavens relative 
+ * to the Prime Meridian (Lanka) adjusted for local longitude (Deshantara).
+ * 
+ * @param ahargana Current day count since epoch
+ * @param longitude Longitude of the observer
+ * @returns Local Sidereal Time in hours [0, 24)
  */
 export function calculateLocalSiderealTime(ahargana: number, longitude: number): number {
   const J2000_JD = 2451545.0;
@@ -43,7 +62,16 @@ export function calculateLocalSiderealTime(ahargana: number, longitude: number):
 }
 
 /**
- * Calculate the ecliptic longitude of the ascendant (rising point).
+ * Calculate the ecliptic longitude of the ascendant (Lagna).
+ * 
+ * [Ch. III, v.41-42] In modern trigonometry, this internalizes the 
+ * classical 'Udaya-prana' and 'Cara' corrections. It solves for 
+ * the intersection of the local horizon and the ecliptic.
+ * 
+ * @param lstHours Local Sidereal Time in decimal hours
+ * @param latitude Latitude of the observer
+ * @param obliquity Obliquity of the ecliptic (standardly 24° in SS)
+ * @returns Longitude of the Lagna in degrees [0, 360)
  */
 export function calculateAscendantLongitude(
   lstHours: number,
@@ -67,6 +95,13 @@ export function calculateAscendantLongitude(
 
 /**
  * Get the Lagna (ascendant) for a given time and location.
+ * 
+ * Overall procedure to identify the rising Rashi (sign).
+ * 
+ * @param ahargana Current day count
+ * @param latitude Observer latitude
+ * @param longitude Observer longitude
+ * @returns Detailed Lagna information including Rashi index and name
  */
 export function getLagna(ahargana: number, latitude: number, longitude: number): LagnaInfo {
   const lst = calculateLocalSiderealTime(ahargana, longitude);

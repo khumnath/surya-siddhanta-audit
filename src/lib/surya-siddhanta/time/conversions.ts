@@ -1,23 +1,35 @@
 /**
- * Surya-Siddhanta Time Conversions
- * ================================
+ * Siddhantic Time Conversions (Ahargana)
+ * =====================================
  * 
- * Provides the mathematical transformation between modern Gregorian/Julian 
- * dates and the traditional day-count (Ahargana) since the Kali Epoch.
+ * Provides the mathematical bridge between modern Gregorian/Julian calendars 
+ * and the traditional continuous day-count (Ahargana) since the Kali Epoch.
+ * 
+ * [Ch. I, v.48-51] Defines the process of 'Ahargana' (heap of days)—the 
+ * summation of months and days to arrive at a serial count for astronomical 
+ * lookups.
+ * [Ch. I, v.52] Establishes the Ahargana as the count of terrestrial 
+ * (civil/civilian) days elapsed since the zero-point of the epoch.
  */
 
 import { DateTime } from 'luxon';
 import type { Location } from '../../../types/astronomy';
+import { KATHMANDU } from '../geography/location';
 
 /** 
- * [Ch. I] The Kali Yuga Epoch JDN.
- * Corresponds to Midnight (Ujjain) on Friday, February 18, 3102 BCE.
- * At this moment, the mean longitudes of all planets were at 0° (Revati).
+ * Siddhantic Epoch (Kali Yuga).
+ * 
+ * [Ch. I, v.17, 21] Corresponds to Midnight (Ujjain Meridian) on Friday, 
+ * February 18, 3102 BCE (Julian). At this epoch, the mean positions of 
+ * all planets are scripturally defined as being exactly at 0° (Revati).
  */
 export const KALI_EPOCH_JDN = 588465.5;
 
 /**
- * Convert Gregorian date to Julian Day Number (JDN).
+ * Convert a proleptic Gregorian date to a Julian Day Number (JDN).
+ * 
+ * This is the standard continuous day count used by modern astronomers 
+ * (starting from Jan 1, 4713 BCE).
  * 
  * @param year Proleptic Gregorian year
  * @param month Month (1-12)
@@ -25,8 +37,8 @@ export const KALI_EPOCH_JDN = 588465.5;
  * @param hour Hour (0-23)
  * @param minute Minute (0-59)
  * @param second Second (0-59)
- * @param timezoneOffset Offset from UTC in hours
- * @returns Julian Day Number
+ * @param timezoneOffset Offset from UTC in hours (e.g., +5.75 for Kathmandu)
+ * @returns Julian Day Number as a decimal.
  */
 export function gregorianToJdn(
   year: number,
@@ -58,7 +70,10 @@ export function gregorianToJdn(
 }
 
 /**
- * Convert Julian Day Number to Gregorian date.
+ * Convert a continuous Julian Day Number back to a calendar date.
+ * 
+ * This function accounts for the Gregorian calendar reform (Oct 1582) 
+ * for large JDN values.
  * 
  * @param jdn Julian Day Number
  * @returns Tuple of [year, month, day]
@@ -86,20 +101,24 @@ export function jdnToGregorian(jdn: number): [number, number, number] {
 }
 
 /**
- * Calculate the number of days elapsed since the Kali Yuga Epoch.
+ * Calculate the Siddhantic Ahargana from a JD.
+ * 
+ * [Ch. I, v.52] The Ahargana is the count of terrestrial (civil) days 
+ * that have elapsed since the Midnight at Ujjain epoch of 3102 BCE.
  * 
  * @param jdn Current Julian Day Number
- * @returns Days since Kali Epoch
+ * @returns Decimal days since Kali Epoch.
  */
 export function daysSinceKali(jdn: number): number {
   return jdn - KALI_EPOCH_JDN;
 }
 
 /**
- * Convert a DateTime object to the traditional Ahargana (Sum of Days).
+ * Convert a modern DateTime object to the traditional Ahargana (Sum of Days).
  * 
- * [Ch. I, v.51-54] This sum of days is the fundamental time input for 
- * mean motion and planetary anomaly lookups in the Surya-Siddhanta.
+ * [Ch. I, v.48-51] This is the core time input for the library. All 
+ * planetary positions (True Longitudes) are derived purely from this 
+ * single day-count value.
  * 
  * @param dt Modern DateTime or JS Date
  * @param location Geographic location for local time adjustments
@@ -125,11 +144,46 @@ export function dateTimeToAhargana(
   return daysSinceKali(jdn);
 }
 
+/**
+ * Reverse conversion from traditional Ahargana back to Gregorian time.
+ * 
+ * Useful for verifying historical planetary configurations against 
+ * reconstructed dates.
+ * 
+ * @param ahargana Days since Kali Epoch
+ * @returns Luxon DateTime in the observer's zone (Asia/Kathmandu).
+ */
+export function aharganaToDateTime(
+  ahargana: number,
+  _location: Location = KATHMANDU
+): DateTime {
+  const jdn = ahargana + KALI_EPOCH_JDN;
+  const [y, m, d] = jdnToGregorian(jdn);
+  
+  const dayFrac = (jdn + 0.5) % 1;
+  const totalSeconds = Math.round(dayFrac * 86400);
+  const hour = Math.floor(totalSeconds / 3600);
+  const minute = Math.floor((totalSeconds % 3600) / 60);
+  const second = totalSeconds % 60;
+
+  return DateTime.fromObject({
+    year: y,
+    month: m,
+    day: d,
+    hour,
+    minute,
+    second
+  }, { zone: 'Asia/Kathmandu' });
+}
+
 // ============================================================================
-// Lunar Month Constants (Modern Engine Parity)
-// Note: Traditional SS values are expressed as discrete Bhaganas (revolutions).
+// Siddhantic Period Multipliers (Traditional Parity)
 // ============================================================================
+/** Mean synodic month (Tithi-span average) */
 export const SYNODIC_MONTH = 29.530588;
+/** Mean sidereal month (Moon's transit of Nakshatras) */
 export const SIDEREAL_MONTH = 27.321661;
+/** Moon's anomalistic month (Perigee to Perigee) */
 export const ANOMALISTIC_MONTH = 27.554550;
+/** Moon's draconic month (Node to Node) */
 export const DRACONIC_MONTH = 27.212221;

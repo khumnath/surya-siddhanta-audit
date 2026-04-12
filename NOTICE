@@ -1,0 +1,21 @@
+# NOTICE
+
+Surya Siddhanta Audit
+Copyright © 2026 khumnath cg
+
+This project incorporates third-party software as specified below:
+
+## Modern Astronomical Core (astronomy-engine)
+Modern comparative audits and modern astronomical calculations are powered by the "astronomy-engine" library.
+
+Copyright © 2018-2024 Donald Cross <cosinekitty@gmail.com>
+Distributed under the MIT License: https://github.com/cosinekitty/astronomy/blob/master/LICENSE
+
+## Documentation & Textual References
+- Translation of the Sūrya-Siddhānta: A Text-book of Hindu Astronomy (1860) by Ebenezer Burgess.
+- Authoritative Sanskrit DJVU source texts provided by Rashtriya Sanskrit Sansthan.
+
+---
+
+This project is distributed under the GPL-3.0-or-later license.
+For the full license text, see the LICENSE file.

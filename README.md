@@ -61,6 +61,12 @@ Primary computational and textual references are located in the `reference/` dir
 - BURGESS, E. (1860). *Translation of the Sūrya-Siddhānta: A Text-book of Hindu Astronomy*.
 - Authoritative Sanskrit DJVU source texts.
 
----
-**License**: GPL-3.0-or-later 
+## ⚖️ Credits & Legal
+
+### Modern Astronomical Core
+Modern comparative audits are powered by the [astronomy-engine](https://github.com/cosinekitty/astronomy), created by **Donald Cross**. 
+*Copyright © 2018-2024 Donald Cross. Distributed under the MIT License.*
+
+### Project License
+This project (Surya Siddhanta Audit) is licensed under the **GPL-3.0-or-later**. 
 *Curated for the Surya Siddhanta Parity API.*

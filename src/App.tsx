@@ -449,7 +449,7 @@ const App: React.FC = () => {
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full">
             <a
-              href="/docs/index.html"
+               href="api/index.html"
               target="_blank"
               rel="noopener noreferrer"
               style={{

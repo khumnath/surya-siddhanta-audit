@@ -1,73 +1,66 @@
-# React + TypeScript + Vite
+# 🪐 Surya Siddhanta Audit
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A high-fidelity, academically-verifiable realization of the ancient **Surya Siddhanta** astronomical engine, implemented in pure TypeScript. 
 
-Currently, two official plugins are available:
+This project bridges traditional Siddhantic mathematics with modern astronomical precision, providing a zero-lookup engine that derives all celestial positions from prime motion constants.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## 🚀 Key Features
 
-## React Compiler
+- **Zero-Lookup Architecture**: Rejecting hard-coded tables, the system derives every astronomical element (Sun, Moon, Planets, Tithi, Nakshatra) formulaically.
+- **Modern Parity Audits**: Integrated bridge to JPL-based `astronomy-engine` ensuring mathematical alignment within a $10^{-6}$ degree tolerance.
+- **Siddhantic Proofs**: Static documentation enriched with authoritative Sanskrit verses automatically injected during the build process.
+- **Diagnostic Pipeline**: A purpose-built regression suite (`dump`/`verify`) to prevent mathematical drift during development.
+- **Premium UI**: A high-performance React dashboard with glassmorphism aesthetics and synchronized comparative views.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 🛠 Project Structure
 
-## Expanding the ESLint configuration
+- `src/lib/surya-siddhanta/`: Core traditional engine implementation.
+- `src/lib/modern/`: Modern JPL validation bridge.
+- `scratch/`: The diagnostic suite and regression audit snapshots.
+- `reference/`: Consolidated authoritative primary sources and reference PDFs.
+- `scripts/`: Build-time automation and documentation enrichment logic.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## 🚦 Getting Started
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### Installation
+```bash
+npm install
+# or
+bun install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### Development
+```bash
+npm run dev
 ```
+
+### Static Documentation
+Generate the high-fidelity documentation with scriptural proofs:
+```bash
+npm run build
+# The site is generated in /public/docs
+```
+
+## ⚖️ The Audit Pipeline (Testing)
+
+We maintain code integrity through a two-stage diagnostic process.
+
+1. **Establish a Baseline**: Save the current mathematical state.
+   ```bash
+   npm run dump -- --date=2026-04-12
+   ```
+
+2. **Run Verification**: Audit live code against established baselines.
+   ```bash
+   npm run verify
+   # Follow the interactive prompts to select your snapshot.
+   ```
+
+## 📖 References
+Primary computational and textual references are located in the `reference/` directory, including:
+- BURGESS, E. (1860). *Translation of the Sūrya-Siddhānta: A Text-book of Hindu Astronomy*.
+- Authoritative Sanskrit DJVU source texts.
+
+---
+**License**: GPL-3.0-or-later 
+*Curated for the Surya Siddhanta Parity API.*

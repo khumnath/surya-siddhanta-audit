@@ -10,6 +10,8 @@
   "scripts": {
     "dev": "vite",
     "docs:generate": "node scripts/resolve-siddhanta-logic.js",
+    "dump": "npx tsx scratch/dump_data.ts",
+    "verify": "npx tsx scratch/verify_data.ts",
     "build": "npm run docs:generate && tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview"

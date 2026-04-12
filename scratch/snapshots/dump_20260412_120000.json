@@ -1,12 +1,14 @@
 {
   "meta": {
-    "timestamp": "2026-04-12T16:46:28.962+05:45",
+    "timestamp": "2026-04-12T17:05:06.476+05:45",
     "input_datetime": "2026-04-12T12:00:00.000+05:45",
     "location": {
+      "name": "Custom Location",
       "latitude": 27.7,
       "longitude": 85.32,
       "elevation": 0,
-      "timezone_offset": 5.75
+      "timezone_offset": 5.75,
+      "timezone_name": "UTC"
     },
     "ahargana": 1872677.2604166665
   },

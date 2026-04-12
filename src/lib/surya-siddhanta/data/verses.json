@@ -65,11 +65,29 @@
     "translation": "The intercalary months originate from the solar/lunar revolution difference.",
     "modernCommentary": "Explains the Adhika Masa (Leap Month) logic. Since the lunar year (~354 days) is shorter than the solar year (~365 days), an extra month is added roughly every 32.5 months to keep the calendar synchronized with the seasons."
   },
+  "I.48": {
+    "adhyaya": "Madhyama (Mean Motions)",
+    "sanskrit": "कल्पादिगुणितं कालमुपर्युपरि संस्थितं । सौरैर्वर्षगतैः सार्धं संकल्य तानि पिण्डयेत् ॥",
+    "translation": "Having multiplied the time from the beginning of the creation by the number of years, add to the product the number of years elapsed of the current year.",
+    "modernCommentary": "The first step of the Ahargana (heaping of days) process: converting cumulative Kalpa/Yuga time into a single count of elapsed solar years."
+  },
+  "I.49": {
+    "adhyaya": "Madhyama (Mean Motions)",
+    "sanskrit": "तानि चैवाधिमासान्तैर्गुणयेत् संस्थितैरधः । चान्द्रमासैर्विभज्यैवं लब्धाः स्युः पृथगधिमासकाः ॥",
+    "translation": "Multiply that sum of years by the number of intercalary months, and divide by the number of lunar months; the result is the number of intercalary months.",
+    "modernCommentary": "Calculates the number of intercalary months elapsed since the epoch to synchronize the solar year count with the lunar cycle."
+  },
   "I.50": {
     "adhyaya": "Madhyama (Mean Motions)",
     "sanskrit": "द्विष्ठास्तिथिक्षयाभ्यस्ताश्चान्द्रवासरभाजिताः । लब्धोनरात्रिरहिता लङ्कायामार्धरात्रिकाः ॥",
     "translation": "The sum of days is found... it is the number of civil days elapsed at the meridian of Lanka.",
     "modernCommentary": "The core Ahargana algorithm. It converts years, months, and days into a single integer (civil days) used for all planetary positions. It anchors the calculation to midnight at the Lanka Prime Meridian."
+  },
+  "I.51": {
+    "adhyaya": "Madhyama (Mean Motions)",
+    "sanskrit": "गुणयेत् पिण्डितैस्तैस्तैः पृथक् तिथिक्षयैस्ततः । चान्द्रवासरसङ्ख्याप्तैर्लब्धोनरात्रिरहिताः ॥",
+    "translation": "Multiply that sum of days by the number of omitted lunar days, and divide by the number of lunar days; subtract the result from the sum of days to obtain the civil days.",
+    "modernCommentary": "The final adjustment in the Ahargana calculation: subtracting the 'omitted days' (Tithi-kshaya) to arrive at the final count of terrestrial civil days (Savana-dina) passed since the epoch."
   },
   "I.60": {
     "adhyaya": "Madhyama (Mean Motions)",
@@ -140,6 +158,12 @@
     "adhyaya": "Manadhya (Systems of Measurement)",
     "sanskrit": "चतुर्भिर्व्यवहारोऽत्र सौरचान्द्रार्षसावनैः। बाहस्स्येन षष्ट्यब्दं जेयं नान्यैस्तु नित्यशः।।",
     "translation": "Of these, only four are commonly used in practice... the Jovian (Gaurava) is used for determining the cycle of sixty years (Samvatsara)."
+  },
+  "XIV.3": {
+    "adhyaya": "Manadhya (Systems of Measurement)",
+    "sanskrit": "मासा द्वादश मेषाद्याः शशिनस्ते तु कीर्तिताः । प्रभवद्याः षष्टिगुणा वर्षे च कीर्तिताः ॥",
+    "translation": "The months are twelve, and are called Mesha, etc.; they are also called Chaitra, etc. The years are sixty, and are called Prabhava, etc.",
+    "modernCommentary": "Defines the correlation between Solar signs (Mesha, etc.) and Lunar names (Chaitra, etc.), as well as the 60-year Samvatsara cycle (Prabhava, etc.)."
   },
   "XIV.17": {
     "adhyaya": "Manadhya (Systems of Measurement)",
@@ -233,8 +257,8 @@
     "translation": "The time from one sunrise to the next is designated as a Savana (civil) day.",
     "modernCommentary": "Defines the fundamental civil day. This sunrise-to-sunrise period is the basis for determining the weekday (Vara), the planetary hours (Hora), and the divisions used in Muhurta calculations like Choghadia."
   },
-  "I.51": {
-    "adhyaya": "Madhyama (Mean Motions)",
+  "XII.31": {
+    "adhyaya": "Bhugola (Cosmogony)",
     "sanskrit": "मन्दादधोऽधः क्रमेण स्युः...॥",
     "translation": "Beginning from Saturn, and descending in the order of their speed (Saturn, Jupiter, Mars, Sun, Venus, Mercury, Moon) are the lords of the hours (Hora).",
     "modernCommentary": "Establishes the 'Speed-Descending Order' of the planets. This sequence determines the planetary hour (Hora) and is the foundation for calculating the specific 'Kaalas' (like Rahu Kaal or Yamaganda) which occur when different planetary energies dominate the day."

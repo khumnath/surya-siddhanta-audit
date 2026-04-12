@@ -90,10 +90,10 @@ export const REV_MOON_NODE = 232238;
 /** 
  * [Ch. I, v.41] Sun's apogee longitude (Mandocca).
  */
-export const APOGEE_SUN = 77.0 + 17.0 / 60.0;
+export const APOGEE_SUN = 77.0 + 14.0 / 60.0;
 
 /** [Ch. I, v.42] Mars's apogee longitude (Mangala Mandocca). */
-export const APOGEE_MARS = 130.0 + 1.0 / 60.0;
+export const APOGEE_MARS = 130.0;
 
 /** [Ch. I, v.42] Mercury's apogee longitude (Budha Mandocca). */
 export const APOGEE_MERCURY = 220.0 + 26.0 / 60.0;

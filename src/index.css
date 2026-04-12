@@ -39,8 +39,10 @@
   --accent-error: #ec1010;
 
   --text-primary: #f8fafc;
-  --text-secondary: #94a3b8;
-  --text-dim: #391c41;
+  --text-secondary: #cbd5e1;
+  --text-dim: #94a3b8;
+  --bg-subtle: rgba(255, 255, 255, 0.05);
+
 
   --glass-blur: blur(16px);
   --glass-shadow: 0 20px 50px -12px rgba(0, 0, 0, 0.5);
@@ -56,9 +58,11 @@
   --border-card: rgba(0, 0, 0, 0.1);
   --border-focus: #4f46e5;
 
-  --text-primary: #0f172a;
-  --text-secondary: #475569;
-  --text-dim: #94a3b8;
+  --text-primary: #020617;
+  --text-secondary: #0f172a;
+  --text-dim: #334155;
+  --bg-subtle: rgba(0, 0, 0, 0.05);
+
 
   --glass-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
 }
@@ -80,12 +84,12 @@
 }
 
 .nav-pill {
-  padding: 0.6rem 1.25rem;
-  border-radius: 10px;
+  padding: 0.7rem 1.4rem;
+  border-radius: 12px;
   border: none;
-  font-size: 0.75rem;
+  font-size: 0.9rem;
   font-weight: 700;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.01em;
   cursor: pointer;
   background: transparent;
   color: var(--text-secondary);
@@ -102,9 +106,10 @@
 }
 
 .nav-pill.active {
-  background: var(--accent-primary);
-  color: white;
-  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+  background: var(--accent-primary) !important;
+  color: white !important;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3) !important;
+  opacity: 1 !important;
 }
 
 * {
@@ -229,8 +234,13 @@ button {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  background: var(--accent-primary);
-  color: white;
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-secondary);
+}
+
+:root[data-theme='light'] button:not(.bg-accent-primary):not(.active) {
+  background: rgba(0, 0, 0, 0.05);
+  color: var(--text-primary);
 }
 
 button:hover {
@@ -280,9 +290,9 @@ input:focus {
 /* Typography Helpers */
 .text-label {
   color: var(--text-dim);
-  font-size: 0.65rem;
-  font-weight: 800;
-  letter-spacing: 0.1em;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
 }
 
@@ -315,4 +325,8 @@ input:focus {
   .dashboard-container {
     padding: 1rem;
   }
+}
+
+@utility bg-subtle {
+  background-color: var(--bg-subtle);
 }

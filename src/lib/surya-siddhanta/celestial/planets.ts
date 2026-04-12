@@ -48,9 +48,9 @@ export const MANDA_CIRC_SATURN: [number, number] = [49.0, 48.0];
  */
 export const SIGHRA_CIRC_MARS: [number, number] = [235.0, 232.0];
 export const SIGHRA_CIRC_MERCURY: [number, number] = [133.0, 132.0];
-export const SIGHRA_CIRC_JUPITER: [number, number] = [70.0, 72.0];
+export const SIGHRA_CIRC_JUPITER: [number, number] = [72.0, 70.0];
 export const SIGHRA_CIRC_VENUS: [number, number] = [262.0, 260.0];
-export const SIGHRA_CIRC_SATURN: [number, number] = [39.0, 40.0];
+export const SIGHRA_CIRC_SATURN: [number, number] = [40.0, 39.0];
 
 /**
  * Calculate the dynamically corrected epicycle circumference based on anomaly.

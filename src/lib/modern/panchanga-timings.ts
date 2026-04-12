@@ -104,7 +104,9 @@ export function getModernPanchangaElements(date: Date, ayanMode: string = 'Chitr
       index: res.modernSamvatsarIdx,
       name: res.modernSamvatsarName
     },
-    samvatsarRawCount: res.samvatsarRawCount
+    samvatsarRawCount: res.samvatsarRawCount,
+    siderealSun: res.siderealSun,
+    siderealMoon: res.siderealMoon
   };
 }
 

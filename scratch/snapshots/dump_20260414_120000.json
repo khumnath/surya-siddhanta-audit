@@ -1,0 +1,67 @@
+{
+  "meta": {
+    "timestamp": "2026-04-12T17:51:41.406+05:45",
+    "input_datetime": "2026-04-14T12:00:00.000+05:45",
+    "location": {
+      "name": "Custom Location",
+      "latitude": 27.7,
+      "longitude": 85.32,
+      "elevation": 0,
+      "timezone_offset": 5.75,
+      "timezone_name": "UTC"
+    },
+    "ahargana": 1872679.2604166665
+  },
+  "surya_siddhanta": {
+    "eras": {
+      "kali_yuga": 5127,
+      "vikram_samvat_lunar": 2083,
+      "bikram_sambat_solar": 2082,
+      "shalivahana_shaka": 1948,
+      "nepal_sambat": 1146,
+      "south_samvatsar": "Parabhava",
+      "north_samvatsar": "Raudra",
+      "north_samvatsar_fraction": 0.09322976703151653
+    },
+    "panchanga": {
+      "tithi": {
+        "index": 28,
+        "name": "Trayodashi",
+        "paksha": "Krishna",
+        "fraction": 0.1341407826923522
+      },
+      "month": "Chaitra"
+    },
+    "planets": {
+      "sun": 355.5100195329602,
+      "moon": 321.1197089252684,
+      "mars": 332.692503844145,
+      "mercury": 336.108542571585,
+      "jupiter": 76.39442824667383,
+      "venus": 24.691666488170085,
+      "saturn": 335.91662592318664
+    },
+    "transitions": {
+      "sunrise": 6.06385159564485,
+      "sunset": 17.93614840435515,
+      "dayLengthHours": 11.8722968087103
+    }
+  },
+  "modern": {
+    "panchanga": {
+      "tithiIdx": 26,
+      "tithiFraction": 0.4553474242078721,
+      "nakshatraIdx": 23,
+      "nakshatraFraction": 0.816584088625202,
+      "yogaIdx": 23,
+      "karanaIdx": 52,
+      "siderealMoon": 317.5544545150027,
+      "siderealSun": 0.09028542450823807,
+      "siderealJupiter": 82.66226866728499,
+      "modernSamvatsarIdx": 53,
+      "modernSamvatsarName": "Raudra",
+      "samvatsarRawCount": 5187,
+      "ayan": 24.225783722525108
+    }
+  }
+}

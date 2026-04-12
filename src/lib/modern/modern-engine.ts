@@ -330,4 +330,116 @@ export class ModernPanchangaEngine {
 
     return date;
   }
+
+  /**
+   * Finds the exact ingress of the Sun into a target sidereal sign using binary search.
+   */
+  static findHighPrecisionSunIngress(date: Date, targetRashi: number, ayanMode: string = 'Chitrapaksha (Lahiri)'): Date {
+    // 1. Coarse search to find the day boundary
+    const coarse = this.findSunIngress(date, targetRashi, ayanMode);
+    
+    // 2. Binary search within that day [coarse - 1 day, coarse]
+    let low = coarse.getTime() - 86400000;
+    let high = coarse.getTime();
+    
+    for (let i = 0; i < 25; i++) {
+        const mid = (low + high) / 2;
+        const sun = this.getSiderealSun(new Date(mid), ayanMode);
+        const rashi = Math.floor(sun / 30);
+        
+        // Handle wrap around for Mesha (rashi 0)
+        if (targetRashi === 0 && rashi === 11) {
+            low = mid;
+        } else if (rashi < targetRashi) {
+            low = mid;
+        } else {
+            high = mid;
+        }
+    }
+    return new Date(high);
+  }
+
+  static getSiderealSun(date: Date, ayanMode: string = 'Chitrapaksha (Lahiri)'): number {
+    const time = AstroMath.makeTime(date);
+    const sunP = AstroMath.getSunPosition(time);
+    const ayan = AstroMath.getAyanamsha(time, ayanMode);
+    return (sunP - ayan + 360) % 360;
+  }
+
+  /**
+   * Stabilized Solar Month Sign with look-ahead logic.
+   */
+  static getModernSolarMonthSign(date: Date, ayanMode: string = 'Chitrapaksha (Lahiri)'): number {
+     const sun = this.getSiderealSun(date, ayanMode);
+     const currentRashi = Math.floor(sun / 30);
+     
+     // Look ahead to next midnight (start of tomorrow)
+     const nextDate = new Date(date);
+     nextDate.setHours(24, 0, 0, 0); 
+     
+     const nextSun = this.getSiderealSun(nextDate, ayanMode);
+     const nextRashi = Math.floor(nextSun / 30);
+     
+     if (nextRashi > currentRashi || (currentRashi === 11 && nextRashi === 0)) {
+         return nextRashi + 1;
+     }
+     return currentRashi + 1;
+  }
+
+  /**
+   * Stabilized Solar Month Day with look-ahead logic.
+   */
+  static getModernSolarMonthDay(date: Date, ayanMode: string = 'Chitrapaksha (Lahiri)'): number {
+      const currentSign = this.getModernSolarMonthSign(date, ayanMode);
+      const targetRashi = currentSign - 1;
+      
+      const ingressDate = this.findHighPrecisionSunIngress(date, targetRashi, ayanMode);
+      
+      // Zero out time components to compare calendar days
+      const d1 = new Date(date);
+      d1.setHours(0, 0, 0, 0);
+      const d2 = new Date(ingressDate);
+      d2.setHours(0, 0, 0, 0);
+      
+      return Math.round((d1.getTime() - d2.getTime()) / 86400000) + 1;
+  }
+
+  /**
+   * Finds the exact ingress of the Sun into a target sidereal sign (Day-based coarse search).
+   * 
+   * @param date Scan date
+   * @param targetRashi Rashi index (0=Mesha, 1=Vrishabha, etc.)
+   * @param ayanMode Ayanamsha calibration
+   */
+  static findSunIngress(date: Date, targetRashi: number, ayanMode: string = 'Chitrapaksha (Lahiri)'): Date {
+    const getRashi = (d: Date) => {
+      const sun = this.getSiderealSun(d, ayanMode);
+      return Math.floor(sun / 30);
+    };
+    
+    let current = new Date(date);
+    const startRashi = getRashi(current);
+
+    // If we are already in the month, find the preceding start
+    if (startRashi === targetRashi) {
+      for (let i = 0; i < 35; i++) {
+        current.setDate(current.getDate() - 1);
+        if (getRashi(current) !== targetRashi) {
+          const ingress = new Date(current);
+          ingress.setDate(ingress.getDate() + 1);
+          return ingress;
+        }
+      }
+    } else {
+      // Find the next occurrence
+      for (let i = 0; i < 400; i++) {
+        current.setDate(current.getDate() + 1);
+        if (getRashi(current) === targetRashi) {
+          return current;
+        }
+      }
+    }
+
+    return date;
+  }
 }

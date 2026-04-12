@@ -7,7 +7,7 @@
  * 
  * [Ch. XIV, v.18] Operates on the 'Savana' day, defined precisely as 
  * the duration from one sunrise to the next.
- * [Ch. I, v.51] Utilizes the 'Speed-Descending' order of planets 
+ * [Ch. XII, v.31] Utilizes the 'Speed-Descending' order of planets 
  * (Saturn, Jupiter, Mars, Sun, Venus, Mercury, Moon) to determine the 
  * governance and quality of time segments.
  */
@@ -27,9 +27,17 @@ export interface MuhurtaTiming {
 const CHOGHADIA_NAMES = ["Udveg", "Chara", "Labh", "Amrit", "Kaal", "Shubh", "Rog"];
 
 /**
+ * [Ch. XII, v.31] Authority for the 'Speed-Descending' order of planets.
+ * This order is the basis for determining the lords of the hours (Horas).
+ */
+export const PLANETS_SPEED_ORDER = [
+  "Saturn", "Jupiter", "Mars", "Sun", "Venus", "Mercury", "Moon"
+];
+
+/**
  * Planetary sequences for the Day Choghadiya, derived from the 
  * weekday ruler (Vara-adhipati) and following the standard 
- * Siddhantic order [Ch. I, v.51].
+ * Siddhantic order [Ch. XII, v.31].
  */
 const DAY_SEQUENCES = [
   [0, 1, 2, 3, 4, 5, 6, 0], // Sun
@@ -88,7 +96,7 @@ export function calculateDailyMuhurtas(
   }
 
   // 2. Special Kaalas (Planetary Periods)
-  // [Ch. I, v.51] Based on the planetary hours (Hora), these specific 
+  // [Ch. XII, v.31] Based on the planetary hours (Hora), these specific 
   // segments represent times where planetary 'shadows' are dominant.
   const rahuParts = [8, 2, 7, 5, 6, 4, 3];
   const yamaParts = [5, 4, 3, 2, 1, 7, 6];

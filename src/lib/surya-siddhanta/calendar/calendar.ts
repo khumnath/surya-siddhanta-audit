@@ -14,6 +14,7 @@ import { calculateTrueLongitudeSun } from '../celestial/sun';
 import { calculateTrueLongitudeMoon } from '../celestial/moon';
 import { calculateTrueLongitudePlanet } from '../celestial/planets';
 import { Body } from '../celestial/mean_motions';
+import { findSSLunarBoundary, findSSSunIngress } from './transit-finder';
 import { normalizeAngle } from '../core/utils';
 import { calculateSunriseSunset as calcSS } from '../geometry/geodesy';
 
@@ -76,26 +77,105 @@ export function isAdhimasa(ahargana: number): boolean {
   return rashiNow === rashiFuture;
 }
 
+export const LUNAR_MONTH_NAMES = [
+  "Chaitra", "Vaishakha", "Jyeshtha", "Ashadha", "Shravana", "Bhadrapada",
+  "Ashvina", "Karttika", "Margashirsha", "Pausha", "Magha", "Phalguna"
+];
+
+/**
+ * High-precision Lunar Month naming logic (Siddhantic).
+ * 
+ * [Ch. XIV, v.1-3] Traditional lunar months are named after the solar 
+ * transit (Sankranti) that occurs within them. This function derives the 
+ * base name by finding the Sun's position at the relevant Amavasya.
+ * 
+ * @param ahargana Current day count
+ * @param system Naming system ('amanta' or 'purnimanta')
+ * @param injectedSunLongAtBoundary Optional Sun longitude override for data-bridging
+ * @param injectedIsKrishnaPaksha Optional Krishna Paksha override for data-bridging
+ */
+export function getLunarMonthDetails(
+  ahargana: number, 
+  system: 'amanta' | 'purnimanta' = 'purnimanta',
+  injectedSunLongAtBoundary?: number,
+  injectedIsKrishnaPaksha?: boolean
+): { name: string; isAdhika: boolean } {
+  // 1. Find the preceding New Moon (Amavasya boundary)
+  // Even for Purnimanta, the NAME is determined by the Sankranti relative to the Amavasya.
+  const precedingNewMoon = injectedSunLongAtBoundary !== undefined ? ahargana : findSSLunarBoundary(ahargana, 0, -1);
+  
+  // 2. Sun longitude at that New Moon
+  const lSunAtNM = injectedSunLongAtBoundary !== undefined ? injectedSunLongAtBoundary : calculateTrueLongitudeSun(precedingNewMoon);
+  
+  // 3. Current Paksha status
+  let isKrishna;
+  if (injectedIsKrishnaPaksha !== undefined) {
+    isKrishna = injectedIsKrishnaPaksha;
+  } else {
+    const pakshaIdx = getTithiDetails(ahargana).index;
+    isKrishna = pakshaIdx > 15;
+  }
+
+  // 4. Base index (Meshadi)
+  // Rule: Chaitra is the month where Sun enters Mesha (Idx 0).
+  // At the preceding New Moon, the Sun was in Meena (Idx 11).
+  const solarRashiAtNM = Math.floor(lSunAtNM / 30.0);
+  
+  // Month Name = Index of the NEXT Rashi
+  let monthIdx = (solarRashiAtNM + 1) % 12;
+  
+  // 5. Purnimanta Shift
+  // In Purnimanta, the month changes at Full Moon (start of Krishna Paksha).
+  // The name used for Krishna Paksha is the name of the NEXT Amanta month.
+  if (system === 'purnimanta' && isKrishna) {
+    monthIdx = (monthIdx + 1) % 12;
+  }
+
+  return {
+    name: LUNAR_MONTH_NAMES[monthIdx],
+    isAdhika: isAdhimasa(ahargana) // Simplified check for now
+  };
+}
+
 /**
  * Get the name of the Lunar Month.
  * 
- * [Ch. I, v.48-51] Traditional lunar months (Meshadi) are named based on 
+ * [Ch. XIV, v.1-3] Traditional lunar months (Meshadi) are named based on 
  * the solar Rashi occupied by the Sun at the preceding New Moon.
  * 
  * @param ahargana Current day count
+ * @param system Naming system ('amanta' or 'purnimanta')
+ * @param rawSunLongAtNM Optional Sun longitude at the preceding New Moon
+ * @param isKrishnaPaksha Optional flag indicating a waning moon paksha
  * @returns The traditional month name (e.g., 'Chaitra')
  */
-export function getLunarMonthName(ahargana: number): string {
-  const lSun = calculateTrueLongitudeSun(ahargana);
-  const solarMonthIdx = Math.floor(lSun / 30.0);
-  
-  const lunarMonthNames = [
-    "Vaishakha", "Jyeshtha", "Ashadha", "Shravana", "Bhadrapada",
-    "Ashvina", "Karttika", "Margashirsha", "Pausha", "Magha", "Phalguna", "Chaitra"
-  ];
+export function getLunarMonthName(
+  ahargana: number, 
+  system: 'amanta' | 'purnimanta' = 'purnimanta',
+  rawSunLongAtNM?: number, 
+  isKrishnaPaksha?: boolean
+): string {
+  const details = getLunarMonthDetails(ahargana, system, rawSunLongAtNM, isKrishnaPaksha);
+  return details.isAdhika ? `Adhika ${details.name}` : details.name;
+}
 
-  const baseName = lunarMonthNames[solarMonthIdx];
-  return isAdhimasa(ahargana) ? `Adhika ${baseName}` : baseName;
+/**
+ * Calculates the day of the current solar month (Saura-masa).
+ * 
+ * [Ch. XIV, v.7-11] The solar day count begins at the moment of ingress (Sankranti).
+ * 
+ * @param ahargana Current day count
+ * @param rawSunLong Optional Sun longitude override
+ * @returns Day of the month (1-indexed)
+ */
+export function getSolarMonthDay(ahargana: number, rawSunLong?: number): number {
+  const am = Math.floor(ahargana);
+  const effectiveRashiIdx = getSolarMonthSign(ahargana, rawSunLong);
+  const targetRashi = (effectiveRashiIdx - 1);
+  
+  const ingressAhargana = findSSSunIngress(am, targetRashi);
+  // Day count using civil boundaries: the day of Sankranti is Day 1.
+  return am - Math.floor(ingressAhargana) + 1;
 }
 
 // ============================================================================
@@ -242,39 +322,42 @@ export function calculateKarana(ahargana: number): { index: number; name: string
  * @param ahargana Current day count
  * @returns 1-based Rashi index (1=Mesha, ..., 12=Meena)
  */
-export function getSolarMonthSign(ahargana: number): number {
-  const lSun = calculateTrueLongitudeSun(ahargana);
-  return Math.floor(lSun / 30.0) + 1;
+export function getSolarMonthSign(ahargana: number, rawSunLong?: number): number {
+  const am = Math.floor(ahargana);
+  // Look ahead: if Sun transits into a new rashi today (before next midnight), 
+  // then today is Day 1 of that new month.
+  const s1 = (rawSunLong !== undefined && Math.abs(ahargana - am) < 0.001) ? rawSunLong : calculateTrueLongitudeSun(am + 1);
+  const monthIdx = Math.floor(s1 / 30.0) + 1;
+  return ((monthIdx - 1 + 12) % 12) + 1;
 }
+
+export const SOLAR_RASHI_NAMES = [
+  "Mesha", "Vrishabha", "Mithuna", "Karka", "Simha", "Kanya",
+  "Tula", "Vrishchika", "Dhanu", "Makara", "Kumbha", "Meena"
+];
+
+export const BIKRAM_MONTH_NAMES = [
+  "Baishakh", "Jestha", "Ashadh", "Shrawan", "Bhadra", "Ashwin",
+  "Kartik", "Mangsir", "Poush", "Magh", "Falgun", "Chaitra"
+];
 
 /**
  * Get the name of the Solar Month (Rashi).
  * 
  * @param ahargana Current day count
- * @returns Combined Rashi name (e.g., 'Mesha (Aries)')
+ * @returns Combined Rashi name (e.g., 'Mesha')
  */
-export function getSolarMonthName(ahargana: number): string {
-  const solarMonthIdx = getSolarMonthSign(ahargana);
-  const rashiNames = [
-    "Mesha (Aries)", "Vrishabha (Taurus)", "Mithuna (Gemini)",
-    "Karkataka (Cancer)", "Simha (Leo)", "Kanya (Virgo)",
-    "Tula (Libra)", "Vrishchika (Scorpio)", "Dhanu (Sagittarius)",
-    "Makara (Capricorn)", "Kumbha (Aquarius)", "Meena (Pisces)"
-  ];
-  return rashiNames[(solarMonthIdx - 1) % 12];
+export function getSolarMonthName(ahargana: number, rawSunLong?: number): string {
+  const solarMonthIdx = getSolarMonthSign(ahargana, rawSunLong);
+  return SOLAR_RASHI_NAMES[(solarMonthIdx - 1) % 12];
 }
 
 /**
  * Get the Bikram Sambat (Solar) month name.
  */
-export function getBikramMonthName(ahargana: number): string {
-  const solarMonthIdx = getSolarMonthSign(ahargana);
-  const bsMonths = [
-    "Baisakh", "Jestha", "Ashadh", "Shrawan",
-    "Bhadra", "Ashwin", "Kartik", "Mangsir",
-    "Poush", "Magh", "Falgun", "Chaitra"
-  ];
-  return bsMonths[(solarMonthIdx - 1) % 12];
+export function getBikramMonthName(ahargana: number, rawSunLong?: number): string {
+  const solarMonthIdx = getSolarMonthSign(ahargana, rawSunLong);
+  return BIKRAM_MONTH_NAMES[(solarMonthIdx - 1) % 12];
 }
 
 /**
@@ -287,8 +370,8 @@ export function getBikramMonthName(ahargana: number): string {
  * @param ahargana Current day count
  * @returns Ayana name
  */
-export function getAyana(ahargana: number): string {
-  const sunLong = calculateTrueLongitudeSun(ahargana);
+export function getAyana(ahargana: number, rawSunLong?: number): string {
+  const sunLong = rawSunLong !== undefined ? rawSunLong : calculateTrueLongitudeSun(ahargana);
   if (sunLong >= 270.0 || sunLong < 90.0) {
     return "Uttarayana (Northward)";
   } else {
@@ -305,8 +388,8 @@ export function getAyana(ahargana: number): string {
  * @param ahargana Current day count
  * @returns Name of the current Vedic season (e.g., 'Vasanta')
  */
-export function getSeason(ahargana: number): string {
-  const solarMonth = getSolarMonthSign(ahargana);
+export function getSeason(ahargana: number, rawSunLong?: number): string {
+  const solarMonth = getSolarMonthSign(ahargana, rawSunLong);
   const seasons = [
     "Vasanta (Spring)", "Grishma (Summer)", "Varsha (Rains)",
     "Sarad (Autumn)", "Hemanta (Winter)", "Sisira (Winter/Cool)"

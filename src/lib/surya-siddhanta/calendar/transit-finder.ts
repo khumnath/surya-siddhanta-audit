@@ -175,3 +175,120 @@ export function formatAharganaDate(ahargana: number): string {
   const dt = aharganaToDateTime(ahargana, KATHMANDU);
   return dt.toFormat("MMM d, yyyy");
 }
+
+/**
+ * Finds the exact Ahargana when the Sun enters a target sign in the SS engine.
+ * 
+ * @param ahargana Search start point
+ * @param targetRashi Target Rashi index (0=Mesha, etc.)
+ */
+import { calculateTrueLongitudeSun } from '../celestial/sun';
+import { calculateTrueLongitudeMoon } from '../celestial/moon';
+import { normalizeAngle } from '../core/utils';
+
+export function findSSSunIngress(ahargana: number, targetRashi: number): number {
+  let lo = ahargana - 35; // A solar month is max ~32 days
+  let hi = ahargana;
+
+  // Binary search for 25 iterations (~1 minute precision)
+  for (let i = 0; i < 25; i++) {
+    const mid = (lo + hi) / 2;
+    const sunLong = calculateTrueLongitudeSun(mid);
+    const r = Math.floor(sunLong / 30);
+    
+    // Logic to handle 11 -> 0 wrap
+    const diff = (r - targetRashi + 12) % 12;
+    const isPast = diff < 6;
+
+    if (isPast) hi = mid; else lo = mid;
+  }
+  
+  return hi;
+}
+
+/**
+ * Pinpoints the exact Ahargana of a Tithi transition in the SS engine.
+ * 
+ * [Ch. XIV, v.1-3] Calculates the precise moment a Tithi changes by 
+ * solving for the 12-degree separation between the Sun and Moon.
+ * 
+ * @param ahargana Day count to search around
+ * @param targetTithi 0-29 (0 = Amavasya/New Moon start, 15 = Purnima start)
+ * @param direction -1 (preceding) or 1 (next)
+ */
+export function findSSLunarBoundary(ahargana: number, targetTithi: number, direction: -1 | 1 = -1): number {
+  const getTithiIdx = (a: number) => {
+    const s = calculateTrueLongitudeSun(a);
+    const m = calculateTrueLongitudeMoon(a);
+    const diff = normalizeAngle(m - s);
+    return Math.floor(diff / 12);
+  };
+
+  let lo = ahargana + (direction === -1 ? -32 : 0);
+  let hi = ahargana + (direction === -1 ? 0 : 32);
+
+  // Binary search for 25 iterations (~1 second precision)
+  for (let i = 0; i < 25; i++) {
+    const mid = (lo + hi) / 2;
+    const t = getTithiIdx(mid);
+    
+    // Logic to handle 29 -> 0 wrap
+    let isPast;
+    if (direction === -1) {
+       // Finding preceding
+       const diff = (t - targetTithi + 30) % 30;
+       isPast = diff < 15;
+    } else {
+       // Finding next
+       const diff = (targetTithi - t + 30) % 30;
+       isPast = diff > 15;
+    }
+
+    if (isPast) hi = mid; else lo = mid;
+  }
+  return direction === -1 ? lo : hi;
+}
+
+/**
+ * Finds the New Moon or Full Moon using the Modern JPL Engine.
+ * 
+ * Used for high-precision comparison (Audit) to determine the offset 
+ * between traditional and modern lunar cycle boundaries.
+ * 
+ * @param date Reference date
+ * @param targetTithi 0 (New Moon) or 15 (Full Moon)
+ * @param direction Search direction
+ */
+export function findModernLunarBoundary(date: Date, targetTithi: number, direction: -1 | 1 = -1): Date {
+  const step = direction * 0.5; // half day steps
+  let current = new Date(date);
+  
+  const getTithi = (d: Date) => ModernPanchangaEngine.getElements(d).tithiIdx;
+  const startTithi = getTithi(current);
+
+  // Linear scan to find the rough neighborhood
+  for (let i = 0; i < 60; i++) {
+    const next = new Date(current.getTime() + step * 86400000);
+    const nextT = getTithi(next);
+    if (direction === -1) {
+      if (nextT === targetTithi && startTithi !== targetTithi) break;
+    } else {
+      if (nextT === targetTithi && startTithi !== targetTithi) break;
+    }
+    current = next;
+  }
+
+  // Binary search to refine
+  let lo = direction === -1 ? current.getTime() : date.getTime();
+  let hi = direction === -1 ? date.getTime() : current.getTime();
+  
+  for (let i = 0; i < 25; i++) {
+    const mid = (lo + hi) / 2;
+    if (getTithi(new Date(mid)) === targetTithi) {
+       if (direction === -1) lo = mid; else hi = mid;
+    } else {
+       if (direction === -1) hi = mid; else lo = mid;
+    }
+  }
+  return new Date((lo + hi) / 2);
+}

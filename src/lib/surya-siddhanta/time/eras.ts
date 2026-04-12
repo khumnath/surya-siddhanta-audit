@@ -164,6 +164,7 @@ export function getAllEraYears(ahargana: number): Record<string, number | string
 
   return {
     kali_yuga: kaliLunar,
+    kali_yuga_solar: kaliSolar,
     vikram_samvat_lunar: kaliToVikramSamvat(kaliLunar),
     bikram_sambat_solar: kaliToVikramSamvat(kaliSolar),
     shalivahana_shaka: shaka, 

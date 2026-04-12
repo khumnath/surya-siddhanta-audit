@@ -25,13 +25,17 @@ import {
   getTithiDetails, calculateNakshatra,
   getSolarMonthName, getAyana, getSeason,
   getAllPlanetRashis, getLunarMonthName, getSunriseSunset,
-  getBikramMonthName, longitudeToRashiDetailed
+  getBikramMonthName, longitudeToRashiDetailed,
+  getSolarMonthDay, LUNAR_MONTH_NAMES, SOLAR_RASHI_NAMES, BIKRAM_MONTH_NAMES
 } from './lib/surya-siddhanta/calendar/calendar';
-import { computeDayPanchangaTimings } from './lib/surya-siddhanta/calendar/panchanga-timings';
+import {
+  computeDayPanchangaTimings
+} from './lib/surya-siddhanta/calendar/panchanga-timings';
 import {
   computeModernPanchangaTimings,
   getModernPanchangaElements
 } from './lib/modern/panchanga-timings';
+import { findModernLunarBoundary } from './lib/surya-siddhanta/calendar/transit-finder';
 import { getModernPositions } from './lib/modern/astronomy';
 import { type AyanamshaMode } from './lib/modern/ayanamsha';
 import { getAllEraYears } from './lib/surya-siddhanta/time/eras';
@@ -39,18 +43,19 @@ import { getLagna } from './lib/surya-siddhanta/astrology/lagna';
 import { calculateDailyMuhurtas } from './lib/surya-siddhanta/calendar/muhurta';
 import { getModernLagna } from './lib/modern/astronomy';
 import { getNorthSamvatsar } from './lib/surya-siddhanta/calendar/samvatsar';
-import { 
-  findSSMeanTransitAhargana, 
+import {
+  findSSMeanTransitAhargana,
   findNextSSMeanTransitAhargana,
   getSSNextSamvatsarName,
   getModernNextSamvatsarName,
-  findPrecedingYugadiAhargana, 
+  findPrecedingYugadiAhargana,
   getNorthCivilSamvatsar,
   getSouthCivilSamvatsar,
   getNextSamvatsarName,
-  formatAharganaDate 
+  findSSSunIngress,
+  formatAharganaDate
 } from './lib/surya-siddhanta/calendar/transit-finder';
-import { ModernPanchangaEngine } from './lib/modern/modern-engine';
+import { ModernPanchangaEngine, TITHIS } from './lib/modern/modern-engine';
 
 
 // Component Imports
@@ -69,6 +74,7 @@ const App: React.FC = () => {
   const [viewMode, setViewMode] = useState<'ss' | 'modern' | 'both'>('both');
   /** Configurable Ayanamsha for the Modern calibration */
   const [modernAyanamsha, setModernAyanamsha] = useState<AyanamshaMode>('lahiri');
+  const [lunarSystem, setLunarSystem] = useState<'amanta' | 'purnimanta'>('purnimanta');
 
   const [theme, setTheme] = useState<'dark' | 'light'>(() => {
     return (localStorage.getItem('theme') as 'dark' | 'light') || 'light';
@@ -100,7 +106,6 @@ const App: React.FC = () => {
   const tithi = getTithiDetails(ahargana);
   const nakshatra = calculateNakshatra(ahargana);
   const solarMonth = getSolarMonthName(ahargana);
-  const lunarMonth = getLunarMonthName(ahargana);
   const ayana = getAyana(ahargana);
   const season = getSeason(ahargana);
   const eras = getAllEraYears(ahargana);
@@ -108,6 +113,8 @@ const App: React.FC = () => {
   const sunTimes = getSunriseSunset(ahargana, location.latitude);
   const bikramMonth = getBikramMonthName(ahargana);
   const ssLagna = getLagna(ahargana, location.latitude, location.longitude);
+  /** Traditional Solar/Lunar details */
+  const lunarMonth = getLunarMonthName(ahargana, lunarSystem);
 
   /** Modern currentized snapshots for comparison view */
   const modernCurrent = useMemo(() => {
@@ -149,6 +156,73 @@ const App: React.FC = () => {
     return getModernPositions(selectedDate.toJSDate(), modernAyanamsha);
   }, [viewMode, selectedDate, modernAyanamsha]);
 
+  /** Modern Solar/Lunar rhythm for comparison */
+  const modernRhythm = useMemo(() => {
+    if (!modernCurrent) return null;
+    const sSun = (modernCurrent as any).siderealSun;
+
+    // Find the modern New Moon boundary to determine the lunar month name correctly
+    const modNM = findModernLunarBoundary(selectedDate.toJSDate(), 0, -1);
+    const modElementsAtNM = getModernPanchangaElements(modNM, modernAyanamsha);
+    const modSunAtNM = (modElementsAtNM as any).siderealSun;
+
+    const modSign = ModernPanchangaEngine.getModernSolarMonthSign(selectedDate.toJSDate(), modernAyanamsha);
+    const modDay = ModernPanchangaEngine.getModernSolarMonthDay(selectedDate.toJSDate(), modernAyanamsha);
+
+    return {
+      solarMonth: SOLAR_RASHI_NAMES[modSign - 1],
+      bikramMonth: BIKRAM_MONTH_NAMES[modSign - 1],
+      ayana: getAyana(ahargana, sSun),
+      season: getSeason(ahargana, sSun),
+      lunarMonth: getLunarMonthName(ahargana, lunarSystem, modSunAtNM, modernCurrent.tithi.index > 15),
+      paksha: modernCurrent.tithi.name.split(' ')[0],
+      solarDay: modDay
+    };
+  }, [modernCurrent, ahargana, selectedDate, modernAyanamsha, lunarSystem]);
+
+  /** Modern Era Logic - Precise transit boundaries */
+  const modernEras = useMemo(() => {
+    if (!modernCurrent || !modernRhythm) return null;
+
+    const gYear = selectedDate.year;
+    const sSun = (modernCurrent as any).siderealSun;
+    
+    // 1. Solar Kali/Bikram (Mesha Sankranti)
+    const baseKaliSolar = gYear + 3100;
+    const finalKaliSolar = (selectedDate.month < 4 || (selectedDate.month === 4 && sSun >= 300)) ? baseKaliSolar : baseKaliSolar + 1;
+
+    // 2. Lunar Kali/Vikram (Chaitra Shukla Pratipada)
+    const mIdx = LUNAR_MONTH_NAMES.indexOf(modernRhythm.lunarMonth);
+    
+    let isPastYugadi = false;
+    if (selectedDate.month > 4) isPastYugadi = true;
+    else if (selectedDate.month >= 3) {
+      if (mIdx > 0 && mIdx < 10) isPastYugadi = true;
+      else if (mIdx === 0 && modernRhythm.paksha === 'Shukla') isPastYugadi = true;
+    }
+    const finalKaliLunar = isPastYugadi ? gYear + 3101 : gYear + 3100;
+
+    // 3. Nepal Sambat (Kartika Shukla Pratipada)
+    let isPastKartika = false;
+    if (selectedDate.month > 11) isPastKartika = true;
+    else if (selectedDate.month >= 10) {
+      if (mIdx > 7) isPastKartika = true;
+      else if (mIdx === 7 && modernRhythm.paksha === 'Shukla') isPastKartika = true;
+    }
+    const finalNS = (selectedDate.year - 880) + (isPastKartika ? 1 : 0);
+
+    return {
+      kaliSolar: finalKaliSolar,
+      kaliLunar: finalKaliLunar,
+      bikram: finalKaliSolar - 3044,
+      vikram: finalKaliLunar - 3044,
+      shaka: finalKaliLunar - 3179,
+      nepal: finalNS
+    };
+  }, [modernCurrent, modernRhythm, selectedDate]);
+
+  const ssSolarDay = getSolarMonthDay(ahargana);
+
   // Modern Lagna
   const modernLagna = useMemo(() => {
     if (viewMode === 'ss') return null;
@@ -157,16 +231,16 @@ const App: React.FC = () => {
   // Triple Samvatsara Auditor - High Precision refined for Adoption Window
   const samvatsarAudit = useMemo(() => {
     if (!modernCurrent) return null;
-    
+
     // Find high-precision boundary dates
     const modernInDate = ModernPanchangaEngine.findJupiterIngress(selectedDate.toJSDate(), modernAyanamsha);
     const modernOutDate = ModernPanchangaEngine.findNextJupiterIngress(selectedDate.toJSDate(), modernAyanamsha);
-    
+
     const ss = getNorthSamvatsar(ahargana);
     const ssMeanAhargana = findSSMeanTransitAhargana(ahargana);
     const ssEndAhargana = findNextSSMeanTransitAhargana(ahargana);
     const yugadiAhargana = findPrecedingYugadiAhargana(ahargana);
-    
+
     const civilStartStr = formatAharganaDate(yugadiAhargana);
     const civilName = getNorthCivilSamvatsar(ahargana);
     const southName = getSouthCivilSamvatsar(ahargana);
@@ -175,7 +249,7 @@ const App: React.FC = () => {
     const selTs = selectedDate.toMillis();
     const modTs = modernInDate.getTime();
     const yugadiTs = DateTime.fromFormat(civilStartStr, "MMM d, yyyy").setZone('Asia/Kathmandu').toMillis();
-    
+
     const isTransWindow = (selTs > Math.min(modTs, yugadiTs)) && (selTs < Math.max(modTs, yugadiTs));
 
     return {
@@ -227,6 +301,28 @@ const App: React.FC = () => {
     return solarMonth.includes("Meena");
   }, [solarMonth]);
 
+  const sankrantiAudit = useMemo(() => {
+    if (!isBikramNewYearApproaching) return null;
+
+    // Modern Mesha Sankranti (Sidereal 0)
+    const modernSankrantiDate = ModernPanchangaEngine.findSunIngress(selectedDate.toJSDate(), 0, modernAyanamsha);
+    const modernElements = ModernPanchangaEngine.getElements(modernSankrantiDate, modernAyanamsha);
+    const modernTithiName = TITHIS[modernElements.tithiIdx];
+
+    // SS Mesha Sankranti (Sidereal 0)
+    const ssSankrantiAhargana = findSSSunIngress(ahargana, 0);
+    const ssSankrantiDateStr = formatAharganaDate(ssSankrantiAhargana);
+    const ssTithi = getTithiDetails(ssSankrantiAhargana);
+    const ssMonth = getLunarMonthName(ssSankrantiAhargana);
+
+    return {
+      modernDate: DateTime.fromJSDate(modernSankrantiDate).setZone('Asia/Kathmandu').toFormat("MMMM d, yyyy"),
+      modernLunar: `${modernTithiName}`,
+      ssDate: ssSankrantiDateStr,
+      ssLunar: `${ssMonth} ${ssTithi.paksha} ${ssTithi.name}`
+    };
+  }, [isBikramNewYearApproaching, selectedDate, ahargana, modernAyanamsha]);
+
   const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUseCurrentTime(false);
     const dt = DateTime.fromISO(e.target.value);
@@ -242,7 +338,7 @@ const App: React.FC = () => {
     <div className="dashboard-container fade-in">
       {/* Global Top Bar (Parity Audit + Theme Toggle) */}
       <div className="flex items-center justify-between px-4 py-2 bg-white/5 border-b border-border-subtle" style={{
-        fontSize: '0.65rem',
+        fontSize: '0.85rem',
         fontWeight: 700,
         letterSpacing: '0.1em',
         textTransform: 'uppercase',
@@ -253,9 +349,9 @@ const App: React.FC = () => {
           {viewMode !== 'ss' && parityScore !== null && (
             <>
               <div className="flex items-center gap-2.5">
-                <LineChart size={14} color="var(--accent-secondary)" className="shrink-0" />
-                <span style={{ color: 'var(--text-dim)' }}>Siddhanta-Modern Parity:</span>
-                <span style={{ color: parityScore > 90 ? 'var(--accent-success)' : 'var(--accent-secondary)' }}>
+                <LineChart size={16} color="var(--accent-secondary)" className="shrink-0" />
+                <span style={{ color: 'var(--text-secondary)', fontWeight: 600 }}>Siddhanta-Modern Parity:</span>
+                <span style={{ color: parityScore > 90 ? 'var(--accent-success)' : 'var(--accent-secondary)', fontWeight: 800, fontSize: '0.9rem' }}>
                   {parityScore.toFixed(1)}% Match
                 </span>
               </div>
@@ -299,20 +395,19 @@ const App: React.FC = () => {
                 Surya Siddhanta audit
               </span>
               <span style={{
-                fontSize: '0.65rem',
-                fontWeight: 900,
+                fontSize: '0.85rem',
+                fontWeight: 800,
                 color: 'var(--accent-primary)',
-                opacity: 0.8,
                 background: 'rgba(99, 102, 241, 0.1)',
-                padding: '0.15rem 0.5rem',
-                borderRadius: '6px',
+                padding: '0.25rem 0.6rem',
+                borderRadius: '8px',
                 letterSpacing: '0.05em'
               }} className="w-fit whitespace-nowrap mx-auto sm:mx-0">
                 v1.2.0
               </span>
             </div>
           </div>
-          <div className="text-[0.55rem] sm:text-[0.6rem] text-text-dim tracking-[0.2em] sm:tracking-[0.25em] font-black uppercase mt-2 sm:mt-1 opacity-70">
+          <div className="text-[0.75rem] sm:text-[0.85rem] text-text-secondary tracking-[0.2em] font-black uppercase mt-3 opacity-90">
             Vedic Astronomical Audit
           </div>
         </div>
@@ -343,8 +438,8 @@ const App: React.FC = () => {
               {!useCurrentTime && (
                 <button
                   onClick={() => setUseCurrentTime(true)}
-                  style={{ background: 'var(--accent-primary)', color: 'white', fontSize: '0.6rem', padding: '0.25rem 0.5rem', borderRadius: '4px' }}
-                  className="hover:brightness-110 whitespace-nowrap"
+                  style={{ fontSize: '0.8rem', padding: '0.4rem 0.8rem', borderRadius: '6px' }}
+                  className="bg-accent-primary! text-white! hover:brightness-110 whitespace-nowrap shadow-sm"
                 >
                   Reset
                 </button>
@@ -396,7 +491,7 @@ const App: React.FC = () => {
               <button
                 key={mode}
                 onClick={() => setViewMode(mode)}
-                className={`nav-pill text-[0.65rem] px-3! font-black uppercase ${viewMode === mode ? 'active' : ''}`}
+                className={`nav-pill text-[0.65rem] px-3! font-black uppercase ${viewMode === mode ? 'active bg-accent-primary! text-white!' : ''}`}
               >
                 {mode === 'ss' ? 'TRAD (SS)' : mode === 'modern' ? 'MOD (JPL)' : 'COMPARE'}
               </button>
@@ -404,16 +499,34 @@ const App: React.FC = () => {
           </div>
 
           {viewMode !== 'ss' && (
-            <div className="flex items-center gap-2 bg-white/5 px-3 py-1.5 rounded-xl border border-white/10 shrink-0">
-              <select
-                value={modernAyanamsha}
-                onChange={(e) => setModernAyanamsha(e.target.value as AyanamshaMode)}
-                className="bg-transparent border-none text-accent-primary text-xs font-bold outline-none cursor-pointer"
-              >
-                <option value="lahiri" style={{ background: 'var(--bg-surface)' }}>Lahiri</option>
-                <option value="ss_lib" style={{ background: 'var(--bg-surface)' }}>Revati</option>
-                <option value="tropical" style={{ background: 'var(--bg-surface)' }}>Tropical</option>
-              </select>
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2 bg-white/5 px-3 py-1.5 rounded-xl border border-white/10 shrink-0">
+                <span className="text-[0.6rem] font-bold text-text-secondary uppercase tracking-tighter opacity-70">Ayanamsha</span>
+                <select
+                  value={modernAyanamsha}
+                  onChange={(e) => setModernAyanamsha(e.target.value as AyanamshaMode)}
+                  className="bg-transparent border-none text-accent-primary text-xs font-bold outline-none cursor-pointer"
+                >
+                  <option value="lahiri" style={{ background: 'var(--bg-surface)' }}>Lahiri</option>
+                  <option value="ss_lib" style={{ background: 'var(--bg-surface)' }}>Revati</option>
+                  <option value="tropical" style={{ background: 'var(--bg-surface)' }}>Tropical</option>
+                </select>
+              </div>
+
+              <div className="flex items-center gap-1 bg-subtle p-1 rounded-xl border border-white/5 shrink-0 shadow-inner">
+                {(['amanta', 'purnimanta'] as const).map((sys) => (
+                  <button
+                    key={sys}
+                    onClick={() => setLunarSystem(sys)}
+                    className={`px-4 py-1.5 rounded-lg text-[0.65rem] font-bold uppercase tracking-wider transition-all duration-500 transform ${lunarSystem === sys
+                        ? 'bg-accent-primary! text-white! shadow-md scale-100 opacity-100'
+                        : 'text-text-secondary hover:text-text-primary bg-subtle! opacity-80 hover:opacity-100 scale-95'
+                      }`}
+                  >
+                    {sys}
+                  </button>
+                ))}
+              </div>
             </div>
           )}
         </div>
@@ -439,10 +552,10 @@ const App: React.FC = () => {
                   <Info size={20} color="var(--accent-primary)" />
                 </div>
                 <div>
-                  <div style={{ fontSize: '0.65rem', fontWeight: 900, color: 'var(--accent-primary)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.3rem' }}>
+                  <div style={{ fontSize: '0.8rem', fontWeight: 900, color: 'var(--accent-primary)', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: '0.5rem' }}>
                     Calendar Adoption Comparison
                   </div>
-                  <p style={{ fontSize: '0.75rem', color: 'var(--text-dim)', lineHeight: '1.5', margin: 0 }}>
+                  <p style={{ fontSize: '0.85rem', color: 'var(--text-primary)', lineHeight: '1.6', margin: 0 }}>
                     Transition period detected: Different regional calendars adopt Samvatsara names based on varying logic. Modern systems follow high-precision **True Jupiter Ingress**, while traditional systems follow **Mean Motion** or pin the name strictly to the **Lunar New Year (Yugadi)**.
                   </p>
                 </div>
@@ -457,7 +570,7 @@ const App: React.FC = () => {
                 <h2 className="flex-center" style={{ fontSize: '1.2rem' }}>
                   <Globe size={24} color="var(--accent-primary)" /> Chronology & Era Systems
                 </h2>
-                <div className="flex-center" style={{ background: 'rgba(255,255,255,0.03)', padding: '0.4rem 1rem', borderRadius: '12px', fontSize: '0.75rem' }}>
+                <div className="flex-center" style={{ background: 'var(--bg-subtle)', padding: '0.5rem 1.2rem', borderRadius: '14px', fontSize: '0.85rem', fontWeight: 600 }}>
                   <span className="text-label" style={{ marginRight: '0.5rem' }}>Julian Day:</span>
                   <span style={{ fontFamily: 'monospace', fontWeight: 700 }}>{(ahargana + 2451545.0 + 0.5).toFixed(2)}</span>
                 </div>
@@ -471,36 +584,36 @@ const App: React.FC = () => {
                     {viewMode === 'both' && samvatsarAudit ? (
                       <>
                         <div style={{ marginBottom: '1.5rem' }}>
-                          <div className="text-value" style={{ fontSize: '1.2rem', fontWeight: 700 }}>{samvatsarAudit.ss}</div>
-                          <div style={{ fontSize: '0.55rem', color: 'var(--text-dim)', fontWeight: 700, marginBottom: '4px' }}>SS MEAN (Astronomical Status) • {samvatsarAudit.ssStart} – {samvatsarAudit.ssEnd}</div>
-                          <div style={{ backgroundColor: 'rgba(255,255,255,0.03)', padding: '4px 8px', borderRadius: '4px', fontSize: '0.5rem', color: 'var(--text-dim)' }}>
+                          <div className="text-value" style={{ fontSize: '1.3rem', fontWeight: 700 }}>{samvatsarAudit.ss}</div>
+                          <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', fontWeight: 700, marginBottom: '6px' }}>SS MEAN (Astronomical Status) • {samvatsarAudit.ssStart} – {samvatsarAudit.ssEnd}</div>
+                          <div style={{ backgroundColor: 'var(--bg-subtle)', padding: '6px 10px', borderRadius: '6px', fontSize: '0.75rem', color: 'var(--text-primary)' }}>
                             SS EPOCH: FEB 18, 3102 BCE • YEAR COUNT: {samvatsarAudit.ssRawCount}
                           </div>
-                          <div style={{ fontSize: '0.5rem', opacity: 0.6, marginTop: '4px' }}>NEXT: {samvatsarAudit.ssNext}</div>
+                          <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', fontWeight: 600, marginTop: '6px' }}>NEXT: {samvatsarAudit.ssNext}</div>
                         </div>
 
                         <div style={{ marginBottom: '1.5rem' }}>
-                          <div className="text-value" style={{ fontSize: '1.2rem', color: 'var(--accent-primary)', fontWeight: 700 }}>{samvatsarAudit.modern}</div>
-                          <div style={{ fontSize: '0.55rem', color: 'var(--accent-primary)', fontWeight: 800, marginBottom: '4px' }}>MODERN TRUE (Astronomical Status) • {samvatsarAudit.modernStart} – {samvatsarAudit.modernEnd}</div>
-                          <div style={{ backgroundColor: 'rgba(0,180,255,0.05)', padding: '4px 8px', borderRadius: '4px', fontSize: '0.5rem', color: 'var(--accent-primary)' }}>
+                          <div className="text-value" style={{ fontSize: '1.3rem', color: 'var(--accent-primary)', fontWeight: 700 }}>{samvatsarAudit.modern}</div>
+                          <div style={{ fontSize: '0.8rem', color: 'var(--accent-primary)', fontWeight: 800, marginBottom: '6px' }}>MODERN TRUE (Astronomical Status) • {samvatsarAudit.modernStart} – {samvatsarAudit.modernEnd}</div>
+                          <div style={{ backgroundColor: 'rgba(99, 102, 241, 0.1)', padding: '6px 10px', borderRadius: '6px', fontSize: '0.75rem', color: 'var(--accent-primary)', border: '1px solid rgba(99, 102, 241, 0.2)' }}>
                             TRANSIT EPOCH: JAN 5, 3102 BCE • TRANSIT COUNT: {samvatsarAudit.modernRawCount}
                           </div>
-                          <div style={{ fontSize: '0.5rem', color: 'var(--accent-primary)', opacity: 0.6, marginTop: '4px' }}>NEXT: {samvatsarAudit.modernNext}</div>
+                          <div style={{ fontSize: '0.75rem', color: 'var(--accent-primary)', fontWeight: 600, marginTop: '6px' }}>NEXT: {samvatsarAudit.modernNext}</div>
                         </div>
 
                         <div style={{ marginBottom: '1.5rem' }}>
-                          <div className="text-value" style={{ fontSize: '1.2rem', opacity: 0.8, fontWeight: 700 }}>{samvatsarAudit.civil}</div>
-                          <div style={{ fontSize: '0.55rem', color: 'var(--text-dim)', fontWeight: 700 }}>NORTH CIVIL (Pinned at Yugadi {samvatsarAudit.civilStart})</div>
-                          <div style={{ fontSize: '0.45rem', textTransform: 'uppercase', color: 'var(--accent-secondary)', fontWeight: 800, marginTop: '4px', opacity: 0.9 }}>
+                          <div className="text-value" style={{ fontSize: '1.3rem', opacity: 1, fontWeight: 700 }}>{samvatsarAudit.civil}</div>
+                          <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', fontWeight: 700 }}>NORTH CIVIL (Pinned at Yugadi {samvatsarAudit.civilStart})</div>
+                          <div style={{ fontSize: '0.75rem', textTransform: 'uppercase', color: 'var(--accent-secondary)', fontWeight: 800, marginTop: '6px' }}>
                             CIVIL ADOPTION: NAME REMAINS CONSTANT UNTIL NEXT LUNAR YEAR
                           </div>
-                          <div style={{ fontSize: '0.5rem', color: 'var(--text-dim)', opacity: 0.6, marginTop: '4px' }}>NEXT: {samvatsarAudit.civilNext}</div>
+                          <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', fontWeight: 600, marginTop: '6px' }}>NEXT: {samvatsarAudit.civilNext}</div>
                         </div>
 
                         <div>
-                          <div className="text-value" style={{ fontSize: '1.2rem', color: 'var(--accent-secondary)', fontWeight: 700 }}>{samvatsarAudit.south}</div>
-                          <div style={{ fontSize: '0.55rem', color: 'var(--accent-secondary)', fontWeight: 800 }}>SOUTH CIVIL (Lunar-Pinned • Salivahana Era)</div>
-                          <div style={{ fontSize: '0.5rem', color: 'var(--accent-secondary)', opacity: 0.6, marginTop: '4px' }}>NEXT: {samvatsarAudit.southNext}</div>
+                          <div className="text-value" style={{ fontSize: '1.3rem', color: 'var(--accent-secondary)', fontWeight: 700 }}>{samvatsarAudit.south}</div>
+                          <div style={{ fontSize: '0.8rem', color: 'var(--accent-secondary)', fontWeight: 800 }}>SOUTH CIVIL (Lunar-Pinned • Salivahana Era)</div>
+                          <div style={{ fontSize: '0.75rem', color: 'var(--accent-secondary)', fontWeight: 600, marginTop: '6px' }}>NEXT: {samvatsarAudit.southNext}</div>
                         </div>
                       </>
                     ) : (
@@ -508,7 +621,7 @@ const App: React.FC = () => {
                         <div className="text-value" style={{ fontSize: '1.4rem' }}>
                           {viewMode === 'ss' ? eras.north_samvatsar : (modernCurrent?.samvatsar.name || '---')}
                         </div>
-                        <div style={{ fontSize: '0.65rem', color: 'var(--text-dim)', fontWeight: 700 }}>
+                        <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', fontWeight: 700 }}>
                           {viewMode === 'ss' ? 'NORTH SYSTEM (JUPITER)' : 'MODERN JUPITER TRANSIT'}
                         </div>
                       </div>
@@ -518,33 +631,56 @@ const App: React.FC = () => {
 
                 {/* Major Eras Section */}
                 <div className="span-8">
-                  <div className="text-label" style={{ marginBottom: '1rem' }}>Traditional Eras & Boundaries</div>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '1.5rem' }}>
-                    {Object.entries(eras)
-                      .filter(([k]) => k.includes('kali') || k.includes('vikram') || k.includes('bikram') || k.includes('nepal') || k.includes('shaka'))
-                      .map(([key, val]) => (
-                      <div key={key}>
-                        <div className="text-value" style={{ 
-                          color: key === 'vikram_samvat_lunar' ? 'var(--accent-primary)' : 
-                                 key === 'bikram_sambat_solar' ? 'var(--accent-secondary)' : 
-                                 'var(--text-primary)' 
-                        }}>{val}</div>
-                        <div className="text-label" style={{ fontSize: '0.55rem', marginTop: '0.2rem', textTransform: 'uppercase', opacity: 0.8 }}>
-                          {key.replace(/_/g, ' ')}
+                  <div className="text-label" style={{ marginBottom: '1.5rem', fontWeight: 900, fontSize: '0.75rem', letterSpacing: '0.1em' }}>Traditional Eras & Boundaries</div>
+
+                  <div className="flex flex-col gap-6">
+                    {/* Comparative Era Grid */}
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1.5rem', borderBottom: '1px solid var(--border-subtle)', paddingBottom: '1.5rem' }}>
+                      <div className="text-label text-[0.65rem] uppercase opacity-50 font-black">Era System</div>
+                      <div className="text-label text-[0.65rem] uppercase opacity-50 font-black text-center">Siddhantic (Trad)</div>
+                      <div className="text-label text-[0.65rem] uppercase opacity-50 font-black text-center">JPL/Drik (Modern)</div>
+                    </div>
+
+                    {[
+                      { label: 'Solar Month Day', ss: ssSolarDay, mod: modernRhythm?.solarDay },
+                      { label: 'Kali Yuga (Lunar)', ss: eras.kali_yuga, mod: modernEras?.kaliLunar },
+                      { label: 'Bikram Sambat (Solar)', ss: eras.bikram_sambat_solar, mod: modernEras?.bikram },
+                      { label: 'Bikram Sambat (Lunar)', ss: eras.vikram_samvat_lunar, mod: modernEras?.vikram },
+                      { label: 'Nepal Sambat', ss: eras.nepal_sambat, mod: modernEras?.nepal },
+                      { label: 'Shaka Samvat', ss: eras.shaka_samvat, mod: modernEras?.shaka }
+                    ].map((row) => (
+                      <div key={row.label} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1.5rem', alignItems: 'center' }}>
+                        <div className="text-label text-[0.75rem] font-bold uppercase tracking-wide">{row.label}</div>
+
+                        <div className="text-center">
+                          {(viewMode === 'ss' || viewMode === 'both') ? (
+                            <div className="text-value text-[1rem] font-bold text-text-primary">{row.ss}</div>
+                          ) : <div className="text-text-secondary opacity-30">—</div>}
+                        </div>
+
+                        <div className="text-center">
+                          {(viewMode === 'modern' || viewMode === 'both') ? (
+                            <div className="text-value text-[1rem] font-bold text-accent-primary">{row.mod || '---'}</div>
+                          ) : <div className="text-text-secondary opacity-30">—</div>}
                         </div>
                       </div>
                     ))}
                   </div>
 
-                  {isBikramNewYearApproaching && (
+                  {isBikramNewYearApproaching && sankrantiAudit && (
                     <div style={{ marginTop: '1.5rem', padding: '1rem 1.2rem', background: 'rgba(245, 158, 11, 0.08)', border: '1px solid var(--accent-secondary)', borderRadius: '16px', display: 'flex', alignItems: 'flex-start', gap: '1rem' }}>
                       <Info size={18} color="var(--accent-secondary)" style={{ marginTop: '0.2rem' }} />
-                      <div style={{ fontSize: '0.75rem', color: 'var(--text-primary)', lineHeight: '1.4' }}>
-                        <strong style={{ color: 'var(--accent-secondary)', display: 'block', marginBottom: '0.2rem' }}>Solar Transition Warning: Mesha Sankranti</strong>
-                        Currently in the transition gap: **Vikram Samvat {eras.vikram_samvat_lunar} (Lunar)** has begun, but **Bikram Sambat {eras.bikram_sambat_solar} (Solar)** remains until Mesha Sankranti. 
-                        <span style={{ display: 'block', marginTop: '0.4rem', opacity: 0.8, fontSize: '0.7rem' }}>
-                          Actual Solar New Year: **April 15, 2026** (Phalguna Shukla Dwadashi)
-                        </span>
+                      <div style={{ fontSize: '0.85rem', color: 'var(--text-primary)', lineHeight: '1.6' }}>
+                        <strong style={{ color: 'var(--accent-secondary)', display: 'block', marginBottom: '0.4rem' }}>Solar Transition Warning: Mesha Sankranti</strong>
+                        Currently in the transition gap: Vikram Samvat {eras.vikram_samvat_lunar} (Lunar) has begun, but Bikram Sambat {eras.bikram_sambat_solar} (Solar) remains until Mesha Sankranti.
+                        <div style={{ marginTop: '0.8rem', display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
+                          <span style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600 }}>
+                            Modern Target (JPL): **{sankrantiAudit.modernDate}** ({sankrantiAudit.modernLunar})
+                          </span>
+                          <span style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600 }}>
+                            Siddhanta Target (SS): **{sankrantiAudit.ssDate}** ({sankrantiAudit.ssLunar})
+                          </span>
+                        </div>
                       </div>
                     </div>
                   )}
@@ -579,8 +715,8 @@ const App: React.FC = () => {
                       position: 'relative'
                     }}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' }}>
-                        <div className="text-label" style={{ color: item.color, fontWeight: 900, fontSize: '0.7rem', letterSpacing: '0.12em' }}>{item.label}</div>
-                        <div style={{ fontSize: '0.55rem', fontWeight: 800, color: 'var(--accent-primary)', opacity: 0.8, letterSpacing: '0.05em', background: 'rgba(99, 102, 241, 0.1)', padding: '0.2rem 0.4rem', borderRadius: '4px' }}>
+                        <div className="text-label" style={{ color: item.color, fontWeight: 900, fontSize: '0.85rem', letterSpacing: '0.12em' }}>{item.label}</div>
+                        <div style={{ fontSize: '0.75rem', fontWeight: 800, color: 'var(--accent-primary)', letterSpacing: '0.05em', background: 'rgba(99, 102, 241, 0.1)', padding: '0.3rem 0.6rem', borderRadius: '6px' }}>
                           MODERN (J2000)
                         </div>
                       </div>
@@ -595,7 +731,7 @@ const App: React.FC = () => {
                           marginTop: '0.4rem',
                           fontFamily: 'monospace',
                           fontWeight: 800,
-                          background: val.endAhargana ? `${item.color}15` : 'rgba(255,255,255,0.05)',
+                          background: val.endAhargana ? `${item.color}15` : 'var(--bg-subtle)',
                           padding: '0.2rem 0.6rem',
                           borderRadius: '6px',
                           display: 'inline-block'
@@ -606,11 +742,11 @@ const App: React.FC = () => {
 
                       <div style={{ marginTop: '1.2rem', paddingTop: '1rem', borderTop: '1px solid var(--border-subtle)' }}>
                         {item.trad && (
-                          <div style={{ padding: '0.5rem', background: hasDrift ? 'rgba(239, 68, 68, 0.05)' : 'rgba(255,255,255,0.02)', borderRadius: '8px', border: hasDrift ? '1px solid rgba(239, 68, 68, 0.1)' : '1px solid var(--border-subtle)' }}>
-                            <div style={{ fontSize: '0.6rem', fontWeight: 800, color: hasDrift ? 'var(--accent-error)' : 'var(--text-dim)', textTransform: 'uppercase', marginBottom: '0.3rem', letterSpacing: '0.05em' }}>TRADITIONAL (SS)</div>
+                          <div style={{ padding: '0.7rem', background: hasDrift ? 'rgba(239, 68, 68, 0.08)' : 'rgba(255,255,255,0.04)', borderRadius: '10px', border: hasDrift ? '1px solid rgba(239, 68, 68, 0.2)' : '1px solid var(--border-subtle)' }}>
+                            <div style={{ fontSize: '0.75rem', fontWeight: 800, color: hasDrift ? 'var(--accent-error)' : 'var(--text-secondary)', textTransform: 'uppercase', marginBottom: '0.4rem', letterSpacing: '0.05em' }}>TRADITIONAL (SS)</div>
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                               <span style={{ fontSize: '0.8rem', fontWeight: 800, color: hasDrift ? 'var(--accent-error)' : 'var(--text-primary)' }}>{item.trad.name}</span>
-                              <span style={{ fontSize: '0.7rem', fontWeight: 700, fontFamily: 'monospace', color: 'var(--text-dim)' }}>
+                              <span style={{ fontSize: '0.85rem', fontWeight: 700, fontFamily: 'monospace', color: 'var(--text-secondary)' }}>
                                 {item.trad.endAhargana ? `${item.trad.endTimeStr}` : '→'}
                               </span>
                             </div>
@@ -622,50 +758,78 @@ const App: React.FC = () => {
                 })}
               </div>
 
-              <div className="flex flex-col justify-self-center flex-nowrap gap-12 pt-8 border-t border-border-subtle overflow-x-auto pb-4 scrollbar-hide" style={{ overflowY: 'hidden' }}>
+              <div className="flex flex-row flex-wrap justify-center gap-x-16 gap-y-12 pt-10 border-t border-border-subtle overflow-x-auto pb-6 scrollbar-hide" style={{ overflowY: 'hidden' }}>
                 {/* 1. SOLAR GROUP */}
-                <div className="flex flex-col flex-nowrap gap-8">
-                  <div className="flex flex-col gap-1 pr-4 border-r border-white/5">
-                    <div className="text-[0.6rem] font-black tracking-[0.15em] text-accent-secondary flex items-center gap-2 uppercase">
-                      <Sun size={12} /> Solar (Sauramana)
+                <div className="flex flex-col items-center gap-8">
+                  <div className="flex flex-col gap-1 items-center">
+                    <div className="text-[0.8rem] font-bold tracking-[0.2em] text-accent-secondary flex items-center gap-2 uppercase">
+                      <Sun size={14} /> Solar (Sauramana)
                     </div>
                   </div>
-                  <div className="flex flex-col flex-nowrap gap-8">
-                    <div>
-                      <div className="text-sm font-black text-text-primary tracking-tight whitespace-nowrap">{solarMonth}</div>
-                      <div className="text-[0.5rem] font-black text-text-dim uppercase tracking-widest mt-1">SUN RASHI</div>
-                    </div>
-                    <div>
-                      <div className="text-sm font-black text-accent-secondary tracking-tight whitespace-nowrap">{bikramMonth}</div>
-                      <div className="text-[0.5rem] font-black text-text-dim uppercase tracking-widest mt-1">BS MONTH</div>
-                    </div>
-                    <div>
-                      <div className="text-sm font-black text-text-primary tracking-tight whitespace-nowrap">{season}</div>
-                      <div className="text-[0.5rem] font-black text-text-dim uppercase tracking-widest mt-1">SEASON</div>
-                    </div>
-                    <div>
-                      <div className="text-sm font-black text-text-primary tracking-tight whitespace-nowrap">{ayana}</div>
-                      <div className="text-[0.5rem] font-black text-text-dim uppercase tracking-widest mt-1">AYANA</div>
-                    </div>
+                  <div className="flex flex-row flex-wrap justify-center gap-x-12 gap-y-8">
+                    {[
+                      { label: 'SUN RASHI', trad: solarMonth, modern: modernRhythm?.solarMonth, icon: Globe },
+                      { label: 'BS MONTH', trad: bikramMonth, modern: modernRhythm?.bikramMonth, icon: CalendarIcon },
+                      { label: 'SEASON', trad: season, modern: modernRhythm?.season, icon: Sun },
+                      { label: 'AYANA', trad: ayana, modern: modernRhythm?.ayana, icon: Layers },
+                    ].map((item) => (
+                      <div key={item.label} className="flex flex-col items-center min-w-[140px]">
+                        <div className="text-[0.65rem] font-black text-text-secondary uppercase tracking-widest mb-3">{item.label}</div>
+
+                        {viewMode === 'both' ? (
+                          <div className="flex flex-col gap-2.5 w-full">
+                            <div className="px-3 py-1.5 bg-accent-primary/5 rounded-lg border border-accent-primary/10">
+                              <div className="text-[0.5rem] font-bold text-accent-primary uppercase tracking-tighter mb-0.5 opacity-70">MODERN</div>
+                              <div className="text-[0.85rem] font-black text-text-primary whitespace-nowrap">{item.modern}</div>
+                            </div>
+                            <div className="px-3 py-1.5 bg-white/5 rounded-lg border border-white/5">
+                              <div className="text-[0.5rem] font-bold text-text-secondary uppercase tracking-tighter mb-0.5 opacity-60">TRADITIONAL</div>
+                              <div className="text-[0.85rem] font-black text-text-primary whitespace-nowrap">{item.trad}</div>
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="text-base font-black text-text-primary tracking-tight whitespace-nowrap">
+                            {viewMode === 'modern' ? item.modern : item.trad}
+                          </div>
+                        )}
+                      </div>
+                    ))}
                   </div>
                 </div>
 
                 {/* 2. LUNAR GROUP */}
-                <div className="flex flex-col flex-nowrap gap-8 border-l border-white/10 pl-8">
-                  <div className="flex flex-col gap-1 pr-4 border-r border-white/5">
-                    <div className="text-[0.6rem] font-black tracking-[0.15em] text-accent-primary flex items-center gap-2 uppercase">
-                      <Moon size={12} /> Lunar (Chandramana)
+                <div className="flex flex-col items-center gap-8 px-8 sm:border-l sm:border-white/5">
+                  <div className="flex flex-col gap-1 items-center">
+                    <div className="text-[0.8rem] font-bold tracking-[0.2em] text-accent-primary flex items-center gap-2 uppercase">
+                      <Moon size={14} /> Lunar (Chandramana)
                     </div>
                   </div>
-                  <div className="flex flex-col flex-nowrap gap-8">
-                    <div>
-                      <div className="text-sm font-black text-text-primary tracking-tight whitespace-nowrap">{lunarMonth}</div>
-                      <div className="text-[0.5rem] font-black text-text-dim uppercase tracking-widest mt-1">LUNAR MONTH</div>
-                    </div>
-                    <div>
-                      <div className="text-sm font-black text-text-primary tracking-tight whitespace-nowrap">{tithi.paksha}</div>
-                      <div className="text-[0.5rem] font-black text-text-dim uppercase tracking-widest mt-1">PAKSHA</div>
-                    </div>
+                  <div className="flex flex-row flex-wrap justify-center gap-x-12 gap-y-8">
+                    {[
+                      { label: 'LUNAR MONTH', trad: lunarMonth, modern: modernRhythm?.lunarMonth },
+                      { label: 'PAKSHA', trad: tithi.paksha, modern: modernRhythm?.paksha },
+                    ].map((item) => (
+                      <div key={item.label} className="flex flex-col items-center min-w-[140px]">
+                        <div className="text-[0.65rem] font-black text-text-secondary uppercase tracking-widest mb-3">{item.label}</div>
+
+                        {viewMode === 'both' ? (
+                          <div className="flex flex-col gap-2.5 w-full">
+                            <div className="px-3 py-1.5 bg-accent-primary/5 rounded-lg border border-accent-primary/10">
+                              <div className="text-[0.5rem] font-bold text-accent-primary uppercase tracking-tighter mb-0.5 opacity-70">MODERN</div>
+                              <div className="text-[0.85rem] font-black text-text-primary whitespace-nowrap">{item.modern}</div>
+                            </div>
+                            <div className="px-3 py-1.5 bg-white/5 rounded-lg border border-white/5">
+                              <div className="text-[0.5rem] font-bold text-text-secondary uppercase tracking-tighter mb-0.5 opacity-60">TRADITIONAL</div>
+                              <div className="text-[0.85rem] font-black text-text-primary whitespace-nowrap">{item.trad}</div>
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="text-base font-black text-text-primary tracking-tight whitespace-nowrap">
+                            {viewMode === 'modern' ? item.modern : item.trad}
+                          </div>
+                        )}
+                      </div>
+                    ))}
                   </div>
                 </div>
               </div>
@@ -992,7 +1156,7 @@ const App: React.FC = () => {
 
       <footer style={{ marginTop: '4rem', padding: '2rem 1rem', borderTop: '1px solid var(--border-card)', textAlign: 'center', opacity: 0.6 }}>
         <div style={{ fontSize: '0.8rem', marginBottom: '0.5rem', fontWeight: 700, color: 'var(--text-primary)' }}>Surya Siddhanta audit by <a href="https://nepdate.khumnath.com.np">nepdate</a></div>
-        <div style={{ fontSize: '0.7rem', color: 'var(--text-dim)' }}>Traditional Surya Siddhanta calibrated against JPL JPL-grade Ephemeris (Drik Logic)</div>
+        <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', fontWeight: 600 }}>Traditional Surya Siddhanta calibrated against JPL-grade Ephemeris (Drik Logic)</div>
       </footer>
     </div>
   );

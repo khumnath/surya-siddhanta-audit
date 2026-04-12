@@ -642,7 +642,7 @@ const App: React.FC = () => {
                     </div>
 
                     {[
-                      { label: 'Solar Month Day', ss: ssSolarDay, mod: modernRhythm?.solarDay },
+                      { label: 'Solar Month Day', ss: `${solarMonth} ${ssSolarDay}`, mod: modernRhythm ? `${modernRhythm.solarMonth} ${modernRhythm.solarDay}` : '---' },
                       { label: 'Kali Yuga (Lunar)', ss: eras.kali_yuga, mod: modernEras?.kaliLunar },
                       { label: 'Bikram Sambat (Solar)', ss: eras.bikram_sambat_solar, mod: modernEras?.bikram },
                       { label: 'Bikram Sambat (Lunar)', ss: eras.vikram_samvat_lunar, mod: modernEras?.vikram },

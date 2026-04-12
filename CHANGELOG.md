@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.3.0] - 2026-04-12
+### Fixed
+- **Engine Calibration**: Restored full scriptural parity with the **Burgess (1935)** standard.
+  - Corrected flipped Manda (eccentricity) epicycle circumferences for star-planets.
+  - Aligned Sun and Mars apogee longitudes with canonical values.
+- **UI Aesthetics**: Restored vibrant "Signature Blue" active states for all tabs, toggles, and primary action buttons.
+- **Visibility**: Improved Light Mode accessibility by darkening primary text colors and implementing theme-aware translucent backgrounds.
+
+### Added
+- **Solar Drift Audit**: Integrated a dynamic Bija derivation modal for analyzing the ~4.6° longitudinal drift since the Kali Yuga epoch.
+- **Enriched Chronology**: Solar months are now displayed alongside days in the "Traditional Eras" table (e.g., "Meena 25").
+- **Documentation**: Added precise Burgess (1935) source citations to all core astronomical constants.
+
 ## [1.2.0] - 2026-04-12
 ### Added
 - **Diagnostic Suite**: Implemented `dump_data.ts` and `verify_data.ts` for end-to-end mathematical regression testing.

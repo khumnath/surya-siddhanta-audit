@@ -80,7 +80,7 @@ async function resolveSiddhantaDocs() {
 
     console.log('--- Injecting Header Theme Toggle and footer ---');
     const toggleScript = fs.readFileSync(path.resolve('scripts/header-toggle.js'), 'utf-8');
-    const docsDir = path.resolve('public/docs');
+    const docsDir = path.resolve('docs/api');
     const htmlFiles = execSync(`find ${docsDir} -name "*.html"`).toString().split('\n').filter(Boolean);
 
     for (const htmlFile of htmlFiles) {

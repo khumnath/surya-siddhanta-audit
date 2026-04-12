@@ -1,7 +1,7 @@
 {
   "name": "surya-siddhanta-audit",
   "private": true,
-  "version": "1.1.0",
+  "version": "1.3.0",
   "type": "module",
   "description": "Surya Siddhanta Calculator with modern validation",
   "author": "khumnath cg",
@@ -12,7 +12,7 @@
     "docs:generate": "node scripts/resolve-siddhanta-logic.js",
     "dump": "npx tsx scratch/dump_data.ts",
     "verify": "npx tsx scratch/verify_data.ts",
-    "build": "npm run docs:generate && tsc -b && vite build",
+    "build": "tsc -b && vite build && npm run docs:generate",
     "lint": "eslint .",
     "preview": "vite preview"
   },
@@ -24,6 +24,7 @@
     "luxon": "^3.7.2",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
+    "react-is": "^19.2.5",
     "recharts": "^3.8.1"
   },
   "devDependencies": {

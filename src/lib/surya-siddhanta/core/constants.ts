@@ -89,22 +89,38 @@ export const REV_MOON_NODE = 232238;
 
 /** 
  * [Ch. I, v.41] Sun's apogee longitude (Mandocca).
+ * Value: 77° 14' as per Burgess (1935) Table B.
  */
 export const APOGEE_SUN = 77.0 + 14.0 / 60.0;
 
-/** [Ch. I, v.42] Mars's apogee longitude (Mangala Mandocca). */
+/** 
+ * [Ch. I, v.42] Mars's apogee longitude (Mangala Mandocca).
+ * Value: 130° 0' as per Burgess (1935).
+ */
 export const APOGEE_MARS = 130.0;
 
-/** [Ch. I, v.42] Mercury's apogee longitude (Budha Mandocca). */
+/** 
+ * [Ch. I, v.42] Mercury's apogee longitude (Budha Mandocca).
+ * Value: 220° 26' as per Burgess (1935).
+ */
 export const APOGEE_MERCURY = 220.0 + 26.0 / 60.0;
 
-/** [Ch. I, v.42] Jupiter's apogee longitude (Guru Mandocca). */
+/** 
+ * [Ch. I, v.42] Jupiter's apogee longitude (Guru Mandocca).
+ * Value: 171° 16' as per Burgess (1935).
+ */
 export const APOGEE_JUPITER = 171.0 + 16.0 / 60.0;
 
-/** [Ch. I, v.42] Venus's apogee longitude (Shukra Mandocca). */
+/** 
+ * [Ch. I, v.42] Venus's apogee longitude (Shukra Mandocca).
+ * Value: 79° 49' as per Burgess (1935).
+ */
 export const APOGEE_VENUS = 79.0 + 49.0 / 60.0;
 
-/** [Ch. I, v.42] Saturn's apogee longitude (Shani Mandocca). */
+/** 
+ * [Ch. I, v.42] Saturn's apogee longitude (Shani Mandocca).
+ * Value: 236° 37' as per Burgess (1935).
+ */
 export const APOGEE_SATURN = 236.0 + 37.0 / 60.0;
 
 // ============================================================================

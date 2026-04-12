@@ -4,7 +4,7 @@
     "src"
   ],
   "entryPointStrategy": "expand",
-  "out": "public/docs",
+  "out": "docs/api",
   "exclude": [
     "**/node_modules/**",
     "**/*.test.ts"

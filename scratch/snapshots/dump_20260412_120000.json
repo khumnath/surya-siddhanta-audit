@@ -1,6 +1,6 @@
 {
   "meta": {
-    "timestamp": "2026-04-12T17:05:06.476+05:45",
+    "timestamp": "2026-04-12T21:27:31.125+05:45",
     "input_datetime": "2026-04-12T12:00:00.000+05:45",
     "location": {
       "name": "Custom Location",
@@ -15,6 +15,7 @@
   "surya_siddhanta": {
     "eras": {
       "kali_yuga": 5127,
+      "kali_yuga_solar": 5126,
       "vikram_samvat_lunar": 2083,
       "bikram_sambat_solar": 2082,
       "shalivahana_shaka": 1948,
@@ -28,23 +29,23 @@
         "index": 25,
         "name": "Dashami",
         "paksha": "Krishna",
-        "fraction": 0.9201026264265835
+        "fraction": 0.9200772190909277
       },
       "month": "Chaitra"
     },
     "planets": {
-      "sun": 353.5267926758926,
+      "sun": 353.52709756392045,
       "moon": 292.5680241930116,
-      "mars": 331.43036133905883,
-      "mercury": 333.03835138462466,
-      "jupiter": 76.16903533849154,
-      "venus": 22.23612898333738,
-      "saturn": 335.6679576604332
+      "mars": 331.4628894487323,
+      "mercury": 332.88971563777,
+      "jupiter": 76.01503276141938,
+      "venus": 22.152309024791634,
+      "saturn": 335.52945457726815
     },
     "transitions": {
-      "sunrise": 6.092011552369665,
-      "sunset": 17.907988447630334,
-      "dayLengthHours": 11.81597689526067
+      "sunrise": 6.092007219761607,
+      "sunset": 17.907992780238395,
+      "dayLengthHours": 11.815985560476786
     }
   },
   "modern": {

@@ -1,27 +1,50 @@
-# Surya Siddhanta Audit: Project Context
+# Surya Siddhanta Audit: Definitive Project Context
 
-This project is a high-fidelity realization of the pure astronomical formulas of the ancient Surya Siddhanta (SS), implemented in TypeScript. It serves as both a functional astronomical engine and an academic platform for auditing traditional calendrical logic against modern JPL-based data.
+This document is the authoritative technical reference for the Surya Siddhanta (SS) Audit project. It is designed to provide future AI agents and developers with an immediate, deep understanding of the system's architecture, philosophy, and current status.
 
-## Core Philosophical Pillar
-**Zero-Lookup Architecture**: Every astronomical value (planetary position, tithi transition, ingress, etc.) is derived formulaically from prime parameters. The library contains no historical lookup tables.
+## 1. Project Philosophy & Core Principles
+- **Zero-Lookup derivation**: The engine rejects hard-coded astronomical tables. Every tithi, longitude, and ingress is computed from prime motion constants defined in `verses.json`.
+- **Mathematical Parity**: The system is calibrated to match modern JPL-based data (`astronomy-engine`) with a $10^{-6}$ degree tolerance, using a configurable Ayanamsha bridge.
+- **Academically Grounded**: Every significant computational function is linked to a canonical Sanskrit proof from the Burgess/Surya Siddhanta text.
 
-## System Components
+## 2. Technical Stack
+- **Core**: TypeScript (Targeting ESNext).
+- **Frontend**: React + Vite (Custom Premium Theme).
+- **Time/Date**: Luxon (Native ISO and UTC handling).
+- **Audit**: `astronomy-engine` (Modern JPL Bridge).
+- **Documentation**: TypeDoc with custom scriptural injection scripts.
 
-### 1. Traditional Engine (`src/lib/surya-siddhanta/`)
-The primary mathematical core implementing the Siddhantic formulas.
-- **Precision**: Calculations maintain a $10^{-6}$ degree fidelity against authoritative texts.
-- **Verification**: Documented with JSDoc headers that inject authoritative Sanskrit proofs during the build process.
+## 3. Directory Architecture
+- `/src/lib/surya-siddhanta/`: The traditional engine.
+    - `center/`: Core celestial logic (mean motions, anomalies, true longitudes).
+    - `calendar/`: Panchanga elements (Tithi, Nakshatra, Karana, Yoga).
+    - `time/`: Ahargana (Siddhantic Julian Day) and epoch conversion logic.
+    - `geography/`: Terrestrial longitudes, latitudes, and timezones.
+- `/src/lib/modern/`: The modern audit bridge.
+- `/scratch/`: The diagnostic suite. 
+    - `dump_data.ts`: Snapshot generation.
+    - `verify_data.ts`: Regression auditing.
+    - `internal/`: Archived legacy tests.
+- `/reference/`: Authoritative primary source texts (PDF/TXT).
+- `/scripts/`: Automated build and documentation logic.
 
-### 2. Modern Audit Bridge (`src/lib/modern/`)
-A bridge to the NASA-JPL based `astronomy-engine`, used for calculating comparative drift and calibrating ayanamsha models.
+## 4. Proprietary Diagnostic Pipeline
+To prevent mathematical drift during refactoring:
+1.  **Generation**: `npm run dump` (via `scratch/dump_data.ts`) creates a JSON snapshot of the engine's current state.
+2.  **Regression**: `npm run verify` (via `scratch/verify_data.ts`) performs a deep-comparison between a baseline snapshot and the live code, reporting any delta in Ahargana or planetary longitudes.
 
-### 3. Diagnostic Suite (`scratch/`)
-A purpose-built verification pipeline designed to prevent mathematical regressions.
-- **`dump_data.ts`**: Snapshots canonical astronomical states for calibration.
-- **`verify_data.ts`**: An interactive utility for 1:1 regression audits against established baselines.
+## 5. Documentation Build Process
+The documentation is unique because it is dynamically enriched:
+- **`resolve-siddhanta-logic.js`**: Scans the source files for specifically formatted JSDoc tags and injects Sanskrit verses from `verses.json`.
+- **Branding**: The build includes custom CSS and JS injection for a premium UI (theme toggle, branded footers).
 
-### 4. Authoritative References (`reference/`)
-Consolidated primary sources used to validate constants and formulas, including the Sanskrit original and the authoritative Burgess translation/commentary.
+## 6. Current Milestones & Parity Status
+- [x] **Parity Status**: Established $10^{-6}$ precision for all primary planets.
+- [x] **Geodesy**: Corrected sunrise/sunset logic for Kathmandu/Nepal horizons.
+- [x] **Calendar**: Fixed Nepal Sambat year transition logic.
+- [x] **Branding**: Customized static site documentation is production-ready.
 
-## Current State
-The engine is currently in a "Stably Calibrated" state, meaning it handles cross-era calculations (from Kali Yuga epoch to the present day) with internally consistent mathematical precision.
+## 7. Knowledge Transfer for Future Agents
+- **Identifiers**: Celestial bodies MUST use `ALL_CAPS` (e.g., `Body.SUN`, `Body.JUPITER`).
+- **Tolerances**: Floating-point comparisons must use a $10^{-6}$ buffer as defined in `verify_data.ts`.
+- **References**: Always consult `reference/surya_siddhanta_english_ocr.pdf` when verifying formula constants.

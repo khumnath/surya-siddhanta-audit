@@ -12,7 +12,7 @@
  */
 
 import { DAYS_PER_MAHAYUGA, REV_JUPITER } from '../core/constants';
-import { aharganaToDateTime } from '../time/conversions';
+import { aharganaToDateTime, dateTimeToAhargana } from '../time/conversions';
 import { KATHMANDU } from '../geography/location';
 import { getNorthSamvatsar, getSouthSamvatsar } from './samvatsar';
 import { ModernPanchangaEngine } from '../../modern/modern-engine';
@@ -48,38 +48,32 @@ export function findSSMeanTransitAhargana(ahargana: number): number {
  * @returns Ahargana of the preceding lunar boundary.
  */
 export function findPrecedingLunarBoundary(ahargana: number, targetRashi: number): number {
-  // Scan forward from a safe distance looking for the Tithi/Rashi signature.
-  let currentAhar = Math.floor(ahargana - 400); 
+  // Ensure we check up to the end of the current civil day to capture transitions 
+  // that happen after sunrise today.
+  const dt = aharganaToDateTime(ahargana, KATHMANDU);
+  const endOfDay = dt.set({ hour: 23, minute: 59, second: 59 }).toJSDate();
   
-  let foundBoundary = 0;
-  for (let d = 0; d < 450; d++) {
-    if (currentAhar > ahargana) break;
-
-    const checkDate = aharganaToDateTime(currentAhar, KATHMANDU).toJSDate();
-    const el = ModernPanchangaEngine.getElements(checkDate, 'Chitrapaksha (Lahiri)');
+  // 1. Find the most recent New Moon (Tithi 0 boundary) before the end of today
+  let currentNM = findModernLunarBoundary(endOfDay, 0, -1);
+  
+  // 2. Scan backwards looking for the NM where the Sun is in the target Rashi
+  // We check up to 14 months to be safe (covers gaps/intercalary cases)
+  for (let i = 0; i < 14; i++) {
+    const el = ModernPanchangaEngine.getElements(currentNM, 'Chitrapaksha (Lahiri)');
     const rashi = Math.floor(el.siderealSun / 30);
     
-    // Check for Shukla Pratipada (index 1) in the correct solar sign.
     if (rashi === targetRashi) {
-      if (el.tithiIdx === 1) {
-         const prevDate = new Date(checkDate);
-         prevDate.setDate(prevDate.getDate() - 1);
-         const prevEl = ModernPanchangaEngine.getElements(prevDate, 'Chitrapaksha (Lahiri)');
-         
-         if (prevEl.tithiIdx >= 28) {
-            foundBoundary = currentAhar - 1;
-         } else {
-            foundBoundary = currentAhar - 1;
-         }
-      } else if (el.tithiIdx === 0) {
-         foundBoundary = currentAhar;
-      }
+      // Return the floor of the transition Ahargana to represent the civil day
+      const nmAhargana = dateTimeToAhargana(currentNM, KATHMANDU);
+      return Math.floor(nmAhargana);
     }
     
-    currentAhar++;
+    // Jump back 15 days and find preceding NM
+    const prevDate = new Date(currentNM.getTime() - 15 * 86400000);
+    currentNM = findModernLunarBoundary(prevDate, 0, -1);
   }
   
-  return foundBoundary || ahargana;
+  return Math.floor(ahargana);
 }
 
 /**
@@ -264,31 +258,48 @@ export function findModernLunarBoundary(date: Date, targetTithi: number, directi
   let current = new Date(date);
   
   const getTithi = (d: Date) => ModernPanchangaEngine.getElements(d).tithiIdx;
-  const startTithi = getTithi(current);
 
-  // Linear scan to find the rough neighborhood
-  for (let i = 0; i < 60; i++) {
-    const next = new Date(current.getTime() + step * 86400000);
+  // Linear scan to find the bracket [current, next]
+  let next = new Date(date);
+
+  for (let i = 0; i < 120; i++) {
+    next = new Date(current.getTime() + step * 86400000);
     const nextT = getTithi(next);
+    const currT = getTithi(current);
+
     if (direction === -1) {
-      if (nextT === targetTithi && startTithi !== targetTithi) break;
+      // Searching backwards for the most recent transition TO targetTithi
+      // Transition is (Pre-target) -> targetTithi
+      // If we are currently in targetTithi, we want its START.
+      // If we are NOT in targetTithi, we want the most recent time it entered targetTithi.
+      if (currT === targetTithi && nextT !== targetTithi) {
+        // Found the boundary between next and current!
+        break;
+      }
     } else {
-      if (nextT === targetTithi && startTithi !== targetTithi) break;
+      // Searching forwards for the NEXT transition TO targetTithi
+      if (currT !== targetTithi && nextT === targetTithi) {
+        break;
+      }
     }
     current = next;
   }
 
-  // Binary search to refine
-  let lo = direction === -1 ? current.getTime() : date.getTime();
-  let hi = direction === -1 ? date.getTime() : current.getTime();
+  // Binary search to refine in [lo, hi]
+  let lo = direction === -1 ? next.getTime() : current.getTime();
+  let hi = direction === -1 ? current.getTime() : next.getTime();
   
   for (let i = 0; i < 25; i++) {
     const mid = (lo + hi) / 2;
-    if (getTithi(new Date(mid)) === targetTithi) {
-       if (direction === -1) lo = mid; else hi = mid;
+    const midT = getTithi(new Date(mid));
+    
+    if (direction === -1) {
+       // Preceding: lo is pre-target, hi is target
+       if (midT === targetTithi) hi = mid; else lo = mid;
     } else {
-       if (direction === -1) hi = mid; else lo = mid;
+       // Next: lo is pre-target, hi is target
+       if (midT === targetTithi) hi = mid; else lo = mid;
     }
   }
-  return new Date((lo + hi) / 2);
+  return new Date(hi);
 }

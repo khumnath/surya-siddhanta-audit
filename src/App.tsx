@@ -20,13 +20,13 @@ import {
 // Library Imports
 import { KATHMANDU, getAllLocations } from './lib/surya-siddhanta/geography/location';
 import type { Location } from './types/astronomy';
-import { dateTimeToAhargana } from './lib/surya-siddhanta/time/conversions';
+import { dateTimeToAhargana, aharganaToDateTime } from './lib/surya-siddhanta/time/conversions';
 import {
   getTithiDetails, calculateNakshatra,
   getSolarMonthName, getAyana, getSeason,
   getAllPlanetRashis, getLunarMonthName, getSunriseSunset,
   getBikramMonthName, longitudeToRashiDetailed,
-  getSolarMonthDay, LUNAR_MONTH_NAMES, SOLAR_RASHI_NAMES, BIKRAM_MONTH_NAMES
+  getSolarMonthDay, SOLAR_RASHI_NAMES, BIKRAM_MONTH_NAMES
 } from './lib/surya-siddhanta/calendar/calendar';
 import {
   computeDayPanchangaTimings
@@ -49,6 +49,7 @@ import {
   getSSNextSamvatsarName,
   getModernNextSamvatsarName,
   findPrecedingYugadiAhargana,
+  findPrecedingNepalSambatAhargana,
   getNorthCivilSamvatsar,
   getSouthCivilSamvatsar,
   getNextSamvatsarName,
@@ -191,24 +192,16 @@ const App: React.FC = () => {
     const baseKaliSolar = gYear + 3100;
     const finalKaliSolar = (selectedDate.month < 4 || (selectedDate.month === 4 && sSun >= 300)) ? baseKaliSolar : baseKaliSolar + 1;
 
-    // 2. Lunar Kali/Vikram (Chaitra Shukla Pratipada)
-    const mIdx = LUNAR_MONTH_NAMES.indexOf(modernRhythm.lunarMonth);
-    
-    let isPastYugadi = false;
-    if (selectedDate.month > 4) isPastYugadi = true;
-    else if (selectedDate.month >= 3) {
-      if (mIdx > 0 && mIdx < 10) isPastYugadi = true;
-      else if (mIdx === 0 && modernRhythm.paksha === 'Shukla') isPastYugadi = true;
-    }
+    // 2. Lunar Kali/Vikram (Chaitra Shukla Pratipada) uses fixed boundary
+    const currentYugadi = findPrecedingYugadiAhargana(ahargana);
+    const yugadiYear = aharganaToDateTime(currentYugadi, location).year;
+    const isPastYugadi = yugadiYear === selectedDate.year;
     const finalKaliLunar = isPastYugadi ? gYear + 3101 : gYear + 3100;
 
-    // 3. Nepal Sambat (Kartika Shukla Pratipada)
-    let isPastKartika = false;
-    if (selectedDate.month > 11) isPastKartika = true;
-    else if (selectedDate.month >= 10) {
-      if (mIdx > 7) isPastKartika = true;
-      else if (mIdx === 7 && modernRhythm.paksha === 'Shukla') isPastKartika = true;
-    }
+    // 3. Nepal Sambat (Kartika Shukla Pratipada) uses fixed boundary
+    const currentNS = findPrecedingNepalSambatAhargana(ahargana);
+    const nsYear = aharganaToDateTime(currentNS, location).year;
+    const isPastKartika = nsYear === selectedDate.year;
     const finalNS = (selectedDate.year - 880) + (isPastKartika ? 1 : 0);
 
     return {

@@ -5,13 +5,49 @@
  * Implements the 24 sine values (Jya) and interpolation logic derived
  * from Chapter II (True Places of the Planets).
  * 
- * [Ch. II, v.15-22] The definition of the 24-point Sine table.
+ * [Ch. II, v.15-22]
+ *
+ * <details class="siddhantic-proof">
+ * <summary>Siddhantic Proof: Spashta (True Longitudes) v.15</summary>
+ *
+ * **Sanskrit (Devanagari):**
+ *
+ * चतुर्विंशतिधा चक्रे ज्यार्धारिण पृथक्पृथक् । तानि पञ्चविंशतियुक्तानि त्रीणि शतानि च ॥
+ *
+ * **Translation (Burgess):**
+ *
+ * Divide the quadrant of the circle into 24 parts... the first sine is 225 minutes.
+ *
+ * **Modern Technical Commentary:**
+ *
+ * Establishes the 24-point Sine table (Jya). The interval is 225' (3° 45'), chosen because in a circle where R = 3438', the arc of 225' is approximately equal to its sine.
+ *
+ * </details>
+ * The definition of the 24-point Sine table.
  */
 
 import { RADIUS } from './constants';
 
 /** 
- * [Ch. II, v.15] Arc increment between table entries (225').
+ * [Ch. II, v.15]
+ *
+ * <details class="siddhantic-proof">
+ * <summary>Siddhantic Proof: Spashta (True Longitudes) v.15</summary>
+ *
+ * **Sanskrit (Devanagari):**
+ *
+ * चतुर्विंशतिधा चक्रे ज्यार्धारिण पृथक्पृथक् । तानि पञ्चविंशतियुक्तानि त्रीणि शतानि च ॥
+ *
+ * **Translation (Burgess):**
+ *
+ * Divide the quadrant of the circle into 24 parts... the first sine is 225 minutes.
+ *
+ * **Modern Technical Commentary:**
+ *
+ * Establishes the 24-point Sine table (Jya). The interval is 225' (3° 45'), chosen because in a circle where R = 3438', the arc of 225' is approximately equal to its sine.
+ *
+ * </details>
+ * Arc increment between table entries (225').
  * Traditionally called "the eighth part of the minutes of a sign".
  */
 export const ARC_INCREMENT_MIN = 225.0;
@@ -51,7 +87,25 @@ export const SINE_TABLE: number[] = [
 /**
  * Calculate the Indian Sine (Jya) for a given angle.
  * 
- * [Ch. II, v.15-22] Calculation of the intermediate Jya using interpolation.
+ * [Ch. II, v.15-22]
+ *
+ * <details class="siddhantic-proof">
+ * <summary>Siddhantic Proof: Spashta (True Longitudes) v.15</summary>
+ *
+ * **Sanskrit (Devanagari):**
+ *
+ * चतुर्विंशतिधा चक्रे ज्यार्धारिण पृथक्पृथक् । तानि पञ्चविंशतियुक्तानि त्रीणि शतानि च ॥
+ *
+ * **Translation (Burgess):**
+ *
+ * Divide the quadrant of the circle into 24 parts... the first sine is 225 minutes.
+ *
+ * **Modern Technical Commentary:**
+ *
+ * Establishes the 24-point Sine table (Jya). The interval is 225' (3° 45'), chosen because in a circle where R = 3438', the arc of 225' is approximately equal to its sine.
+ *
+ * </details>
+ * Calculation of the intermediate Jya using interpolation.
  * 
  * @param angleDeg Angle in degrees (will be normalized to 0-360)
  * @returns The Jya value (R × sin(θ)), signed for quadrants 3 and 4

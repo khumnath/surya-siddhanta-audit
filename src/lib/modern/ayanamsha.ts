@@ -31,7 +31,25 @@ export function getLahiriAyanamsha(date: Date): number {
 /**
  * traditional Surya Siddhanta Libratory Precession (Ayana-chalana).
  * 
- * [Ch. III, v.9-12] Describes precession not as a continuous cycle, 
+ * [Ch. III, v.9-12]
+ *
+ * <details class="siddhantic-proof">
+ * <summary>Siddhantic Proof: Tri-Prasna (Shadows & Direction) v.9</summary>
+ *
+ * **Sanskrit (Devanagari):**
+ *
+ * त्रिंशत्कृत्यो युगे भानां चक्र प्राक्परिलम्बते । तद्रुणाद्भूदिनैर्भक्ताद्‌ युगणाद्यदवाप्यते ॥
+ *
+ * **Translation (Burgess):**
+ *
+ * In a Mahayuga, the circle of stars oscillates eastward 600 times.
+ *
+ * **Modern Technical Commentary:**
+ *
+ * Establishes the **Trepidation Theory** of Precession. Rather than a continuous 25,700-year cycle, the Siddhanta models precession as a swinging motion of 27° in either direction. 600 cycles in a Mahayuga implies an annual rate of 54 seconds of arc.
+ *
+ * </details>
+ * Describes precession not as a continuous cycle, 
  * but as a libration (oscillation) of 27° in each direction.
  * 
  * 600 revolutions per Mahayuga implies a total range of 54° over 
@@ -45,7 +63,25 @@ export function getSSLibAyanamsha(date: Date): number {
   const jd = time.ut + 2451545.0;
   const ahargana = jd - KALI_EPOCH_JDN;
 
-  // [Ch. III, v.9] 600 revolutions in a Mahayuga (1,577,917,828 days)
+  // [Ch. III, v.9]
+  //
+  // <details class="siddhantic-proof">
+  // <summary>Siddhantic Proof: Tri-Prasna (Shadows & Direction) v.9</summary>
+  //
+  // **Sanskrit (Devanagari):**
+  //
+  // त्रिंशत्कृत्यो युगे भानां चक्र प्राक्परिलम्बते । तद्रुणाद्भूदिनैर्भक्ताद्‌ युगणाद्यदवाप्यते ॥
+  //
+  // **Translation (Burgess):**
+  //
+  // In a Mahayuga, the circle of stars oscillates eastward 600 times.
+  //
+  // **Modern Technical Commentary:**
+  //
+  // Establishes the **Trepidation Theory** of Precession. Rather than a continuous 25,700-year cycle, the Siddhanta models precession as a swinging motion of 27° in either direction. 600 cycles in a Mahayuga implies an annual rate of 54 seconds of arc.
+  //
+  // </details>
+  // 600 revolutions in a Mahayuga (1,577,917,828 days)
   const totalRevolutions = (ahargana * 600) / 1577917828;
   const angle = (totalRevolutions * 360) % 360;
   

@@ -7,7 +7,25 @@
  * 
  * [Ch. II, v.29] Defines 'Kendra' as the angular distance between a 
  * planet and its apsis/conjunction point.
- * [Ch. II, v.46] Establishes the rules for identifying the Sighra point 
+ * [Ch. II, v.46]
+ *
+ * <details class="siddhantic-proof">
+ * <summary>Siddhantic Proof: Spashta (True Longitudes) v.46</summary>
+ *
+ * **Sanskrit (Devanagari):**
+ *
+ * अर्कबाहुफलाभ्यस्ता ग्रहभुक्तिर्विभाजिता। भचक्रकलिकाभिस्तु लिप्ताः कार्या ग्रहेऽर्कवत्॥
+ *
+ * **Translation (Burgess):**
+ *
+ * Multiply the daily motion of the planet by the Sun's Equation of the Center and divide by 21,600; applying this result makes the motion true to the solar day.
+ *
+ * **Modern Technical Commentary:**
+ *
+ * Defines the 'Bhujantara' or Equation of Time. It corrects for the fact that terrestrial days are measured by the Sun's return to the meridian, which is slightly variable because the Sun's own motion is non-uniform.
+ *
+ * </details>
+ * Establishes the rules for identifying the Sighra point 
  * for inner and outer planets.
  */
 
@@ -45,7 +63,25 @@ export function getMandaKendra(body: Body, ahargana: number): number {
     // unlike the relatively fixed apogees of other planets.
     apogee = calculateMeanLongitude(Body.MOON_APSIS, ahargana);
   } else {
-    // [Ch. II, v.2] Fixed apogees for the current Kalpa.
+    // [Ch. II, v.2]
+    //
+    // <details class="siddhantic-proof">
+    // <summary>Siddhantic Proof: Spashta (True Longitudes) v.2</summary>
+    //
+    // **Sanskrit (Devanagari):**
+    //
+    // अंशाः सूर्यादियुग्मान्ते मन्दोच्चानां यथाक्रमम्। अशीतिः सप्ततिः षष्टिस्ततश्च त्र्याश्विनः खषट्॥
+    //
+    // **Translation (Burgess):**
+    //
+    // The degrees of the apogees (Mandocca) of the Sun and the others are: 80°, 70°, 60°, 223°, 160°...
+    //
+    // **Modern Technical Commentary:**
+    //
+    // Sets the fixed position of the Sun's apogee at 80 degrees (Gemini), which is the zero-point for calculating the mean anomaly (Kendra).
+    //
+    // </details>
+    // Fixed apogees for the current Kalpa.
     const apogees: Partial<Record<Body, number>> = {
       [Body.SUN]: APOGEE_SUN,
       [Body.MARS]: APOGEE_MARS,
@@ -65,7 +101,25 @@ export function getMandaKendra(body: Body, ahargana: number): number {
 /**
  * Calculate the Sighra Kendra (Anomaly of Conjunction).
  * 
- * [Ch. II, v.46] Defines the Sighrocca (Point of Conjunction).
+ * [Ch. II, v.46]
+ *
+ * <details class="siddhantic-proof">
+ * <summary>Siddhantic Proof: Spashta (True Longitudes) v.46</summary>
+ *
+ * **Sanskrit (Devanagari):**
+ *
+ * अर्कबाहुफलाभ्यस्ता ग्रहभुक्तिर्विभाजिता। भचक्रकलिकाभिस्तु लिप्ताः कार्या ग्रहेऽर्कवत्॥
+ *
+ * **Translation (Burgess):**
+ *
+ * Multiply the daily motion of the planet by the Sun's Equation of the Center and divide by 21,600; applying this result makes the motion true to the solar day.
+ *
+ * **Modern Technical Commentary:**
+ *
+ * Defines the 'Bhujantara' or Equation of Time. It corrects for the fact that terrestrial days are measured by the Sun's return to the meridian, which is slightly variable because the Sun's own motion is non-uniform.
+ *
+ * </details>
+ * Defines the Sighrocca (Point of Conjunction).
  * - For Outer Planets (Mars, Jupiter, Saturn): The Sighrocca is the Mean Sun.
  * - For Inner Planets (Mercury, Venus): The Sighrocca is the planet's 
  *   own mean motion.
@@ -77,7 +131,25 @@ export function getMandaKendra(body: Body, ahargana: number): number {
 export async function getSighraKendra(body: Body, ahargana: number): Promise<number> {
   let sighraPos: number;
   if (([Body.MARS, Body.JUPITER, Body.SATURN] as Body[]).includes(body)) {
-    // [Ch. II, v.46] For outer planets, the Sighra is the Sun.
+    // [Ch. II, v.46]
+    //
+    // <details class="siddhantic-proof">
+    // <summary>Siddhantic Proof: Spashta (True Longitudes) v.46</summary>
+    //
+    // **Sanskrit (Devanagari):**
+    //
+    // अर्कबाहुफलाभ्यस्ता ग्रहभुक्तिर्विभाजिता। भचक्रकलिकाभिस्तु लिप्ताः कार्या ग्रहेऽर्कवत्॥
+    //
+    // **Translation (Burgess):**
+    //
+    // Multiply the daily motion of the planet by the Sun's Equation of the Center and divide by 21,600; applying this result makes the motion true to the solar day.
+    //
+    // **Modern Technical Commentary:**
+    //
+    // Defines the 'Bhujantara' or Equation of Time. It corrects for the fact that terrestrial days are measured by the Sun's return to the meridian, which is slightly variable because the Sun's own motion is non-uniform.
+    //
+    // </details>
+    // For outer planets, the Sighra is the Sun.
     sighraPos = calculateMeanLongitude(Body.SUN, ahargana);
   } else if (([Body.MERCURY, Body.VENUS] as Body[]).includes(body)) {
     // For inner planets, the Sighra is their own mean orbital motion.

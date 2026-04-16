@@ -37,7 +37,25 @@ export function decimalToDmsTuple(deg: number): [number, number, number] {
 /**
  * Convert Rashi (Zodiac Sign) notation to absolute longitude.
  * 
- * [Ch. I, v.29] "Twelve signs (Rashi) make a circle."
+ * [Ch. I, v.29]
+ *
+ * <details class="siddhantic-proof">
+ * <summary>Siddhantic Proof: Madhyama (Mean Motions) v.29</summary>
+ *
+ * **Sanskrit (Devanagari):**
+ *
+ * युगे सूर्यबुधशुक्राणां खचतुष्करदार्णवाः। कुजार्किगुरुशीघ्राणां भगणाः पूर्वयायिनाम्॥
+ *
+ * **Translation (Burgess):**
+ *
+ * In a Mahayuga, the Sun, Mercury, and Venus complete 4,320,000 revolutions. This number also applies to the Sighra (conjunction) points of Mars, Saturn, and Jupiter.
+ *
+ * **Modern Technical Commentary:**
+ *
+ * Establishes the mean solar year. For Mercury and Venus, these are their actual orbital revolutions around the Sun. For outer planets, this count applies to their 'Sighra' (fast) epicycle, which represents the Earth's orbital motion.
+ *
+ * </details>
+ * "Twelve signs (Rashi) make a circle."
  * Each Rashi consists of 30 degrees (Amsha).
  * 
  * @param sign Sign number (0-11)

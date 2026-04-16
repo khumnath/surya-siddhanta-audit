@@ -5,9 +5,41 @@
  * Computes the exact transition times (end-moments) for the five limbs 
  * of the traditional calendar: Tithi, Nakshatra, Yoga, Karana, and Vara.
  * 
- * [Ch. XIV, v.18-19] Aligns all computations with the Savana-dina 
+ * [Ch. XIV, v.18-19]
+ *
+ * <details class="siddhantic-proof">
+ * <summary>Siddhantic Proof: Manadhya (Systems of Measurement) v.18</summary>
+ *
+ * **Sanskrit (Devanagari):**
+ *
+ * उदयादुदयं भानोः सावनं तत्‌ प्रकीर्तितम्‌।
+ *
+ * **Translation (Burgess):**
+ *
+ * The time from one sunrise to the next is designated as a Savana (civil) day.
+ *
+ * **Modern Technical Commentary:**
+ *
+ * Defines the fundamental civil day. This sunrise-to-sunrise period is the basis for determining the weekday (Vara), the planetary hours (Hora), and the divisions used in Muhurta calculations like Choghadia.
+ *
+ * </details>
+ * Aligns all computations with the Savana-dina 
  * (civil day), which begins at astronomical sunrise.
- * [Ch. II, v.64-69] Implements the formulas for the five limbs, finding 
+ * [Ch. II, v.64-69]
+ *
+ * <details class="siddhantic-proof">
+ * <summary>Siddhantic Proof: Spashta (True Longitudes) v.64</summary>
+ *
+ * **Sanskrit (Devanagari):**
+ *
+ * चन्द्रार्कयोः संबन्धिनो भागाः सप्तविंशतिः । नक्षत्राणि तानि कथ्यन्ते द्वादशांशैश्च तत्समाः ॥
+ *
+ * **Translation (Burgess):**
+ *
+ * The ecliptic is divided into twenty-seven equal parts, each called a Nakshatra (13° 20').
+ *
+ * </details>
+ * Implements the formulas for the five limbs, finding 
  * the 'Anta-kala'—the precise moment a limb completes its arc—based 
  * on the continuous relative motion of the Sun and Moon.
  */
@@ -28,7 +60,25 @@ import { jdnToGregorian } from '../time/conversions';
 /**
  * Get current Tithi Index.
  * 
- * [Ch. II, v.66] Calculated as the quotient of the angular distance 
+ * [Ch. II, v.66]
+ *
+ * <details class="siddhantic-proof">
+ * <summary>Siddhantic Proof: Spashta (True Longitudes) v.66</summary>
+ *
+ * **Sanskrit (Devanagari):**
+ *
+ * अर्कानिःसृतसश्चन्द्रः प्रत्यूहानि दिने दिने । यदर्कान्तरितो गच्छेद् द्वादशांशैः स वै तिथिः ॥
+ *
+ * **Translation (Burgess):**
+ *
+ * The period in which the Moon increases its distance from the Sun by twelve degrees is called a lunar day (Tithi).
+ *
+ * **Modern Technical Commentary:**
+ *
+ * Defines the Tithi, the primary element of the Panchanga. It is a relative angular measurement (Moon Longitude - Sun Longitude) rather than a fixed temporal duration, leading to Tithis vary in length between 19 and 26 hours.
+ *
+ * </details>
+ * Calculated as the quotient of the angular distance 
  * between the Moon and Sun and the 12-degree tithi-span.
  * 
  * @param ahargana Current day count (decimal)
@@ -43,7 +93,21 @@ function getTithiIdx(ahargana: number): number {
 /**
  * Get current Nakshatra Index.
  * 
- * [Ch. II, v.64] Calculated based on the Moon's true longitude 
+ * [Ch. II, v.64]
+ *
+ * <details class="siddhantic-proof">
+ * <summary>Siddhantic Proof: Spashta (True Longitudes) v.64</summary>
+ *
+ * **Sanskrit (Devanagari):**
+ *
+ * चन्द्रार्कयोः संबन्धिनो भागाः सप्तविंशतिः । नक्षत्राणि तानि कथ्यन्ते द्वादशांशैश्च तत्समाः ॥
+ *
+ * **Translation (Burgess):**
+ *
+ * The ecliptic is divided into twenty-seven equal parts, each called a Nakshatra (13° 20').
+ *
+ * </details>
+ * Calculated based on the Moon's true longitude 
  * within the 27 equal mathematical stations of 13° 20' each.
  * 
  * @param ahargana Current day count (decimal)
@@ -57,7 +121,21 @@ function getNakshatraIdx(ahargana: number): number {
 /**
  * Get current Yoga Index.
  * 
- * [Ch. II, v.65] Derived from the sum of the Sun and Moon's 
+ * [Ch. II, v.65]
+ *
+ * <details class="siddhantic-proof">
+ * <summary>Siddhantic Proof: Spashta (True Longitudes) v.65</summary>
+ *
+ * **Sanskrit (Devanagari):**
+ *
+ * रवीन्दुयोगविप्ताश्च योगा भभोगभाजिताः।
+ *
+ * **Translation (Burgess):**
+ *
+ * The sum of the longitudes of the Sun and Moon, divided by the span of a Nakshatra (800'), are the Yogas (Vishkambha, etc.).
+ *
+ * </details>
+ * Derived from the sum of the Sun and Moon's 
  * longitudes, divided into 27 equal portions.
  * 
  * @param ahargana Current day count (decimal)
@@ -72,7 +150,21 @@ function getYogaIdx(ahargana: number): number {
 /**
  * Get current Karana Index.
  * 
- * [Ch. II, v.67-69] Calculated as half-tithis (6-degree spans), 
+ * [Ch. II, v.67-69]
+ *
+ * <details class="siddhantic-proof">
+ * <summary>Siddhantic Proof: Spashta (True Longitudes) v.67</summary>
+ *
+ * **Sanskrit (Devanagari):**
+ *
+ * ध्रुवाणि शकुनिर्नागं तृतीयं तु चतुष्पदम्‌।
+ *
+ * **Translation (Burgess):**
+ *
+ * The fixed (dhruva) Karanas are Shakuni, Naga, and the third is Chatushpada.
+ *
+ * </details>
+ * Calculated as half-tithis (6-degree spans), 
  * following the specific sequence of 11 traditional names.
  * 
  * @param ahargana Current day count (decimal)
@@ -147,6 +239,7 @@ export interface ElementTiming {
   name: string;
   index: number;      
   pada?: number;
+  startTimeStr?: string;
   endAhargana: number | null; 
   endTimeStr: string;  
 }
@@ -174,10 +267,11 @@ function findElementTimings(
   sunriseHours: number,
 ): ElementTiming[] {
   const results: ElementTiming[] = [];
-  const step = 0.005; // Guard step
+  const step = 0.005; 
   
   let prevIdx = indexFn(sunriseA);
   let t = sunriseA + step;
+  let lastEndStr = formatHours(sunriseHours);
   
   while (t <= nextSunriseA + step * 0.1) {
     const clampedT = Math.min(t, nextSunriseA);
@@ -186,15 +280,18 @@ function findElementTimings(
     if (curIdx !== prevIdx) {
       const transA = binarySearchTransition(indexFn, t - step, clampedT);
       const transHours = sunriseHours + (transA - sunriseA) * 24.0;
+      const endStr = formatHours(transHours);
       
       results.push({
         name: nameFn(prevIdx),
         index: prevIdx + 1,
+        startTimeStr: lastEndStr,
         endAhargana: transA,
-        endTimeStr: formatHours(transHours),
+        endTimeStr: endStr,
       });
       
       prevIdx = curIdx;
+      lastEndStr = endStr;
     }
     t += step;
   }
@@ -202,6 +299,7 @@ function findElementTimings(
   results.push({
     name: nameFn(prevIdx),
     index: prevIdx + 1,
+    startTimeStr: lastEndStr,
     endAhargana: null,
     endTimeStr: '→',
   });
@@ -271,7 +369,25 @@ export interface DayPanchangaTimings {
 /**
  * Orchestrates total Panchanga timing computation for a civil day.
  * 
- * [Ch. XIV, v.18] Anchors all celestial transitions to the 'Savana' 
+ * [Ch. XIV, v.18]
+ *
+ * <details class="siddhantic-proof">
+ * <summary>Siddhantic Proof: Manadhya (Systems of Measurement) v.18</summary>
+ *
+ * **Sanskrit (Devanagari):**
+ *
+ * उदयादुदयं भानोः सावनं तत्‌ प्रकीर्तितम्‌।
+ *
+ * **Translation (Burgess):**
+ *
+ * The time from one sunrise to the next is designated as a Savana (civil) day.
+ *
+ * **Modern Technical Commentary:**
+ *
+ * Defines the fundamental civil day. This sunrise-to-sunrise period is the basis for determining the weekday (Vara), the planetary hours (Hora), and the divisions used in Muhurta calculations like Choghadia.
+ *
+ * </details>
+ * Anchors all celestial transitions to the 'Savana' 
  * frame (sunrise to sunrise), ensuring that ritual elements are 
  * correctly ascribed to the operative solar day.
  * 

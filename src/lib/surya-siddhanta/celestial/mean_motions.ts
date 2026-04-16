@@ -5,7 +5,25 @@
  * Calculates the mean longitudes of celestial bodies based on the Ahargana 
  * (civil days elapsed since the epoch).
  * 
- * [Ch. I, v.29-37] Defines the 'Bhagana' (sidereal revolutions) for each 
+ * [Ch. I, v.29-37]
+ *
+ * <details class="siddhantic-proof">
+ * <summary>Siddhantic Proof: Madhyama (Mean Motions) v.29</summary>
+ *
+ * **Sanskrit (Devanagari):**
+ *
+ * युगे सूर्यबुधशुक्राणां खचतुष्करदार्णवाः। कुजार्किगुरुशीघ्राणां भगणाः पूर्वयायिनाम्॥
+ *
+ * **Translation (Burgess):**
+ *
+ * In a Mahayuga, the Sun, Mercury, and Venus complete 4,320,000 revolutions. This number also applies to the Sighra (conjunction) points of Mars, Saturn, and Jupiter.
+ *
+ * **Modern Technical Commentary:**
+ *
+ * Establishes the mean solar year. For Mercury and Venus, these are their actual orbital revolutions around the Sun. For outer planets, this count applies to their 'Sighra' (fast) epicycle, which represents the Earth's orbital motion.
+ *
+ * </details>
+ * Defines the 'Bhagana' (sidereal revolutions) for each 
  * celestial body within a Mahayuga. These discrete counts are the absolute 
  * source for planetary speeds in the Siddhanta.
  * [Ch. I, v.53-54] Establishes the 'Graha-anayana' (planetary calculation) 
@@ -64,7 +82,25 @@ export type Body = typeof Body[keyof typeof Body];
 /**
  * Mapping of revolutions (Bhagana) per Mahayuga for each body.
  * 
- * [Ch. I, v.29-33] These values are derived from the scriptural counts.
+ * [Ch. I, v.29-33]
+ *
+ * <details class="siddhantic-proof">
+ * <summary>Siddhantic Proof: Madhyama (Mean Motions) v.29</summary>
+ *
+ * **Sanskrit (Devanagari):**
+ *
+ * युगे सूर्यबुधशुक्राणां खचतुष्करदार्णवाः। कुजार्किगुरुशीघ्राणां भगणाः पूर्वयायिनाम्॥
+ *
+ * **Translation (Burgess):**
+ *
+ * In a Mahayuga, the Sun, Mercury, and Venus complete 4,320,000 revolutions. This number also applies to the Sighra (conjunction) points of Mars, Saturn, and Jupiter.
+ *
+ * **Modern Technical Commentary:**
+ *
+ * Establishes the mean solar year. For Mercury and Venus, these are their actual orbital revolutions around the Sun. For outer planets, this count applies to their 'Sighra' (fast) epicycle, which represents the Earth's orbital motion.
+ *
+ * </details>
+ * These values are derived from the scriptural counts.
  */
 const REVOLUTIONS: Record<Body, number> = {
   [Body.SUN]: REV_SUN,

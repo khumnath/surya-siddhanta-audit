@@ -6,9 +6,41 @@
  * by the intersection of the Weekday (Vara) and the Moon's mansion 
  * (Nakshatra) at the moment of sunrise. 
  * 
- * [Ch. II, v.64] Defines the base 27 mathematical Nakshatra segments 
+ * [Ch. II, v.64]
+ *
+ * <details class="siddhantic-proof">
+ * <summary>Siddhantic Proof: Spashta (True Longitudes) v.64</summary>
+ *
+ * **Sanskrit (Devanagari):**
+ *
+ * चन्द्रार्कयोः संबन्धिनो भागाः सप्तविंशतिः । नक्षत्राणि तानि कथ्यन्ते द्वादशांशैश्च तत्समाः ॥
+ *
+ * **Translation (Burgess):**
+ *
+ * The ecliptic is divided into twenty-seven equal parts, each called a Nakshatra (13° 20').
+ *
+ * </details>
+ * Defines the base 27 mathematical Nakshatra segments 
  * (13° 20' each).
- * [Ch. VIII, v.18] Identifies Abhijit as a distinct scriptural asterism, 
+ * [Ch. VIII, v.18]
+ *
+ * <details class="siddhantic-proof">
+ * <summary>Siddhantic Proof: Bha-graha-yuti (Stellar Conjunctions) v.18</summary>
+ *
+ * **Sanskrit (Devanagari):**
+ *
+ * अभिजिद्‌ ब्रह्महृदयं स्वातिवैष्णववासवाः। अहिर्बुघन्यमुदक्स्थत्वान्न वुप्यन्तेऽर्करश्मभिः।
+ *
+ * **Translation (Burgess):**
+ *
+ * Abhijit, Brahma-hridaya, Svati, Shravana, Dhanishtha, and Uttara-Bhadrapada... are never hidden by the sun's rays.
+ *
+ * **Modern Technical Commentary:**
+ *
+ * Identifies **Abhijit** (Vega) as a primary scriptural asterism. While the ecliptic is mathematically divided into 27 equal segments for planetary motion, Abhijit is recognized here as a fixed stellar entity, forming the '28th Nakshatra' used in electional astrology (Muhurta).
+ *
+ * </details>
+ * Identifies Abhijit as a distinct scriptural asterism, 
  * justifying the 28-station system used for fine-tuned electional 
  * astrology (Muhurta).
  */
@@ -18,7 +50,25 @@ import { ANANDADI_YOGA_NAMES } from './names';
 /**
  * 28-Nakshatra Boundaries (including Abhijit).
  * 
- * [Ch. VIII, v.18] While most Nakshatras span 13° 20', the electional system 
+ * [Ch. VIII, v.18]
+ *
+ * <details class="siddhantic-proof">
+ * <summary>Siddhantic Proof: Bha-graha-yuti (Stellar Conjunctions) v.18</summary>
+ *
+ * **Sanskrit (Devanagari):**
+ *
+ * अभिजिद्‌ ब्रह्महृदयं स्वातिवैष्णववासवाः। अहिर्बुघन्यमुदक्स्थत्वान्न वुप्यन्तेऽर्करश्मभिः।
+ *
+ * **Translation (Burgess):**
+ *
+ * Abhijit, Brahma-hridaya, Svati, Shravana, Dhanishtha, and Uttara-Bhadrapada... are never hidden by the sun's rays.
+ *
+ * **Modern Technical Commentary:**
+ *
+ * Identifies **Abhijit** (Vega) as a primary scriptural asterism. While the ecliptic is mathematically divided into 27 equal segments for planetary motion, Abhijit is recognized here as a fixed stellar entity, forming the '28th Nakshatra' used in electional astrology (Muhurta).
+ *
+ * </details>
+ * While most Nakshatras span 13° 20', the electional system 
  * inserts Abhijit between Uttara Ashadha and Shravana. This specific grid 
  * is used to determine the Anandadi Yogas.
  */

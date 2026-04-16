@@ -5,9 +5,45 @@
  * Implements the calculation of the 60-year Jovian cycle, known as the 
  * Barhaspatya Mana (Measure of Jupiter).
  * 
- * [Ch. I, v.55] Defines the mathematical procedure for calculating 
+ * [Ch. I, v.55]
+ *
+ * <details class="siddhantic-proof">
+ * <summary>Siddhantic Proof: Madhyama (Mean Motions) v.55</summary>
+ *
+ * **Sanskrit (Devanagari):**
+ *
+ * द्वादशघ्ना गुरोर्याता भगणा वर्तमानकैः। राशिभिः सहिताः शुद्धाः षष्ट्या स्युर्विजयादयः॥
+ *
+ * **Translation (Burgess):**
+ *
+ * Jupiter's elapsed revolutions multiplied by twelve, with the addition of the current sign, and divided by sixty, give the year of the cycle (Vijaya, etc.).
+ *
+ * **Modern Technical Commentary:**
+ *
+ * Defines the Jovian year (Samvatsara) as the time Jupiter takes to traverse one zodiacal sign. The cycle start point (Vijaya) mentioned here is critical for anchoring the North Indian Samvatsara count.
+ *
+ * </details>
+ * Defines the mathematical procedure for calculating 
  * the current Jovian year based on Jupiter's revolutions.
- * [Ch. XIV, v.17] Technically defines the Jupiter year (Samvatsara) 
+ * [Ch. XIV, v.17]
+ *
+ * <details class="siddhantic-proof">
+ * <summary>Siddhantic Proof: Manadhya (Systems of Measurement) v.17</summary>
+ *
+ * **Sanskrit (Devanagari):**
+ *
+ * षष्ट्यब्दाः पर्यायाः पञ्चाधिकैः पञ्चभिस्तथा । बृहस्पतेर्मानस्य गौरवः संवत्सरः स च ॥
+ *
+ * **Translation (Burgess):**
+ *
+ * Five revolutions of Jupiter make the cycle of sixty years... this is called the Jupiter year (Samvatsara).
+ *
+ * **Modern Technical Commentary:**
+ *
+ * This defines the Jovian cycle (Samvatsara). Five revolutions of Jupiter (approximately 60 solar years) constitute a full cycle where each year has a specific traditional name (Prabhava, Vibhava, etc.).
+ *
+ * </details>
+ * Technically defines the Jupiter year (Samvatsara) 
  * as the time taken for a mean transit across one zodiacal sign (~361 days).
  */
 
@@ -37,13 +73,49 @@ export function getSouthSamvatsar(shakaYear: number): { index: number; name: str
 /**
  * Get the North Indian (Jupiter-based) Samvatsar.
  * 
- * [Ch. I, v.55] Calculates the 'canonical' Jovian year based strictly 
+ * [Ch. I, v.55]
+ *
+ * <details class="siddhantic-proof">
+ * <summary>Siddhantic Proof: Madhyama (Mean Motions) v.55</summary>
+ *
+ * **Sanskrit (Devanagari):**
+ *
+ * द्वादशघ्ना गुरोर्याता भगणा वर्तमानकैः। राशिभिः सहिताः शुद्धाः षष्ट्या स्युर्विजयादयः॥
+ *
+ * **Translation (Burgess):**
+ *
+ * Jupiter's elapsed revolutions multiplied by twelve, with the addition of the current sign, and divided by sixty, give the year of the cycle (Vijaya, etc.).
+ *
+ * **Modern Technical Commentary:**
+ *
+ * Defines the Jovian year (Samvatsara) as the time Jupiter takes to traverse one zodiacal sign. The cycle start point (Vijaya) mentioned here is critical for anchoring the North Indian Samvatsara count.
+ *
+ * </details>
+ * Calculates the 'canonical' Jovian year based strictly 
  * on Jupiter's mean motion.
  * 
  * Algorithm:
  * 1. Calculate total elapsed revolutions of Jupiter.
  * 2. Multiply by 12 to find the total elapsed signs (each sign = 1 year).
- * 3. [Ch. I, v.55] Anchor to the 'Vijaya' year at the start of the cycle.
+ * 3. [Ch. I, v.55]
+ *
+ * <details class="siddhantic-proof">
+ * <summary>Siddhantic Proof: Madhyama (Mean Motions) v.55</summary>
+ *
+ * **Sanskrit (Devanagari):**
+ *
+ * द्वादशघ्ना गुरोर्याता भगणा वर्तमानकैः। राशिभिः सहिताः शुद्धाः षष्ट्या स्युर्विजयादयः॥
+ *
+ * **Translation (Burgess):**
+ *
+ * Jupiter's elapsed revolutions multiplied by twelve, with the addition of the current sign, and divided by sixty, give the year of the cycle (Vijaya, etc.).
+ *
+ * **Modern Technical Commentary:**
+ *
+ * Defines the Jovian year (Samvatsara) as the time Jupiter takes to traverse one zodiacal sign. The cycle start point (Vijaya) mentioned here is critical for anchoring the North Indian Samvatsara count.
+ *
+ * </details>
+ * Anchor to the 'Vijaya' year at the start of the cycle.
  * 
  * NOTE: Because a Jovian year is ~4 days shorter than a solar year, 
  * this system occasionally 'skips' a solar year (Kshaya Samvatsara).
@@ -57,7 +129,25 @@ export function getNorthSamvatsar(ahargana: number): { index: number; name: stri
   const totalRevs = (daysSinceKali * REV_JUPITER) / DAYS_PER_MAHAYUGA;
   const totalSamvatsars = totalRevs * 12;
   
-  // [Ch. I, v.55] Anchor to Vijaya (the 27th name in the list of 60).
+  // [Ch. I, v.55]
+  //
+  // <details class="siddhantic-proof">
+  // <summary>Siddhantic Proof: Madhyama (Mean Motions) v.55</summary>
+  //
+  // **Sanskrit (Devanagari):**
+  //
+  // द्वादशघ्ना गुरोर्याता भगणा वर्तमानकैः। राशिभिः सहिताः शुद्धाः षष्ट्या स्युर्विजयादयः॥
+  //
+  // **Translation (Burgess):**
+  //
+  // Jupiter's elapsed revolutions multiplied by twelve, with the addition of the current sign, and divided by sixty, give the year of the cycle (Vijaya, etc.).
+  //
+  // **Modern Technical Commentary:**
+  //
+  // Defines the Jovian year (Samvatsara) as the time Jupiter takes to traverse one zodiacal sign. The cycle start point (Vijaya) mentioned here is critical for anchoring the North Indian Samvatsara count.
+  //
+  // </details>
+  // Anchor to Vijaya (the 27th name in the list of 60).
   const samvatsarIndex = (Math.floor(totalSamvatsars) + 26) % 60;
   
   return {

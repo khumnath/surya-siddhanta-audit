@@ -5,7 +5,25 @@
  * Provides foundational logic for anchoring astronomical time to the 
  * local civil day (Savana-dina).
  * 
- * [Ch. XIV, v.18-19] Establishes the 'Savana-dina' as the terrestrial 
+ * [Ch. XIV, v.18-19]
+ *
+ * <details class="siddhantic-proof">
+ * <summary>Siddhantic Proof: Manadhya (Systems of Measurement) v.18</summary>
+ *
+ * **Sanskrit (Devanagari):**
+ *
+ * उदयादुदयं भानोः सावनं तत्‌ प्रकीर्तितम्‌।
+ *
+ * **Translation (Burgess):**
+ *
+ * The time from one sunrise to the next is designated as a Savana (civil) day.
+ *
+ * **Modern Technical Commentary:**
+ *
+ * Defines the fundamental civil day. This sunrise-to-sunrise period is the basis for determining the weekday (Vara), the planetary hours (Hora), and the divisions used in Muhurta calculations like Choghadia.
+ *
+ * </details>
+ * Establishes the 'Savana-dina' as the terrestrial 
  * day measured from sunrise to sunrise, which serves as the boundary 
  * for the 'Vara' (weekday).
  */
@@ -30,7 +48,25 @@ export function getWeekdayFromDate(date: Date | string): number {
 /**
  * Standardize Ahargana anchor for daily Panchanga elements.
  * 
- * [Ch. XIV, v.18] In the Surya-Siddhanta, a civil day (Savana-dina) begins 
+ * [Ch. XIV, v.18]
+ *
+ * <details class="siddhantic-proof">
+ * <summary>Siddhantic Proof: Manadhya (Systems of Measurement) v.18</summary>
+ *
+ * **Sanskrit (Devanagari):**
+ *
+ * उदयादुदयं भानोः सावनं तत्‌ प्रकीर्तितम्‌।
+ *
+ * **Translation (Burgess):**
+ *
+ * The time from one sunrise to the next is designated as a Savana (civil) day.
+ *
+ * **Modern Technical Commentary:**
+ *
+ * Defines the fundamental civil day. This sunrise-to-sunrise period is the basis for determining the weekday (Vara), the planetary hours (Hora), and the divisions used in Muhurta calculations like Choghadia.
+ *
+ * </details>
+ * In the Surya-Siddhanta, a civil day (Savana-dina) begins 
  * at the moment of local sunrise. To find the 'Elements for the Day', 
  * we must identify the state of the planets at this exact moment 
  * (Udaya-kaala).

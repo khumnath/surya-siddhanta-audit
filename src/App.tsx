@@ -20,7 +20,7 @@ import {
 // Library Imports
 import { KATHMANDU, getAllLocations } from './lib/surya-siddhanta/geography/location';
 import type { Location } from './types/astronomy';
-import { dateTimeToAhargana, aharganaToDateTime } from './lib/surya-siddhanta/time/conversions';
+import { dateTimeToAhargana } from './lib/surya-siddhanta/time/conversions';
 import {
   getTithiDetails, calculateNakshatra,
   getSolarMonthName, getAyana, getSeason,
@@ -49,6 +49,7 @@ import {
   getSSNextSamvatsarName,
   getModernNextSamvatsarName,
   findPrecedingYugadiAhargana,
+  findPrecedingTraditionalYugadiAhargana,
   findPrecedingNepalSambatAhargana,
   getNorthCivilSamvatsar,
   getSouthCivilSamvatsar,
@@ -162,10 +163,25 @@ const App: React.FC = () => {
     if (!modernCurrent) return null;
     const sSun = (modernCurrent as any).siderealSun;
 
-    // Find the modern New Moon boundary to determine the lunar month name correctly
-    const modNM = findModernLunarBoundary(selectedDate.toJSDate(), 0, -1);
-    const modElementsAtNM = getModernPanchangaElements(modNM, modernAyanamsha);
-    const modSunAtNM = (modElementsAtNM as any).siderealSun;
+    // Find the modern last New Moon to detect Adhika and determine base month
+    const todayJS = selectedDate.toJSDate();
+    const tomorrowJS = new Date(todayJS.getTime() + 86400000);
+    
+    // Amavasya Day Month Adoption:
+    // When sunrise tithi is Amavasya (30), the NM occurs during this civil day.
+    // The new month starts at NM, so the day carries the new month's name.
+    const isAmavasyaDay = (modernCurrent.tithi.index === 30);
+    const boundaryDate = isAmavasyaDay ? tomorrowJS : todayJS;
+    const modIsKrishna = isAmavasyaDay ? false : modernCurrent.tithi.index > 15;
+    
+    const modNM1 = findModernLunarBoundary(boundaryDate, 0, -1);
+    const modElementsAtNM1 = getModernPanchangaElements(modNM1, modernAyanamsha);
+    const modSunAtNM1 = (modElementsAtNM1 as any).siderealSun;
+
+    // Adhika: check full NM-to-NM cycle (Sun stays in same rashi across both NMs)
+    const modNM2 = findModernLunarBoundary(new Date(modNM1.getTime() + 15 * 86400000), 0, 1);
+    const modElementsAtNM2 = getModernPanchangaElements(modNM2, modernAyanamsha);
+    const modSunAtNM2 = (modElementsAtNM2 as any).siderealSun;
 
     const modSign = ModernPanchangaEngine.getModernSolarMonthSign(selectedDate.toJSDate(), modernAyanamsha);
     const modDay = ModernPanchangaEngine.getModernSolarMonthDay(selectedDate.toJSDate(), modernAyanamsha);
@@ -175,44 +191,50 @@ const App: React.FC = () => {
       bikramMonth: BIKRAM_MONTH_NAMES[modSign - 1],
       ayana: getAyana(ahargana, sSun),
       season: getSeason(ahargana, sSun),
-      lunarMonth: getLunarMonthName(ahargana, lunarSystem, modSunAtNM, modernCurrent.tithi.index > 15),
+      lunarMonth: getLunarMonthName(ahargana, lunarSystem, modIsKrishna, modSunAtNM1, modSunAtNM2),
       paksha: modernCurrent.tithi.name.split(' ')[0],
       solarDay: modDay
     };
   }, [modernCurrent, ahargana, selectedDate, modernAyanamsha, lunarSystem]);
 
-  /** Modern Era Logic - Precise transit boundaries */
+  /** Modern Era Logic - Engine Specific Transit */
   const modernEras = useMemo(() => {
     if (!modernCurrent || !modernRhythm) return null;
 
     const gYear = selectedDate.year;
-    const sSun = (modernCurrent as any).siderealSun;
-    
     // 1. Solar Kali/Bikram (Mesha Sankranti)
     const baseKaliSolar = gYear + 3100;
-    const finalKaliSolar = (selectedDate.month < 4 || (selectedDate.month === 4 && sSun >= 300)) ? baseKaliSolar : baseKaliSolar + 1;
+    const modElements = getModernPanchangaElements(selectedDate.toJSDate(), modernAyanamsha);
+    const modSign = Math.floor(modElements.siderealSun / 30) + 1;
+    const finalKaliSolarFixed = (modSign >= 1 && modSign <= 9) ? baseKaliSolar + 1 : baseKaliSolar;
 
-    // 2. Lunar Kali/Vikram (Chaitra Shukla Pratipada) uses fixed boundary
-    const currentYugadi = findPrecedingYugadiAhargana(ahargana);
-    const yugadiYear = aharganaToDateTime(currentYugadi, location).year;
-    const isPastYugadi = yugadiYear === selectedDate.year;
-    const finalKaliLunar = isPastYugadi ? gYear + 3101 : gYear + 3100;
+    // 2. Lunar Kali/Vikram (Chaitra Shukla Pratipada)
+    // We scan for the preceding Yugadi day independently for each engine.
+    const tradYugadi = findPrecedingTraditionalYugadiAhargana(ahargana);
+    const modYugadi = findPrecedingYugadiAhargana(ahargana);
+    
+    const isPastTradYugadi = Math.floor(ahargana) >= tradYugadi;
+    const isPastModYugadi = Math.floor(ahargana) >= modYugadi;
 
-    // 3. Nepal Sambat (Kartika Shukla Pratipada) uses fixed boundary
-    const currentNS = findPrecedingNepalSambatAhargana(ahargana);
-    const nsYear = aharganaToDateTime(currentNS, location).year;
-    const isPastKartika = nsYear === selectedDate.year;
+    const finalKaliLunarTrad = (selectedDate.month < 3 && !isPastTradYugadi) ? gYear + 3100 : (isPastTradYugadi ? gYear + 3101 : gYear + 3100);
+    const finalKaliLunarMod = (selectedDate.month < 3 && !isPastModYugadi) ? gYear + 3100 : (isPastModYugadi ? gYear + 3101 : gYear + 3100);
+
+    // 3. Nepal Sambat (Kartika Shukla Pratipada)
+    const currentNSDay = findPrecedingNepalSambatAhargana(ahargana);
+    const isPastKartika = Math.floor(ahargana) >= currentNSDay;
     const finalNS = (selectedDate.year - 880) + (isPastKartika ? 1 : 0);
 
     return {
-      kaliSolar: finalKaliSolar,
-      kaliLunar: finalKaliLunar,
-      bikram: finalKaliSolar - 3044,
-      vikram: finalKaliLunar - 3044,
-      shaka: finalKaliLunar - 3179,
-      nepal: finalNS
+      kaliSolar: finalKaliSolarFixed,
+      vikramSolar: finalKaliSolarFixed - 3044,
+      kaliLunarTrad: finalKaliLunarTrad,
+      kaliLunarMod: finalKaliLunarMod,
+      vikramLunarTrad: finalKaliLunarTrad - 3044,
+      vikramLunarMod: finalKaliLunarMod - 3044,
+      nepalMod: finalNS,
+      shakaMod: finalKaliLunarMod - 3179
     };
-  }, [modernCurrent, modernRhythm, selectedDate]);
+  }, [selectedDate, ahargana, modernAyanamsha, modernCurrent, modernRhythm]);
 
   const ssSolarDay = getSolarMonthDay(ahargana);
 
@@ -221,6 +243,7 @@ const App: React.FC = () => {
     if (viewMode === 'ss') return null;
     return getModernLagna(selectedDate.toJSDate(), location, modernAyanamsha);
   }, [viewMode, selectedDate, location, modernAyanamsha]);
+
   // Triple Samvatsara Auditor - High Precision refined for Adoption Window
   const samvatsarAudit = useMemo(() => {
     if (!modernCurrent) return null;
@@ -636,11 +659,11 @@ const App: React.FC = () => {
 
                     {[
                       { label: 'Solar Month Day', ss: `${solarMonth} ${ssSolarDay}`, mod: modernRhythm ? `${modernRhythm.solarMonth} ${modernRhythm.solarDay}` : '---' },
-                      { label: 'Kali Yuga (Lunar)', ss: eras.kali_yuga, mod: modernEras?.kaliLunar },
-                      { label: 'Bikram Sambat (Solar)', ss: eras.bikram_sambat_solar, mod: modernEras?.bikram },
-                      { label: 'Bikram Sambat (Lunar)', ss: eras.vikram_samvat_lunar, mod: modernEras?.vikram },
-                      { label: 'Nepal Sambat', ss: eras.nepal_sambat, mod: modernEras?.nepal },
-                      { label: 'Shaka Samvat', ss: eras.shaka_samvat, mod: modernEras?.shaka }
+                      { label: 'Kali Yuga (Lunar)', ss: eras.kali_yuga, mod: modernEras?.kaliLunarMod },
+                      { label: 'Bikram Sambat (Solar)', ss: eras.bikram_sambat_solar, mod: modernEras?.vikramSolar },
+                      { label: 'Bikram Sambat (Lunar)', ss: eras.vikram_samvat_lunar, mod: modernEras?.vikramLunarMod },
+                      { label: 'Nepal Sambat', ss: eras.nepal_sambat, mod: modernEras?.nepalMod },
+                      { label: 'Shaka Samvat', ss: eras.shalivahana_shaka, mod: modernEras?.shakaMod }
                     ].map((row) => (
                       <div key={row.label} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1.5rem', alignItems: 'center' }}>
                         <div className="text-label text-[0.75rem] font-bold uppercase tracking-wide">{row.label}</div>
@@ -974,56 +997,76 @@ const App: React.FC = () => {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
                     {(['tithis', 'nakshatras', 'yogas', 'karanas'] as const).map((key) => {
                       const label = key.toUpperCase().slice(0, -1);
-                      const modItems = modernTimings?.[key];
-                      const tradItems = panchangaTimings[key];
+                      const modItems = modernTimings?.[key] || [];
+                      const tradItems = (panchangaTimings[key] as any[]) || [];
+                      const hasSunriseDrift = modItems[0] && tradItems[0] && modItems[0].name !== tradItems[0].name;
+
                       return (
-                        <div key={key} className="bg-white/5 rounded-xl border border-border-subtle flex flex-col gap-6" style={{ padding: '2.5rem', overflow: 'visible' }}>
-                          <div className="text-[0.75rem] font-black color-text-dim uppercase tracking-[0.2em] opacity-60 flex justify-between items-center">
-                            {label}
+                        <div key={key} className="bg-white/5 rounded-xl border border-border-subtle flex flex-col gap-6" style={{ padding: '2rem', overflow: 'visible' }}>
+                          <div className="flex justify-between items-center">
+                            <div className="text-[0.75rem] font-black color-text-dim uppercase tracking-[0.2em] opacity-60 flex items-center gap-2">
+                              {label}
+                              {hasSunriseDrift && <span title="Sunrise Drift Detected" className="text-accent-error">⚠️</span>}
+                            </div>
                             <span className="text-[0.45rem] px-2 py-0.5 rounded-md bg-white/10 uppercase tracking-widest">ELEMENT</span>
                           </div>
 
-                          <div className="flex flex-col gap-8">
-                            {modItems?.slice(0, 2).map((modIt: any, i: number) => {
-                              const tradIt = tradItems?.[i];
-                              const hasNameDrift = tradIt && modIt.name !== tradIt.name;
-                              const isCurrent = i === 0;
-
-                              return (
-                                <div key={i} className={`flex flex-col gap-5 ${isCurrent ? 'opacity-100' : 'opacity-60 grayscale-[0.5]'}`}>
-                                  {/* MODERN BLOCK */}
-                                  <div className="flex flex-col gap-3">
-                                    <div className="flex justify-between items-center">
-                                      <div className="text-[0.55rem] font-black uppercase tracking-[0.2em] text-accent-primary">JPL MODERN</div>
-                                      {!!modIt.endAhargana && (
-                                        <span className="px-2 py-0.5 rounded bg-accent-secondary/10 text-[0.6rem] font-black text-accent-secondary uppercase tracking-widest border border-accent-secondary/20">
-                                          Ends {modIt.endTimeStr}
-                                        </span>
-                                      )}
-                                    </div>
-                                    <div className="text-lg font-black text-text-primary tracking-tight">{modIt.name}</div>
-                                  </div>
-
-                                  {/* TRADITIONAL COMPARISON */}
-                                  {tradIt && (
-                                    <div className="pt-6 border-t border-white/5 flex flex-col gap-3">
-                                      <div className="flex justify-between items-center">
-                                        <span className="text-[0.55rem] font-black text-text-secondary uppercase tracking-widest opacity-80">TRADITIONAL (SS) BASELINE</span>
-                                        {hasNameDrift && <span title="Drift Detected" className="text-accent-error text-[0.8rem]">⚠️</span>}
+                          <div className="grid grid-cols-1 gap-8">
+                            {/* MODERN ENGINE TIMELINE */}
+                            <div className="flex flex-col gap-4">
+                              <div className="text-[0.55rem] font-black uppercase tracking-[0.2em] text-accent-primary">JPL MODERN (DRIK)</div>
+                              <div className="flex flex-col gap-3">
+                                {modItems.map((it: any, i: number) => (
+                                    <div key={i} className="flex items-center gap-4 group">
+                                      <div className="flex flex-col items-center">
+                                        {i === 0 ? (
+                                          <div className="flex items-center justify-center w-4 h-4 rounded-full bg-accent-primary/20">
+                                            <Sunrise size={10} className="text-accent-primary" />
+                                          </div>
+                                        ) : (
+                                          <div className="w-1.5 h-1.5 rounded-full bg-accent-primary"></div>
+                                        )}
+                                        {i < modItems.length - 1 && <div className="w-[1px] h-6 bg-accent-primary/20"></div>}
                                       </div>
-                                      <div className="flex justify-between items-end">
-                                        <div className={`text-base font-black ${hasNameDrift ? 'text-accent-error' : 'text-text-dim'}`}>
-                                          {tradIt.name}
+                                      <div className="flex flex-col">
+                                        <div className="text-[0.65rem] font-mono font-bold text-text-dim/80 flex items-center gap-1">
+                                          {i === 0 && <span className="opacity-60 text-[0.55rem] uppercase tracking-tighter">Sunrise</span>}
+                                          {it.startTimeStr} — {it.endTimeStr}
                                         </div>
-                                        <div className={`text-sm font-mono font-black ${hasNameDrift ? 'text-accent-error' : 'text-text-dim'}`}>
-                                          {!!tradIt.endAhargana ? tradIt.endTimeStr : '→'}
-                                        </div>
+                                        <div className="text-[0.85rem] font-black text-text-primary tracking-tight">{it.name}</div>
                                       </div>
                                     </div>
-                                  )}
-                                </div>
-                              );
-                            })}
+                                ))}
+                              </div>
+                            </div>
+
+                            {/* TRADITIONAL ENGINE TIMELINE */}
+                            <div className="flex flex-col gap-4 pt-6 border-t border-white/5">
+                              <div className="text-[0.55rem] font-black uppercase tracking-[0.2em] text-text-secondary">TRADITIONAL (SS)</div>
+                              <div className="flex flex-col gap-3">
+                                {tradItems.map((it: any, i: number) => (
+                                    <div key={i} className="flex items-center gap-4 group">
+                                      <div className="flex flex-col items-center">
+                                        {i === 0 ? (
+                                          <div className="flex items-center justify-center w-4 h-4 rounded-full bg-text-secondary/20">
+                                            <Sunrise size={10} className="text-text-secondary" />
+                                          </div>
+                                        ) : (
+                                          <div className="w-1.5 h-1.5 rounded-full bg-text-secondary/60"></div>
+                                        )}
+                                        {i < tradItems.length - 1 && <div className="w-[1px] h-6 bg-text-secondary/10"></div>}
+                                      </div>
+                                      <div className="flex flex-col">
+                                        <div className="text-[0.65rem] font-mono font-bold text-text-dim/80 flex items-center gap-1">
+                                          {i === 0 && <span className="opacity-60 text-[0.55rem] uppercase tracking-tighter">Sunrise</span>}
+                                          {it.startTimeStr} — {it.endTimeStr}
+                                        </div>
+                                        <div className="text-[0.85rem] font-black text-text-dim tracking-tight">{it.name}</div>
+                                      </div>
+                                    </div>
+                                ))}
+                              </div>
+                            </div>
                           </div>
                         </div>
                       );

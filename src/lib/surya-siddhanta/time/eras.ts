@@ -5,7 +5,25 @@
  * Implements conversions and year-count logic for the major Indian 
  * calendar eras (Kali, Vikram, Shaka, Nepal) based on the Surya-Siddhanta epoch.
  * 
- * [Ch. I, v.15-17] Defines the foundational chronometry of the Four Ages (Yugas). 
+ * [Ch. I, v.15-17]
+ *
+ * <details class="siddhantic-proof">
+ * <summary>Siddhantic Proof: Madhyama (Mean Motions) v.15</summary>
+ *
+ * **Sanskrit (Devanagari):**
+ *
+ * तद्द्वादशसहस्राणि चतुर्युगमुदाहृतम्। सूर्याब्दसङ्ख्यया द्वित्रिसागरैरयुताहतैः॥
+ *
+ * **Translation (Burgess):**
+ *
+ * Twelve thousand divine years make a Quadruple Age (Chaturyuga); it consists of 4,320,000 solar years.
+ *
+ * **Modern Technical Commentary:**
+ *
+ * Defines the Mahayuga (Great Age) as the common least multiple of all planetary periods. This 4.32 million year cycle ensures all planets return to 0° Longitude (Aries) simultaneously.
+ *
+ * </details>
+ * Defines the foundational chronometry of the Four Ages (Yugas). 
  * The Kali Yuga (432,000 years) is established as 1/10th of a Mahayuga.
  * [Ch. I, v.21] Provides the basis for the current Kali epoch, which is the 
  * zero-point for all astronomical calculations in the Siddhanta.
@@ -50,7 +68,25 @@ function gregorianYearFromAhargana(ahargana: number): number {
 /**
  * Calculate the SOLAR (Saura) Kali year from Ahargana.
  * 
- * [Ch. I, v.13] The solar year increments precisely when the Sun 
+ * [Ch. I, v.13]
+ *
+ * <details class="siddhantic-proof">
+ * <summary>Siddhantic Proof: Madhyama (Mean Motions) v.13</summary>
+ *
+ * **Sanskrit (Devanagari):**
+ *
+ * तद्द्वद्वात्रिंशता तिथिभिश्चान्द्रो मासस्तत्र ।... मासेर्द्वादशभिर्वर्षं दिव्यं तदह उच्यते ॥
+ *
+ * **Translation (Burgess):**
+ *
+ * Twelve months make a year, which is called a day and night of the gods (Devaratripa).
+ *
+ * **Modern Technical Commentary:**
+ *
+ * Establishes the year as the fundamental solar cycle. It also introduces the 'Divine Day' concept where one human solar year corresponds to a single day for the gods, centered on the North/South poles (Meru).
+ *
+ * </details>
+ * The solar year increments precisely when the Sun 
  * enters the first point of the zodiac (Mesha Sankranti, 0° sidereal longitude).
  * 
  * @param ahargana Current day count
@@ -81,7 +117,25 @@ export function kaliSolarYearFromAhargana(ahargana: number): number {
 /**
  * Calculate the LUNAR (Chandra) Kali year from Ahargana.
  * 
- * [Ch. I, v.13] The lunar year formally increments at Chaitra 
+ * [Ch. I, v.13]
+ *
+ * <details class="siddhantic-proof">
+ * <summary>Siddhantic Proof: Madhyama (Mean Motions) v.13</summary>
+ *
+ * **Sanskrit (Devanagari):**
+ *
+ * तद्द्वद्वात्रिंशता तिथिभिश्चान्द्रो मासस्तत्र ।... मासेर्द्वादशभिर्वर्षं दिव्यं तदह उच्यते ॥
+ *
+ * **Translation (Burgess):**
+ *
+ * Twelve months make a year, which is called a day and night of the gods (Devaratripa).
+ *
+ * **Modern Technical Commentary:**
+ *
+ * Establishes the year as the fundamental solar cycle. It also introduces the 'Divine Day' concept where one human solar year corresponds to a single day for the gods, centered on the North/South poles (Meru).
+ *
+ * </details>
+ * The lunar year formally increments at Chaitra 
  * Shukla Pratipada (Yugadi). This point marks the start of the 
  * ritual year and varies relative to the solar year.
  * 

@@ -5,7 +5,25 @@
  * Provides the mathematical bridge between modern Gregorian/Julian calendars 
  * and the traditional continuous day-count (Ahargana) since the Kali Epoch.
  * 
- * [Ch. I, v.48-51] Defines the process of 'Ahargana' (heap of days)—the 
+ * [Ch. I, v.48-51]
+ *
+ * <details class="siddhantic-proof">
+ * <summary>Siddhantic Proof: Madhyama (Mean Motions) v.48</summary>
+ *
+ * **Sanskrit (Devanagari):**
+ *
+ * कल्पादिगुणितं कालमुपर्युपरि संस्थितं । सौरैर्वर्षगतैः सार्धं संकल्य तानि पिण्डयेत् ॥
+ *
+ * **Translation (Burgess):**
+ *
+ * Having multiplied the time from the beginning of the creation by the number of years, add to the product the number of years elapsed of the current year.
+ *
+ * **Modern Technical Commentary:**
+ *
+ * The first step of the Ahargana (heaping of days) process: converting cumulative Kalpa/Yuga time into a single count of elapsed solar years.
+ *
+ * </details>
+ * Defines the process of 'Ahargana' (heap of days)—the 
  * summation of months and days to arrive at a serial count for astronomical 
  * lookups.
  * [Ch. I, v.52] Establishes the Ahargana as the count of terrestrial 
@@ -19,7 +37,25 @@ import { KATHMANDU } from '../geography/location';
 /** 
  * Siddhantic Epoch (Kali Yuga).
  * 
- * [Ch. I, v.17, 21] Corresponds to Midnight (Ujjain Meridian) on Friday, 
+ * [Ch. I, v.17, 21]
+ *
+ * <details class="siddhantic-proof">
+ * <summary>Siddhantic Proof: Madhyama (Mean Motions) v.17</summary>
+ *
+ * **Sanskrit (Devanagari):**
+ *
+ * युगस्य दशमो भागश्चतुस्त्रिद्व्येकसंगुणः । क्रमात्कृतयुगादीनां षष्ठांशः सन्ध्ययो स्वकः ॥
+ *
+ * **Translation (Burgess):**
+ *
+ * The tenth part of a Mahayuga, multiplied by 4, 3, 2, 1, gives the lengths of the four ages respectively.
+ *
+ * **Modern Technical Commentary:**
+ *
+ * Calculates the specific lengths of the Yugas: Satya (1,728,000y), Treta (1,296,000y), Dvapara (864,000y), and Kali (432,000y) based on a 4:3:2:1 ratio.
+ *
+ * </details>
+ * Corresponds to Midnight (Ujjain Meridian) on Friday, 
  * February 18, 3102 BCE (Julian). At this epoch, the mean positions of 
  * all planets are scripturally defined as being exactly at 0° (Revati).
  */
@@ -116,7 +152,25 @@ export function daysSinceKali(jdn: number): number {
 /**
  * Convert a modern DateTime object to the traditional Ahargana (Sum of Days).
  * 
- * [Ch. I, v.48-51] This is the core time input for the library. All 
+ * [Ch. I, v.48-51]
+ *
+ * <details class="siddhantic-proof">
+ * <summary>Siddhantic Proof: Madhyama (Mean Motions) v.48</summary>
+ *
+ * **Sanskrit (Devanagari):**
+ *
+ * कल्पादिगुणितं कालमुपर्युपरि संस्थितं । सौरैर्वर्षगतैः सार्धं संकल्य तानि पिण्डयेत् ॥
+ *
+ * **Translation (Burgess):**
+ *
+ * Having multiplied the time from the beginning of the creation by the number of years, add to the product the number of years elapsed of the current year.
+ *
+ * **Modern Technical Commentary:**
+ *
+ * The first step of the Ahargana (heaping of days) process: converting cumulative Kalpa/Yuga time into a single count of elapsed solar years.
+ *
+ * </details>
+ * This is the core time input for the library. All 
  * planetary positions (True Longitudes) are derived purely from this 
  * single day-count value.
  * 

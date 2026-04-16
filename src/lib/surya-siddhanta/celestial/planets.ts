@@ -7,9 +7,45 @@
  * 
  * [Ch. II, v.1-5] Defines the fixed points (Mandocca and Sighrocca) for 
  * each planet.
- * [Ch. II, v.34-37] Establishes the variable epicycle circumferences 
+ * [Ch. II, v.34-37]
+ *
+ * <details class="siddhantic-proof">
+ * <summary>Siddhantic Proof: Spashta (True Longitudes) v.34</summary>
+ *
+ * **Sanskrit (Devanagari):**
+ *
+ * ततः मन्दपरिध्यंशाः कथ्यन्ते भौमकादितः। युगाष्टवसवस्त्रिंशत्त्रयस्त्रिंशत्खषट् तथा॥
+ *
+ * **Translation (Burgess):**
+ *
+ * Then are stated the degrees of the Manda-epicycles, for Mars and the others: 75, 30, 33, 12, and 49...
+ *
+ * **Modern Technical Commentary:**
+ *
+ * Defines the dimensions of the primary elliptical correction (Manda) for the five planets. These circumferences represent the eccentricity of the planetary orbits.
+ *
+ * </details>
+ * Establishes the variable epicycle circumferences 
  * (Paridhi) for both Manda (eccentricity) and Sighra (conjunction) cycles.
- * [Ch. II, v.43-44] Mandates the 'Four-Step' iterative correction sequence 
+ * [Ch. II, v.43-44]
+ *
+ * <details class="siddhantic-proof">
+ * <summary>Siddhantic Proof: Spashta (True Longitudes) v.43</summary>
+ *
+ * **Sanskrit (Devanagari):**
+ *
+ * मान्दं कर्मैकं अर्कॆन्दोः भौमादीनाम् अथ उच्यते। शैघ्यं मान्दं पुनर्मान्दं शैघ्यं चत्वारि अनुक्रमात्॥
+ *
+ * **Translation (Burgess):**
+ *
+ * A single Manda-correction is for the Sun and Moon; for Mars and the rest, it is stated that there are four: first Sighra, then Manda, again Manda, then Sighra.
+ *
+ * **Modern Technical Commentary:**
+ *
+ * The standard iterative procedure for star-planets. Because the two corrections (Manda and Sighra) are interdependent, the Siddhanta requires a sequence of half-corrections followed by full-corrections to converge on the true position.
+ *
+ * </details>
+ * Mandates the 'Four-Step' iterative correction sequence 
  * required to arrive at a high-precision True Longitude.
  */
 
@@ -27,7 +63,25 @@ import { getJya, getKojya, inverseJya } from '../core/sine-table';
 /** 
  * Manda Epicycle Circumferences (Manda-paridhi).
  * 
- * [Ch. II, v.34-35] Corrected to match Burgess (1935) Table C.
+ * [Ch. II, v.34-35]
+ *
+ * <details class="siddhantic-proof">
+ * <summary>Siddhantic Proof: Spashta (True Longitudes) v.34</summary>
+ *
+ * **Sanskrit (Devanagari):**
+ *
+ * ततः मन्दपरिध्यंशाः कथ्यन्ते भौमकादितः। युगाष्टवसवस्त्रिंशत्त्रयस्त्रिंशत्खषट् तथा॥
+ *
+ * **Translation (Burgess):**
+ *
+ * Then are stated the degrees of the Manda-epicycles, for Mars and the others: 75, 30, 33, 12, and 49...
+ *
+ * **Modern Technical Commentary:**
+ *
+ * Defines the dimensions of the primary elliptical correction (Manda) for the five planets. These circumferences represent the eccentricity of the planetary orbits.
+ *
+ * </details>
+ * Corrected to match Burgess (1935) Table C.
  * These dimensions reflect the eccentricity of planetary orbits.
  * Format: [Even, Odd] in degrees.
  */
@@ -40,7 +94,25 @@ export const MANDA_CIRC_SATURN: [number, number] = [48.0, 49.0];
 /** 
  * Sighra Epicycle Circumferences (Sighra-paridhi).
  * 
- * [Ch. II, v.36-37] Corrected to match Burgess (1935) Table D.
+ * [Ch. II, v.36-37]
+ *
+ * <details class="siddhantic-proof">
+ * <summary>Siddhantic Proof: Spashta (True Longitudes) v.36</summary>
+ *
+ * **Sanskrit (Devanagari):**
+ *
+ * कुजादीनामतः शैघ्या युग्मान्तेऽर्थाग्निदस्रकाः। गुणाग्निचन्द्राः खनगा द्विरसाक्षीणि गोऽग्नयः॥
+ *
+ * **Translation (Burgess):**
+ *
+ * For Mars and the rest, the Sighra-epicycles at the end of the even quadrants are 235, 133, 70, 262, and 39.
+ *
+ * **Modern Technical Commentary:**
+ *
+ * Defines the second large epicycle (Sighra) used for the star-planets. This epicycle accounts for the relative motion of the Earth and the planet (the 'conjunction' or synodic effect).
+ *
+ * </details>
+ * Corrected to match Burgess (1935) Table D.
  * Mercury and Venus have large Sighra cycles as the 'Sighrocca' 
  * is their own orbital motion.
  * Format: [Even, Odd] in degrees.
@@ -54,7 +126,25 @@ export const SIGHRA_CIRC_SATURN: [number, number] = [39.0, 40.0];
 /**
  * Calculate the dynamically corrected epicycle circumference based on anomaly.
  * 
- * [Ch. II, v.38] Implements the universal Siddhantic rule for epicyclic 
+ * [Ch. II, v.38]
+ *
+ * <details class="siddhantic-proof">
+ * <summary>Siddhantic Proof: Spashta (True Longitudes) v.38</summary>
+ *
+ * **Sanskrit (Devanagari):**
+ *
+ * ओजयुग्मान्तरगुणा भुजज्या त्रिज्ययोद्धृता। युग्मवृत्ते धनर्णं स्यादोजादूनेऽधिके स्फुटम्॥
+ *
+ * **Translation (Burgess):**
+ *
+ * The difference of the epicycles of the odd and even quadrants, multiplied by the sine of the anomaly and divided by the radius, is additive to or subtractive from the even epicycle.
+ *
+ * **Modern Technical Commentary:**
+ *
+ * Implements 'Epicyclic Contraction'. The Siddhanta recognizes that the solar and lunar epicycles are not fixed circles but vary slightly in size depending on the planet's position. This specific formula calculates the 'Corrected Circumference' used for the Equation of the Center.
+ *
+ * </details>
+ * Implements the universal Siddhantic rule for epicyclic 
  * contraction, which applies to both Manda and Sighra cycles.
  * 
  * @param circEven Circumference at 0°/180°
@@ -76,7 +166,25 @@ export function getVariableCircumference(
 /**
  * Calculate the Manda Equation (Equation of the Center).
  * 
- * [Ch. II, v.39, 45] Transforms the mean eccentricity into a 
+ * [Ch. II, v.39, 45]
+ *
+ * <details class="siddhantic-proof">
+ * <summary>Siddhantic Proof: Spashta (True Longitudes) v.39</summary>
+ *
+ * **Sanskrit (Devanagari):**
+ *
+ * तद्गुणे भुजकोटिज्ये भगणांशविभाजिते। तद्भुजज्याफलधनुर्मान्दं लिप्तादिकं फलम्॥
+ *
+ * **Translation (Burgess):**
+ *
+ * Multiply the sine of the anomaly (Kendra-jya) by the epicycle and divide by 360; the arc of the result is the Manda-correction (Equation of the Center).
+ *
+ * **Modern Technical Commentary:**
+ *
+ * The fundamental formula for the Equation of the Center. It transforms the mean eccentricity into a longitudinal correction (Phala) using a sine-wave model. This represents the Sun's non-uniform motion as seen from Earth.
+ *
+ * </details>
+ * Transforms the mean eccentricity into a 
  * longitudinal correction.
  * 
  * @param meanLong Mean longitude
@@ -144,7 +252,25 @@ export function calculateSighraEquation(
 /**
  * Calculate the True Longitude (Spashta) for star planets.
  * 
- * [Ch. II, v.43-44] Implements the rigorous four-step correction procedure:
+ * [Ch. II, v.43-44]
+ *
+ * <details class="siddhantic-proof">
+ * <summary>Siddhantic Proof: Spashta (True Longitudes) v.43</summary>
+ *
+ * **Sanskrit (Devanagari):**
+ *
+ * मान्दं कर्मैकं अर्कॆन्दोः भौमादीनाम् अथ उच्यते। शैघ्यं मान्दं पुनर्मान्दं शैघ्यं चत्वारि अनुक्रमात्॥
+ *
+ * **Translation (Burgess):**
+ *
+ * A single Manda-correction is for the Sun and Moon; for Mars and the rest, it is stated that there are four: first Sighra, then Manda, again Manda, then Sighra.
+ *
+ * **Modern Technical Commentary:**
+ *
+ * The standard iterative procedure for star-planets. Because the two corrections (Manda and Sighra) are interdependent, the Siddhanta requires a sequence of half-corrections followed by full-corrections to converge on the true position.
+ *
+ * </details>
+ * Implements the rigorous four-step correction procedure:
  * 1. Apply half of the Sighra-phala to the Mean Longitude.
  * 2. Apply half of the Manda-phala to the result.
  * 3. Apply the full Manda-phala to the original Mean Longitude to 
@@ -227,7 +353,25 @@ export function calculateTrueLongitudePlanet(body: Body, ahargana: number): numb
 /**
  * Determine if a planet is in Retrograde (Vakra) motion.
  * 
- * [Ch. II, v.52-53] Identifies when the planet reaches the 'turning points' 
+ * [Ch. II, v.52-53]
+ *
+ * <details class="siddhantic-proof">
+ * <summary>Siddhantic Proof: Spashta (True Longitudes) v.52</summary>
+ *
+ * **Sanskrit (Devanagari):**
+ *
+ * दूरस्थितः स्वशीप्रोचाद्‌ ग्रहः शिथिलरश्मिभिः । सव्येतराकृष्टतनुर्भवेद्‌ वक्रगतिस्तदा ॥
+ *
+ * **Translation (Burgess):**
+ *
+ * When a planet is far from its Sighra-uchcha (conjunction), it is pulled backward... and becomes retrograde.
+ *
+ * **Modern Technical Commentary:**
+ *
+ * The physical model of retrograde motion. The Siddhanta describes planets as being pulled by 'reins of air' (vayu-rashmi) attached to their conjunction points. When the planet is far enough (near opposition), this pull reverses its apparent direction.
+ *
+ * </details>
+ * Identifies when the planet reaches the 'turning points' 
  * in its synodic cycle relative to the Sighrocca.
  * 
  * @param body The star planet

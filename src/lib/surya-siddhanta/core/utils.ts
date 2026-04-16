@@ -27,7 +27,25 @@ export function normalizeAngle(angleDeg: number): number {
 /**
  * Convert decimal degrees to Degrees, Minutes, Seconds.
  * 
- * [Ch. I, v.28] Implements the Sashti-vibhaga (sixty-fold division) system:
+ * [Ch. I, v.28]
+ *
+ * <details class="siddhantic-proof">
+ * <summary>Siddhantic Proof: Madhyama (Mean Motions) v.28</summary>
+ *
+ * **Sanskrit (Devanagari):**
+ *
+ * विकलानां कला षष्ट्या तत्षष्ट्या भाग उच्यते । तत्तरिंशता भवेद्राशिर्भगणो द्वादशैव ते ॥
+ *
+ * **Translation (Burgess):**
+ *
+ * Sixty seconds (Vikala) make a minute (Kala); sixty of these a degree (Bhaga); thirty degrees a sign (Rashi); twelve signs a revolution (Bhagana).
+ *
+ * **Modern Technical Commentary:**
+ *
+ * The foundational sexagesimal system for celestial coordinates. It maps the 360-degree ecliptic into 21,600 minutes, allowing for high-precision integer math in astronomical calculations.
+ *
+ * </details>
+ * Implements the Sashti-vibhaga (sixty-fold division) system:
  * - 60 Vikala (Seconds) = 1 Kala (Minute)
  * - 60 Kala = 1 Amsha (Degree)
  * - 30 Amsha = 1 Rashi (Sign)
@@ -46,7 +64,25 @@ export function decimalToDms(deg: number): [number, number, number] {
 /**
  * Convert Degrees, Minutes, Seconds to decimal degrees.
  * 
- * [Ch. I, v.28] Supports calculations involving Lipta (Minutes) and 
+ * [Ch. I, v.28]
+ *
+ * <details class="siddhantic-proof">
+ * <summary>Siddhantic Proof: Madhyama (Mean Motions) v.28</summary>
+ *
+ * **Sanskrit (Devanagari):**
+ *
+ * विकलानां कला षष्ट्या तत्षष्ट्या भाग उच्यते । तत्तरिंशता भवेद्राशिर्भगणो द्वादशैव ते ॥
+ *
+ * **Translation (Burgess):**
+ *
+ * Sixty seconds (Vikala) make a minute (Kala); sixty of these a degree (Bhaga); thirty degrees a sign (Rashi); twelve signs a revolution (Bhagana).
+ *
+ * **Modern Technical Commentary:**
+ *
+ * The foundational sexagesimal system for celestial coordinates. It maps the 360-degree ecliptic into 21,600 minutes, allowing for high-precision integer math in astronomical calculations.
+ *
+ * </details>
+ * Supports calculations involving Lipta (Minutes) and 
  * Vikala (Seconds) as used throughout the Siddhanta.
  * 
  * @param d Degrees (Amsha)

@@ -6,7 +6,25 @@
  * necessary for localizing astronomical calculations. In the Surya 
  * Siddhanta, all positions are initially calculated for the Prime Meridian.
  * 
- * [Ch. I, v.60-62] Establishes the 'Madhya-rekha' (Prime Meridian) passing 
+ * [Ch. I, v.60-62]
+ *
+ * <details class="siddhantic-proof">
+ * <summary>Siddhantic Proof: Madhyama (Mean Motions) v.60</summary>
+ *
+ * **Sanskrit (Devanagari):**
+ *
+ * तेन देशान्तराभ्यस्ता ग्रहभुक्तिर्विभाजिता ॥
+ *
+ * **Translation (Burgess):**
+ *
+ * Multiply the planet's daily motion by the distance in yojanas between the Prime Meridian and the observer's location.
+ *
+ * **Modern Technical Commentary:**
+ *
+ * Defines the Deshantara correction (Longitudinal Correction). It adjusts the planetary position calculated for the Prime Meridian to the local observer's longitude based on Earth's circumference.
+ *
+ * </details>
+ * Establishes the 'Madhya-rekha' (Prime Meridian) passing 
  * through Lanka and Avanti (Ujjain), providing the canonical baseline 
  * for astronomical time.
  */
@@ -34,7 +52,25 @@ locationData.forEach((loc: any) => {
 });
 
 /** 
- * [Ch. I, v.62] Ujjain (Avanti) — The Canonical Reference.
+ * [Ch. I, v.62]
+ *
+ * <details class="siddhantic-proof">
+ * <summary>Siddhantic Proof: Madhyama (Mean Motions) v.62</summary>
+ *
+ * **Sanskrit (Devanagari):**
+ *
+ * रोहीतकमवन्ती च यथा सन्निहितं सरः ॥
+ *
+ * **Translation (Burgess):**
+ *
+ * The line of the Prime Meridian passes through Rohitaka, Avanti (Ujjain), and Kurukshetra.
+ *
+ * **Modern Technical Commentary:**
+ *
+ * Geographical definition of the Siddhantic Prime Meridian. Avanti (75° 46' E) is the primary anchor, effectively the 'Greenwich' of ancient Indian astronomy.
+ *
+ * </details>
+ * Ujjain (Avanti) — The Canonical Reference.
  * 
  * Avanti is explicitly named as a point on the line passing from 
  * the 'center of the earth' (Lanka) through the northern pole.
@@ -82,7 +118,25 @@ export function getAllLocations(): Location[] {
 /**
  * Calculate the Deshantara correction (Longitudinal adjustment).
  * 
- * [Ch. I, v.60-61] Normalizes mean astronomical positions to the observer's 
+ * [Ch. I, v.60-61]
+ *
+ * <details class="siddhantic-proof">
+ * <summary>Siddhantic Proof: Madhyama (Mean Motions) v.60</summary>
+ *
+ * **Sanskrit (Devanagari):**
+ *
+ * तेन देशान्तराभ्यस्ता ग्रहभुक्तिर्विभाजिता ॥
+ *
+ * **Translation (Burgess):**
+ *
+ * Multiply the planet's daily motion by the distance in yojanas between the Prime Meridian and the observer's location.
+ *
+ * **Modern Technical Commentary:**
+ *
+ * Defines the Deshantara correction (Longitudinal Correction). It adjusts the planetary position calculated for the Prime Meridian to the local observer's longitude based on Earth's circumference.
+ *
+ * </details>
+ * Normalizes mean astronomical positions to the observer's 
  * local longitude. The rule of 'Deshantara' translates the distance 
  * from the Prime Meridian into a time correction for Ahargana.
  * 

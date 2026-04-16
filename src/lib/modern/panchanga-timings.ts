@@ -37,12 +37,12 @@ function getModernKaranaIdx(date: Date): number {
 // ─── Name Lookup Tables (Parity with Traditional) ─────────────────────────────
 
 const TITHI_NAMES = [
-  "Pratipada", "Dwitiya", "Tritiya", "Chaturthi", "Panchami", "Shashti",
-  "Saptami", "Ashtami", "Navami", "Dashami", "Ekadashi", "Dwadashi",
-  "Trayodashi", "Chaturdashi", "Purnima",
-  "Pratipada", "Dwitiya", "Tritiya", "Chaturthi", "Panchami", "Shashti",
-  "Saptami", "Ashtami", "Navami", "Dashami", "Ekadashi", "Dwadashi",
-  "Trayodashi", "Chaturdashi", "Amavasya"
+  "Shukla Pratipada", "Shukla Dwitiya", "Shukla Tritiya", "Shukla Chaturthi", "Shukla Panchami", "Shukla Shashti",
+  "Shukla Saptami", "Shukla Ashtami", "Shukla Navami", "Shukla Dashami", "Shukla Ekadashi", "Shukla Dwadashi",
+  "Shukla Trayodashi", "Shukla Chaturdashi", "Shukla Purnima",
+  "Krishna Pratipada", "Krishna Dwitiya", "Krishna Tritiya", "Krishna Chaturthi", "Krishna Panchami", "Krishna Shashti",
+  "Krishna Saptami", "Krishna Ashtami", "Krishna Navami", "Krishna Dashami", "Krishna Ekadashi", "Krishna Dwadashi",
+  "Krishna Trayodashi", "Krishna Chaturdashi", "Krishna Amavasya"
 ];
 
 const NAKSHATRA_NAMES = [
@@ -62,8 +62,7 @@ const YOGA_NAMES = [
 ];
 
 export function tithiFullName(idx: number): string {
-  const paksha = idx < 15 ? "Shukla" : "Krishna";
-  return `${paksha} ${TITHI_NAMES[idx]}`;
+  return TITHI_NAMES[idx];
 }
 
 export function nakshatraName(idx: number): string { return NAKSHATRA_NAMES[idx % 27]; }
@@ -135,6 +134,7 @@ export interface ModernElementTiming {
   name: string;
   index: number;
   pada?: number;
+  startTimeStr?: string;
   endTime: Date | null;
   endTimeStr: string;
   endAhargana?: number; 
@@ -168,24 +168,35 @@ function findModernTimings(
   
   let prevIdx = indexFn(sunriseDate);
   let t = sunriseDate.getTime() + stepMs;
-  
+  let lastEndStr = formatContinuousTime(sunriseDate, sunriseDate, sunriseHour);
+
   while (t <= endMs + stepMs * 0.1) {
     const clampedT = Math.min(t, endMs);
     const curIdx = indexFn(new Date(clampedT));
     if (curIdx !== prevIdx) {
       const transDate = binarySearchModern(indexFn, new Date(t - stepMs), new Date(clampedT));
+      const endStr = formatContinuousTime(transDate, sunriseDate, sunriseHour);
       results.push({
         name: nameFn(prevIdx),
         index: prevIdx + 1,
+        startTimeStr: lastEndStr,
         endTime: transDate,
-        endTimeStr: formatContinuousTime(transDate, sunriseDate, sunriseHour),
+        endTimeStr: endStr,
         endAhargana: (transDate.getTime() / 86400000) + 2440587.5 - 2451545.0
       });
       prevIdx = curIdx;
+      lastEndStr = endStr;
     }
     t += stepMs;
   }
-  results.push({ name: nameFn(prevIdx), index: prevIdx + 1, endTime: null, endTimeStr: '→', endAhargana: 0 });
+  results.push({ 
+    name: nameFn(prevIdx), 
+    index: prevIdx + 1, 
+    startTimeStr: lastEndStr,
+    endTime: null, 
+    endTimeStr: '→', 
+    endAhargana: 0 
+  });
   return results;
 }
 

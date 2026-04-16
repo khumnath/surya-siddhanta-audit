@@ -5,7 +5,25 @@
  * Manages the modern temporal offsets required to align local observations 
  * with the traditional prime meridian (Rekha) of the Surya-Siddhanta.
  * 
- * [Ch. I, v.62] The principal meridian (Rekha) of the earth is defined 
+ * [Ch. I, v.62]
+ *
+ * <details class="siddhantic-proof">
+ * <summary>Siddhantic Proof: Madhyama (Mean Motions) v.62</summary>
+ *
+ * **Sanskrit (Devanagari):**
+ *
+ * रोहीतकमवन्ती च यथा सन्निहितं सरः ॥
+ *
+ * **Translation (Burgess):**
+ *
+ * The line of the Prime Meridian passes through Rohitaka, Avanti (Ujjain), and Kurukshetra.
+ *
+ * **Modern Technical Commentary:**
+ *
+ * Geographical definition of the Siddhantic Prime Meridian. Avanti (75° 46' E) is the primary anchor, effectively the 'Greenwich' of ancient Indian astronomy.
+ *
+ * </details>
+ * The principal meridian (Rekha) of the earth is defined 
  * as passing through Lanka (on the equator), Avanti (Ujjain), and Kurukshetra. 
  * All 'Madhyama' (mean) positions are calculated for this line.
  * [Ch. I, v.63-65] Establishes 'Deshantara'—the longitudinal correction 
